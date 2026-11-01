@@ -333,7 +333,6 @@ function CancelForm({ orderId, orderRef }: { orderId: number; orderRef?: string 
 
 /** Результат экшена → редирект с конкретным сообщением (код + ref заказа, чтобы было ясно ЧТО произошло). */
 async function redirectMsg(code: string, ref?: string): Promise<never> {
-  "use server";
   const { redirect } = await import("next/navigation");
   return redirect(`/dispatch?msg=${code}${ref ? `&ref=${encodeURIComponent(ref)}` : ""}`);
 }
