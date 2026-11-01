@@ -38,7 +38,8 @@ export async function logoutAction(): Promise<void> {
 export interface RegisterResult {
   ok: boolean;
   error?: "exists" | "invalid";
-  verifyUrl?: string; // демо без SMTP: показываем ссылку на экране
+  verifyUrl?: string; // демо/fallback без SMTP: показываем ссылку на экране
+  emailSent?: boolean; // письмо с verify-ссылкой отправлено через Resend
 }
 
 /** Регистрация клиента (kunde): email_verified=0; перерегистрация до подтверждения обновляет токен (D3.7). */
@@ -83,6 +84,14 @@ export async function registerAction(formData: FormData): Promise<RegisterResult
   const token = await issueVerifyToken(userId);
   await audit(db, userId, "register", "user", userId, existing ? "re-register unverified" : "self-registration");
 
+  // Отправка verify-письма через Resend. Если ключа нет/не отправилось —
+  // возвращаем verifyUrl как fallback (ссылка показывается на экране, как в демо).
+  const { sendVerifyEmail } = await import("./email");
+  const mail = await sendVerifyEmail(email, name, token);
+  if (mail.sent) {
+    return { ok: true, emailSent: true };
+  }
+  console.error("verify email not sent:", mail.reason);
   return { ok: true, verifyUrl: `/verify?token=${token}` };
 }
 

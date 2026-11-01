@@ -1,6 +1,6 @@
 "use client";
 
-// Форма регистрации клиента (демо: ссылка подтверждения показывается на экране, D3.6)
+// Форма регистрации клиента (verify-ссылка уходит письмом; при сбое отправки — fallback-ссылка на экране)
 
 import { useState, useTransition } from "react";
 import { registerAction, type RegisterResult } from "@/lib/auth-actions";
@@ -9,12 +9,26 @@ export function RegisterForm() {
   const [result, setResult] = useState<RegisterResult | null>(null);
   const [pending, startTransition] = useTransition();
 
+  if (result?.ok && result.emailSent) {
+    return (
+      <div className="card p-6">
+        <h2 className="text-lg font-bold mb-2">Проверьте почту</h2>
+        <p className="text-sm text-muted mb-4">
+          Мы отправили письмо со ссылкой подтверждения. Она действует 24 часа.
+        </p>
+        <p className="text-sm">
+          <a href="/login" className="font-medium text-accent hover:underline">Перейти ко входу →</a>
+        </p>
+      </div>
+    );
+  }
+
   if (result?.ok && result.verifyUrl) {
     return (
       <div className="card p-6">
         <h2 className="text-lg font-bold mb-2">Осталось подтвердить email</h2>
         <p className="text-sm text-muted mb-4">
-          В продакшене ссылка уйдёт письмом. В демо она показана здесь:
+          Письмо отправить не удалось, поэтому ссылка подтверждения показана здесь:
         </p>
         <a href={result.verifyUrl} className="block break-all rounded-base border border-trust/40 bg-trust/5 px-3 py-2 font-mono text-xs text-trust hover:underline">
           {result.verifyUrl}
