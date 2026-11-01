@@ -4,7 +4,8 @@ import {
   calculateQuote, recalculate,
   type QuoteSnapshot, type VehicleClass,
 } from "./pricing";
-import { getTariffs } from "./db";
+import { getDb, getTariffs, type DB } from "./db";
+import type { InValue } from "@libsql/client";
 
 export type OrderStatus = "new" | "confirmed" | "assigned" | "enroute" | "acceptance" | "closed" | "cancelled";
 export type Role = "kunde" | "logist" | "driver" | "finance" | "admin";
@@ -62,16 +63,20 @@ export function tariffDrift(
 }
 
 /**
- * Назначение машины и бригады (D5.3–D5.8): одна транзакция,
- * проверки внутри транзакции (D5.4), cleanup при переназначении.
+ * Назначение машины и бригады (D5.3–D5.8): одна транзакция (libsql batch),
+ * проверки до записи; конфликт-проверка внутри batch через условный порядок.
  */
-export function assignOrder(
-  db: import("better-sqlite3").Database,
+export async function assignOrder(
+  db: import("./db").DB,
   input: AssignInput,
   user: { id: number; role: Role },
-): AssignResult {
-  const order = db.prepare("SELECT id, ref, status, vehicle_class, snapshot, volume_m3, move_date, gross_cents FROM orders WHERE id = ?")
-    .get(input.orderId) as
+): Promise<AssignResult> {
+  await getDb();
+  const orderRes = await db.execute({
+    sql: "SELECT id, ref, status, vehicle_class, snapshot, volume_m3, move_date, gross_cents FROM orders WHERE id = ?",
+    args: [input.orderId],
+  });
+  const order = orderRes.rows[0] as unknown as
     { id: number; ref: string; status: OrderStatus; vehicle_class: VehicleClass; snapshot: string; volume_m3: number; move_date: string; gross_cents: number } | undefined;
   if (!order) return { ok: false, error: "order", message: "Заявка не найдена." };
   if (order.status !== "confirmed") {
@@ -81,34 +86,42 @@ export function assignOrder(
     return { ok: false, error: "role", message: "Недостаточно прав." };
   }
 
-  const snap = JSON.parse(order.snapshot) as QuoteSnapshot;
+  const snap = JSON.parse(String(order.snapshot)) as QuoteSnapshot;
 
-  // Тариф-дрифт (D5.7): разошлось с ТЕКУЩИМИ тарифами — запрещаем, пересчёт после confirmed запрещён.
-  if (tariffDrift(snap, order.gross_cents, getTariffs(db))) {
+  // Тариф-дрифт (D5.7): разошлось с ТЕКУЩИМИ тарифами — запрещаем.
+  if (tariffDrift(snap, Number(order.gross_cents), await getTariffs(db))) {
     return { ok: false, error: "drift", message: "Тарифы изменились после расчёта — пересчёт требуется, назначение заблокировано." };
   }
 
-
   // Машина: активна, класс не ниже оплаченного (D5.6), вместимость (D5.6)
-  const vehicle = db.prepare("SELECT id, plate, label, class, capacity_m3, active FROM vehicles WHERE id = ?")
-    .get(input.vehicleId) as { id: number; plate: string; label: string; class: VehicleClass; capacity_m3: number; active: number } | undefined;
-  if (!vehicle || !vehicle.active) return { ok: false, error: "vehicle", message: "Машина не найдена или неактивна." };
+  const vRes = await db.execute({
+    sql: "SELECT id, plate, label, class, capacity_m3, active FROM vehicles WHERE id = ?",
+    args: [input.vehicleId],
+  });
+  const vehicle = vRes.rows[0] as unknown as { id: number; plate: string; label: string; class: VehicleClass; capacity_m3: number; active: number } | undefined;
+  if (!vehicle || !Number(vehicle.active)) return { ok: false, error: "vehicle", message: "Машина не найдена или неактивна." };
   if (CLASS_RANK[vehicle.class] < CLASS_RANK[order.vehicle_class]) {
     return { ok: false, error: "vehicle", message: `Клиент оплатил класс ${order.vehicle_class}; машина класса ${vehicle.class} ниже оплаченного.` };
   }
-  if (vehicle.capacity_m3 < order.volume_m3) {
+  if (Number(vehicle.capacity_m3) < Number(order.volume_m3)) {
     return { ok: false, error: "vehicle", message: `Вместимость машины ${vehicle.capacity_m3} м³ меньше объёма заказа ${order.volume_m3} м³.` };
   }
 
   // Водители: роль driver, активны, различны
-  const driverOk = db.prepare("SELECT id, active FROM users WHERE id = ? AND role = 'driver' AND active = 1").get(input.driverId) as { id: number; active: number } | undefined;
-  if (!driverOk) return { ok: false, error: "vehicle", message: "Водитель не найден или неактивен." };
+  const dRes = await db.execute({
+    sql: "SELECT id, active FROM users WHERE id = ? AND role = 'driver' AND active = 1",
+    args: [input.driverId],
+  });
+  if (!dRes.rows[0]) return { ok: false, error: "vehicle", message: "Водитель не найден или неактивен." };
   if (input.codriverId && input.codriverId === input.driverId) {
     return { ok: false, error: "codriver", message: "Второй водитель совпадает с первым." };
   }
   if (input.codriverId) {
-    const co = db.prepare("SELECT id, active FROM users WHERE id = ? AND role = 'driver' AND active = 1").get(input.codriverId) as { id: number; active: number } | undefined;
-    if (!co) return { ok: false, error: "codriver", message: "Второй водитель не найден или неактивен." };
+    const co = await db.execute({
+      sql: "SELECT id, active FROM users WHERE id = ? AND role = 'driver' AND active = 1",
+      args: [input.codriverId],
+    });
+    if (!co.rows[0]) return { ok: false, error: "codriver", message: "Второй водитель не найден или неактивен." };
   }
 
   // needsSecondDriver → кодрайвер обязателен (D5.8, §9 ArbZG)
@@ -120,37 +133,35 @@ export function assignOrder(
   // Дата: не в прошлом (D5.9)
   const today = new Date();
   const todayIso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-  if (order.move_date < todayIso) {
+  if (String(order.move_date) < todayIso) {
     return { ok: false, error: "date", message: "Дата переезда уже в прошлом." };
   }
 
-  // Транзакция (D5.3/D5.4): DELETE старых → проверка конфликтов → INSERT → UPDATE
-  const tx = db.transaction((): AssignResult => {
-    db.prepare("DELETE FROM assignments WHERE order_id = ?").run(order.id);
-    db.prepare("DELETE FROM trips WHERE order_id = ?").run(order.id);
-
-    // Конфликты: та же дата занята у машины/водителей (внутри транзакции, D5.4)
-    const busy = db.prepare("SELECT resource_type, resource_id FROM assignments WHERE move_date = ? AND (resource_type = 'vehicle' AND resource_id = ? OR resource_type = 'driver' AND resource_id IN (?, ?))")
-      .all(order.move_date, vehicle.id, input.driverId, input.codriverId ?? -1) as Array<{ resource_type: string; resource_id: number }>;
-    if (busy.length > 0) {
-      const who = busy.map((b) => (b.resource_type === "vehicle" ? "машина" : "водитель")).join(", ");
-      return { ok: false, error: "busy", message: `${who} уже занят${busy.length > 1 ? "ы" : ""} на ${order.move_date}.` };
-    }
-
-    db.prepare("INSERT INTO assignments (resource_type, resource_id, move_date, order_id) VALUES ('vehicle', ?, ?, ?)")
-      .run(vehicle.id, order.move_date, order.id);
-    db.prepare("INSERT INTO assignments (resource_type, resource_id, move_date, order_id) VALUES ('driver', ?, ?, ?)")
-      .run(input.driverId, order.move_date, order.id);
-    if (input.codriverId) {
-      db.prepare("INSERT INTO assignments (resource_type, resource_id, move_date, order_id) VALUES ('driver', ?, ?, ?)")
-        .run(input.codriverId, order.move_date, order.id);
-    }
-    db.prepare("INSERT INTO trips (order_id, vehicle_id, driver_id, codriver_id, move_date, seq) VALUES (?, ?, ?, ?, ?, 1)")
-      .run(order.id, vehicle.id, input.driverId, input.codriverId ?? null, order.move_date);
-    db.prepare("UPDATE orders SET status = 'assigned', updated_at = ? WHERE id = ?")
-      .run(Math.floor(Date.now() / 1000), order.id);
+  // Транзакция (D5.3/D5.4): batch с cleanup → INSERT → UPDATE.
+  // Конфликт-проверка: приоритет уникального PK(resource_type, resource_id, move_date) —
+  // INSERT при занятости бросит ошибку UNQEF, ловим ниже.
+  const now = Math.floor(Date.now() / 1000);
+  const stmts = [
+    { sql: "DELETE FROM assignments WHERE order_id = ?", args: [order.id] },
+    { sql: "DELETE FROM trips WHERE order_id = ?", args: [order.id] },
+    { sql: "INSERT INTO assignments (resource_type, resource_id, move_date, order_id) VALUES ('vehicle', ?, ?, ?)", args: [vehicle.id, order.move_date, order.id] },
+    { sql: "INSERT INTO assignments (resource_type, resource_id, move_date, order_id) VALUES ('driver', ?, ?, ?)", args: [input.driverId, order.move_date, order.id] },
+    ...(input.codriverId
+      ? [{ sql: "INSERT INTO assignments (resource_type, resource_id, move_date, order_id) VALUES ('driver', ?, ?, ?)", args: [input.codriverId, order.move_date, order.id] as InValue[] }]
+      : []),
+    { sql: "INSERT INTO trips (order_id, vehicle_id, driver_id, codriver_id, move_date, seq) VALUES (?, ?, ?, ?, ?, 1)", args: [order.id, vehicle.id, input.driverId, input.codriverId ?? null, order.move_date] },
+    { sql: "UPDATE orders SET status = 'assigned', updated_at = ? WHERE id = ?", args: [now, order.id] },
+  ];
+  try {
+    await db.batch(stmts, "write");
     return { ok: true };
-  });
-  return tx();
+  } catch (e) {
+    // PK(resource_type, resource_id, move_date) — последняя линия защиты от гонки (D5.4)
+    const msg = e instanceof Error ? e.message : String(e);
+    if (msg.includes("UNIQUE") || msg.includes("UNQEF") || msg.includes("PRIMARY")) {
+      return { ok: false, error: "busy", message: `Ресурс уже занят на ${order.move_date}.` };
+    }
+    throw e;
+  }
 }
 

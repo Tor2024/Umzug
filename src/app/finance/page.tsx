@@ -66,34 +66,46 @@ export default async function FinancePage() {
   const user = await requireRole(["finance", "admin"], "/finance");
   const db = getDb();
 
-  const invoices = db.prepare(
+  const invoicesRes = await db.execute(
     `SELECT i.number, i.order_id, i.amount_cents, i.status, i.dunning_level, i.due_date, i.paid_at,
             o.ref, o.contact_name AS client_name, o.gross_cents
        FROM invoices i JOIN orders o ON o.id = i.order_id
       ORDER BY i.number DESC`,
-  ).all() as unknown as InvRow[];
+  );
+  const invoices = invoicesRes.rows as unknown as InvRow[];
 
-  const ordersNoInvoice = db.prepare(
+  const ordersNoInvoiceRes = await db.execute(
     `SELECT o.id, o.ref, o.contact_name, o.gross_cents, o.status
        FROM orders o
       WHERE o.status = 'closed' AND NOT EXISTS (SELECT 1 FROM invoices i WHERE i.order_id = o.id)
       ORDER BY o.id DESC`,
-  ).all() as Array<{ id: number; ref: string; contact_name: string; gross_cents: number; status: string }>;
+  );
+  const ordersNoInvoice = ordersNoInvoiceRes.rows as unknown as Array<{ id: number; ref: string; contact_name: string; gross_cents: number; status: string }>;
 
-  const allOrders = db.prepare("SELECT id, ref, contact_name FROM orders WHERE status IN ('closed','acceptance') ORDER BY id DESC").all() as
+  const allOrdersRes = await db.execute("SELECT id, ref, contact_name FROM orders WHERE status IN ('closed','acceptance') ORDER BY id DESC");
+  const allOrders = allOrdersRes.rows as unknown as
     Array<{ id: number; ref: string; contact_name: string }>;
 
-  const claims = db.prepare(
+  const claimsRes = await db.execute(
     `SELECT c.number, c.order_id, c.item, c.amount_cents, c.status, c.resolution, c.created_at, o.ref
        FROM claims c JOIN orders o ON o.id = c.order_id ORDER BY c.number DESC`,
-  ).all() as unknown as ClaimRow[];
+  );
+  const claims = claimsRes.rows as unknown as ClaimRow[];
 
-  const paidByOrder = (orderId: number): number =>
-    (db.prepare("SELECT COALESCE(SUM(amount_cents),0) AS s FROM payments WHERE order_id = ?").get(orderId) as { s: number }).s;
-
-  const paymentsAll = db.prepare(
+  const paymentsAllRes = await db.execute(
     `SELECT p.*, o.ref FROM payments p JOIN orders o ON o.id = p.order_id ORDER BY p.id DESC LIMIT 50`,
-  ).all() as Array<{ id: number; order_id: number; invoice_id: string | null; amount_cents: number; method: string; paid_at: number; note: string; ref: string }>;
+  );
+  const paymentsAll = paymentsAllRes.rows as unknown as Array<{ id: number; order_id: number; invoice_id: string | null; amount_cents: number; method: string; paid_at: number; note: string; ref: string }>;
+
+  // Сумма платежей одним запросом (paid по каждому order_id)
+  const paidByOrderMap = new Map<number, number>();
+  {
+    const sumRes = await db.execute("SELECT order_id, COALESCE(SUM(amount_cents),0) AS s FROM payments GROUP BY order_id");
+    for (const r of sumRes.rows as unknown as Array<{ order_id: number; s: number }>) {
+      paidByOrderMap.set(Number(r.order_id), Number(r.s));
+    }
+  }
+  const paidByOrder = (orderId: number): number => paidByOrderMap.get(orderId) ?? 0;
 
   // Дашборд (D7.10)
   let openSum = 0, overdueSum = 0, revenue = 0;
@@ -105,7 +117,8 @@ export default async function FinancePage() {
       if (inv.status === "overdue") overdueSum += rest;
     }
   }
-  revenue = (db.prepare("SELECT COALESCE(SUM(amount_cents),0) AS s FROM payments WHERE amount_cents > 0").get() as { s: number }).s;
+  const revenueRes = await db.execute("SELECT COALESCE(SUM(amount_cents),0) AS s FROM payments WHERE amount_cents > 0");
+  revenue = Number((revenueRes.rows[0] as unknown as { s: number }).s);
 
   const dateLabel = (iso: string): string => new Date(`${iso}T12:00:00`).toLocaleDateString("ru-RU");
   const tsLabel = (ts: number): string => new Date(ts * 1000).toLocaleDateString("ru-RU");

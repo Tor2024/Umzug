@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const BASE = "https://pomoshnik-pereezd.example";
+const BASE = "https://umzug-seven.vercel.app";
 
 /** SEO-минимум (Э8): публичные страницы в sitemap; внутренние экраны — нет. */
 export default function sitemap(): MetadataRoute.Sitemap {

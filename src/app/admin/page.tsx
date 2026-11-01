@@ -147,15 +147,20 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
     redirect(`/admin?msg=${r.ok ? "apikey" : "error"}`);
   }
 
-  const configRows = db.prepare("SELECT key, value FROM config").all() as { key: string; value: string }[];
+  const configRowsRes = await db.execute("SELECT key, value FROM config");
+  const configRows = configRowsRes.rows as unknown as { key: string; value: string }[];
   const configMap = new Map(configRows.map((r) => [r.key, r.value]));
   const tariffKeys = Object.keys(CONFIG_SCHEMA).filter((k) => k.startsWith("pricing.") || k === "finance.due_days");
-  const classes = db.prepare("SELECT * FROM vehicle_classes ORDER BY class").all() as ClassRow[];
-  const users = db.prepare("SELECT id, email, name, role, active, email_verified FROM users ORDER BY role, id").all() as UserRow[];
-  const vehicles = db.prepare("SELECT id, plate, class, label, capacity_m3, active FROM vehicles ORDER BY id").all() as VehicleRow[];
-  const auditRows = db.prepare("SELECT * FROM audit ORDER BY id DESC LIMIT 50").all() as AuditRow[];
-  const historyRows = listAllOrderHistory(db, 100);
-  const chain = verifyChain(db);
+  const classesRes = await db.execute("SELECT * FROM vehicle_classes ORDER BY class");
+  const classes = classesRes.rows as unknown as ClassRow[];
+  const usersRes = await db.execute("SELECT id, email, name, role, active, email_verified FROM users ORDER BY role, id");
+  const users = usersRes.rows as unknown as UserRow[];
+  const vehiclesRes = await db.execute("SELECT id, plate, class, label, capacity_m3, active FROM vehicles ORDER BY id");
+  const vehicles = vehiclesRes.rows as unknown as VehicleRow[];
+  const auditRowsRes = await db.execute("SELECT * FROM audit ORDER BY id DESC LIMIT 50");
+  const auditRows = auditRowsRes.rows as unknown as AuditRow[];
+  const historyRows = await listAllOrderHistory(db, 100);
+  const chain = await verifyChain(db);
   const apiKeySet = !!configMap.get("maps.api_key");
 
   const MSG: Record<string, { text: string; ok: boolean }> = {

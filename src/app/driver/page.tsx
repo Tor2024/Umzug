@@ -5,13 +5,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
 import { requireRole } from "@/lib/auth";
-import { getDb } from "@/lib/db";
-import { verifyChain, type ProtocolRow } from "@/lib/db";
+import { getDb, verifyChain, type ProtocolRow } from "@/lib/db";
 import { recalculate, type QuoteSnapshot } from "@/lib/pricing";
 import { DriverChecklist } from "@/components/driver-checklist";
 import RouteMapLazy from "@/components/route-map-lazy";
 import { SubmitButton } from "@/components/submit-button";
-import type BetterSqlite3 from "better-sqlite3";
 
 export const metadata: Metadata = { title: "Экран водителя", robots: { index: false } };
 export const instant = false;
@@ -44,8 +42,8 @@ export default async function DriverPage({ searchParams }: { searchParams: Promi
   const todayIso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
 
   // D6.8: рейсы водителя через assignments, сегодня сверху + предстоящие
-  const rows = db.prepare(
-    `SELECT o.id, o.ref, o.status, o.move_date, o.from_text, o.to_text, o.volume_m3, o.distance_km,
+  const rowsRes = await db.execute({
+    sql: `SELECT o.id, o.ref, o.status, o.move_date, o.from_text, o.to_text, o.volume_m3, o.distance_km,
             o.gross_cents, o.snapshot, t.vehicle_id, t.driver_id, t.codriver_id, v.plate, v.label AS vehicle_label
      FROM trips t
      JOIN orders o ON o.id = t.order_id
@@ -53,13 +51,61 @@ export default async function DriverPage({ searchParams }: { searchParams: Promi
      WHERE t.driver_id = ? OR t.codriver_id = ?
      ORDER BY CASE WHEN o.status IN ('assigned','enroute') THEN 0 ELSE 1 END, o.move_date ASC, o.id ASC
      LIMIT 50`,
-  ).all(user.id, user.id) as Array<{
+    args: [user.id, user.id],
+  });
+  const rows = rowsRes.rows as unknown as Array<{
     id: number; ref: string; status: string; move_date: string; from_text: string; to_text: string;
     volume_m3: number; distance_km: number; gross_cents: number; snapshot: string;
     vehicle_id: number; driver_id: number; codriver_id: number | null; plate: string; vehicle_label: string;
   }>;
 
-  const chain = verifyChain(db);
+  const chain = await verifyChain(db);
+
+  // Предвыборка: протоколы, геометрия, имена водителей, позиции чек-листа (вместо per-row запросов)
+  const orderIds = rows.map((r) => r.id);
+  const protoMap = new Map<number, ProtocolRow>();
+  const geometryMap = new Map<number, [number, number][] | null>();
+  const nameMap = new Map<number, string>();
+  const planMap = new Map<number, Array<{ key: string; label: string }>>();
+  if (orderIds.length > 0) {
+    const placeholders = orderIds.map(() => "?").join(",");
+    const protoRes = await db.execute({
+      sql: `SELECT id, order_id, loaded_json, deviation_m3, notes, signature, hash, signed_at FROM protocol WHERE order_id IN (${placeholders})`,
+      args: orderIds,
+    });
+    for (const p of protoRes.rows as unknown as Array<ProtocolRow & { order_id: number }>) {
+      protoMap.set(Number(p.order_id), p);
+    }
+    const routeRes = await db.execute({
+      sql: `SELECT order_id, geometry FROM route WHERE order_id IN (${placeholders})`,
+      args: orderIds,
+    });
+    for (const r of routeRes.rows as unknown as Array<{ order_id: number; geometry: string | null }>) {
+      geometryMap.set(Number(r.order_id), r.geometry ? (JSON.parse(r.geometry) as [number, number][]) : null);
+    }
+    const planRes = await db.execute({
+      sql: `SELECT order_id, key, label FROM order_lines WHERE order_id IN (${placeholders}) AND kind = 'line' ORDER BY order_id, idx`,
+      args: orderIds,
+    });
+    for (const l of planRes.rows as unknown as Array<{ order_id: number; key: string; label: string }>) {
+      const arr = planMap.get(Number(l.order_id)) ?? [];
+      arr.push({ key: l.key, label: l.label });
+      planMap.set(Number(l.order_id), arr);
+    }
+  }
+  {
+    const driverIds = Array.from(new Set(rows.flatMap((r) => [Number(r.driver_id), ...(r.codriver_id ? [Number(r.codriver_id)] : [])])));
+    if (driverIds.length > 0) {
+      const nameRes = await db.execute({
+        sql: `SELECT id, name FROM users WHERE id IN (${driverIds.map(() => "?").join(",")})`,
+        args: driverIds,
+      });
+      for (const n of nameRes.rows as unknown as Array<{ id: number; name: string }>) {
+        nameMap.set(Number(n.id), n.name);
+      }
+    }
+  }
+  const driverName = (id: number): string => nameMap.get(id) ?? `#${id}`;
 
   return (
     <main className="mx-auto max-w-md px-4 py-6">
@@ -86,10 +132,9 @@ export default async function DriverPage({ searchParams }: { searchParams: Promi
           const tomorrowIso = (() => { const d = new Date(todayIso + "T12:00:00Z"); d.setUTCDate(d.getUTCDate() + 1); return d.toISOString().slice(0, 10); })();
           const isTomorrow = r.move_date === tomorrowIso && r.status === "assigned";
           const isActive = r.status === "assigned" || r.status === "enroute";
-          const proto = db.prepare("SELECT id, loaded_json, deviation_m3, notes, signature, hash, signed_at FROM protocol WHERE order_id = ?")
-            .get(r.id) as ProtocolRow | undefined;
-          const routeRow = db.prepare("SELECT geometry FROM route WHERE order_id = ?").get(r.id) as { geometry: string | null } | undefined;
-          const geometry = routeRow?.geometry ? (JSON.parse(routeRow.geometry) as [number, number][]) : null;
+          const proto = protoMap.get(r.id);
+          const routeRow = geometryMap.get(r.id);
+          const geometry = routeRow ?? null;
 
           return (
             <li key={r.ref} className={`card p-5 ${isActive ? "border-accent" : ""}`}>
@@ -106,7 +151,7 @@ export default async function DriverPage({ searchParams }: { searchParams: Promi
               </p>
               {geometry && <div className="mt-3"><RouteMapLazy geometry={geometry} fromText={r.from_text} toText={r.to_text} height={200} /></div>}
               {r.codriver_id && (
-                <p className="text-sm text-muted">Экипаж: {driverName(db, r.driver_id)}{r.codriver_id !== r.driver_id ? ` + ${driverName(db, r.codriver_id)}` : ""}</p>
+                <p className="text-sm text-muted">Экипаж: {driverName(r.driver_id)}{r.codriver_id !== r.driver_id ? ` + ${driverName(r.codriver_id)}` : ""}</p>
               )}
 
               {/* Шаг дня 1: Выехал (assigned→enroute, только сегодня — D6.3) */}
@@ -125,7 +170,7 @@ export default async function DriverPage({ searchParams }: { searchParams: Promi
                 <DriverChecklist
                   orderId={r.id}
                   planM3={r.volume_m3}
-                  items={planItems(db, r.id)}
+                  items={planMap.get(r.id) ?? []}
                 />
               )}
 
@@ -159,18 +204,6 @@ export default async function DriverPage({ searchParams }: { searchParams: Promi
       <DashLink />
     </main>
   );
-}
-
-function driverName(db: BetterSqlite3.Database, id: number): string {
-  const row = db.prepare("SELECT name FROM users WHERE id = ?").get(id) as { name: string } | undefined;
-  return row?.name ?? `#${id}`;
-}
-
-/** План чек-листа: позиции расчёта kind=line (D6.4). */
-function planItems(db: BetterSqlite3.Database, orderId: number): Array<{ key: string; label: string }> {
-  const rows = db.prepare("SELECT key, label FROM order_lines WHERE order_id = ? AND kind = 'line' ORDER BY idx")
-    .all(orderId) as Array<{ key: string; label: string }>;
-  return rows;
 }
 
 function StartRouteForm({ orderId }: { orderId: number }) {

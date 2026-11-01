@@ -9,7 +9,7 @@ import { monthAvailability, nearestFreeDate } from "@/lib/availability";
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const jar = await cookies();
   const token = jar.get("ms_session")?.value ?? "";
-  const user = token ? findSession(getDb(), token) : null;
+  const user = token ? await findSession(getDb(), token) : null;
   if (!user) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
@@ -24,11 +24,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   };
 
   const db = getDb();
-  const data = monthAvailability(db, month, opts);
+  const data = await monthAvailability(db, month, opts);
   // Подсказка для express/переполненного месяца: ближайшая свободная дата
   const anyFree = Object.entries(data.dates).find(([, d]) => d.status === "free" || d.status === "partial");
   if (!anyFree) {
-    const nearest = nearestFreeDate(db, `${data.month}-01`, opts);
+    const nearest = await nearestFreeDate(db, `${data.month}-01`, opts);
     return NextResponse.json({ ...data, nearestFree: nearest });
   }
   return NextResponse.json(data);

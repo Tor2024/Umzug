@@ -5,6 +5,7 @@ import "./globals.css";
 const inter = Inter({ variable: "--font-inter", subsets: ["latin", "cyrillic"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://umzug-seven.vercel.app"),
   title: {
     default: "Помощник с переездом",
     template: "%s | Помощник с переездом",

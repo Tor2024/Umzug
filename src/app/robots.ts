@@ -8,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/account", "/dispatch", "/driver", "/finance", "/admin", "/order", "/api", "/login", "/register", "/verify"],
     },
-    sitemap: "https://pomoshnik-pereezd.example/sitemap.xml",
+    sitemap: "https://umzug-seven.vercel.app/sitemap.xml",
   };
 }

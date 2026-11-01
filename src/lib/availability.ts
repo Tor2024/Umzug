@@ -3,7 +3,7 @@
 // (идёт в pendingOrders — арбитраж у логиста, критик 1/п.1).
 // Long-haul рейс (586 км) = 1 занятый день — задокументировано, многодневность не моделируем (критик 2/MED 8).
 
-import type BetterSqlite3 from "better-sqlite3";
+import type { DB } from "./db";
 
 export type DayStatus = "free" | "partial" | "busy" | "closed";
 
@@ -65,22 +65,25 @@ function daysOfMonth(month: string): string[] {
  * Свободные ресурсы на дату: машины/водители минус занятые в confirmed/assigned/enroute.
  * single source of truth — используется и календарём, и createOrderAction (критик 2/HIGH 6).
  */
-export function resourceBookings(db: BetterSqlite3.Database, dateIso: string): {
+export async function resourceBookings(db: DB, dateIso: string): Promise<{
   busyVehicleIds: number[];
   busyDriverIds: number[];
   pendingOrders: number;
-} {
-  const busy = db.prepare(
-    `SELECT a.resource_type, a.resource_id FROM assignments a
-     JOIN orders o ON o.id = a.order_id
-     WHERE a.move_date = ? AND o.status IN ('confirmed','assigned','enroute')`,
-  ).all(dateIso) as Array<{ resource_type: string; resource_id: number }>;
-  const vehicleIds = busy.filter((r) => r.resource_type === "vehicle").map((r) => r.resource_id);
-  const driverIds = busy.filter((r) => r.resource_type === "driver").map((r) => r.resource_id);
-  const pending = db.prepare(
-    "SELECT COUNT(*) AS c FROM orders WHERE move_date = ? AND status = 'new'",
-  ).get(dateIso) as { c: number };
-  return { busyVehicleIds: vehicleIds, busyDriverIds: driverIds, pendingOrders: pending.c };
+}> {
+  const busyRes = await db.execute({
+    sql: `SELECT a.resource_type, a.resource_id FROM assignments a
+          JOIN orders o ON o.id = a.order_id
+          WHERE a.move_date = ? AND o.status IN ('confirmed','assigned','enroute')`,
+    args: [dateIso],
+  });
+  const busy = busyRes.rows as unknown as Array<{ resource_type: string; resource_id: number }>;
+  const vehicleIds = busy.filter((r) => r.resource_type === "vehicle").map((r) => Number(r.resource_id));
+  const driverIds = busy.filter((r) => r.resource_type === "driver").map((r) => Number(r.resource_id));
+  const pendingRes = await db.execute({
+    sql: "SELECT COUNT(*) AS c FROM orders WHERE move_date = ? AND status = 'new'",
+    args: [dateIso],
+  });
+  return { busyVehicleIds: vehicleIds, busyDriverIds: driverIds, pendingOrders: Number((pendingRes.rows[0] as unknown as { c: number }).c) };
 }
 
 /** Минимальный класс машины для объёма (A<15≤B<35≤C; по вместимости классов). */
@@ -96,16 +99,16 @@ const CLASS_RANK = { A: 1, B: 2, C: 3 } as const;
  * Доступность одного дня под конкретную заявку (объём + needsSecond).
  * effectiveFree = min(свободные машины подходящего класса, свободные водители − neededDrivers) — критик 1.
  */
-export function dayAvailability(
-  db: BetterSqlite3.Database,
+export async function dayAvailability(
+  db: DB,
   dateIso: string,
   opts: { volumeM3?: number; needsSecond?: boolean },
-): DayAvailability {
-  const vehicles = db.prepare("SELECT id, class FROM vehicles WHERE active = 1").all() as
-    Array<{ id: number; class: "A" | "B" | "C" }>;
-  const drivers = db.prepare("SELECT id FROM users WHERE role = 'driver' AND active = 1").all() as
-    Array<{ id: number }>;
-  const { busyVehicleIds, busyDriverIds, pendingOrders } = resourceBookings(db, dateIso);
+): Promise<DayAvailability> {
+  const vRes = await db.execute("SELECT id, class FROM vehicles WHERE active = 1");
+  const vehicles = vRes.rows as unknown as Array<{ id: number; class: "A" | "B" | "C" }>;
+  const dRes = await db.execute("SELECT id FROM users WHERE role = 'driver' AND active = 1");
+  const drivers = dRes.rows as unknown as Array<{ id: number }>;
+  const { busyVehicleIds, busyDriverIds, pendingOrders } = await resourceBookings(db, dateIso);
   const minClass = opts.volumeM3 !== undefined ? minClassForVolume(opts.volumeM3) : null;
   const freeVehicles = vehicles.filter((v) => !busyVehicleIds.includes(v.id));
   const freeDrivers = drivers.filter((d) => !busyDriverIds.includes(d.id)).length;
@@ -123,11 +126,11 @@ export function dayAvailability(
 }
 
 /** Календарь месяца: [сегодня, сегодня+3 мес] границы; closed = воскресенье/праздник/прошлое. */
-export function monthAvailability(
-  db: BetterSqlite3.Database,
+export async function monthAvailability(
+  db: DB,
   month: string,
   opts: { volumeM3?: number; needsSecond?: boolean } = {},
-): MonthAvailability {
+): Promise<MonthAvailability> {
   const today = todayIsoBerlin();
   const minMonth = today.slice(0, 7);
   const maxDate = new Date(today + "T12:00:00Z");
@@ -144,22 +147,22 @@ export function monthAvailability(
       if (isSunday(iso)) sundays.push(iso);
       continue;
     }
-    dates[iso] = dayAvailability(db, iso, opts);
+    dates[iso] = await dayAvailability(db, iso, opts);
   }
   return { month: clamped, today, minMonth, maxMonth, holidays, sundays, dates };
 }
 
 /** Ближайшая свободная дата от заданной (для express-подсказки, критик 2/MED 7). */
-export function nearestFreeDate(
-  db: BetterSqlite3.Database,
+export async function nearestFreeDate(
+  db: DB,
   fromIso: string,
   opts: { volumeM3?: number; needsSecond?: boolean } = {},
-): string | null {
+): Promise<string | null> {
   const today = todayIsoBerlin();
   let iso = fromIso < today ? today : fromIso;
   for (let i = 0; i < 90; i++) {
     if (!isClosedDay(iso, today)) {
-      const a = dayAvailability(db, iso, opts);
+      const a = await dayAvailability(db, iso, opts);
       if (a.status !== "busy") return iso;
     }
     const d = new Date(iso + "T12:00:00Z");

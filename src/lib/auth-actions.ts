@@ -14,15 +14,19 @@ export async function loginAction(formData: FormData): Promise<void> {
   const password = String(formData.get("password") ?? "");
   const next = String(formData.get("next") ?? "");
 
-  const res = login(email, password);
+  const res = await login(email, password);
   if (!res.ok) {
     const err = res.needsVerify ? "verify" : res.lockoutSec ? "lockout" : "1";
     redirect(`/login?error=${err}&next=${encodeURIComponent(next)}&email=${encodeURIComponent(email)}`);
   }
   await setSessionCookie(res.token!, res.expiresAt!);
   const db = getDb();
-  const u = db.prepare("SELECT id FROM users WHERE email = ?").get(email.trim().toLowerCase()) as { id: number } | undefined;
-  audit(db, u?.id ?? null, "login", "user", u?.id ?? "");
+  const uRes = await db.execute({
+    sql: "SELECT id FROM users WHERE email = ?",
+    args: [email.trim().toLowerCase()],
+  });
+  const u = uRes.rows[0] as unknown as { id: number } | undefined;
+  await audit(db, u?.id ?? null, "login", "user", u?.id ?? "");
   redirect(next ? decodeURIComponent(next) : "/login/success");
 }
 
@@ -48,7 +52,11 @@ export async function registerAction(formData: FormData): Promise<RegisterResult
   }
 
   const db = getDb();
-  const existing = db.prepare("SELECT id, email_verified FROM users WHERE email = ?").get(email) as
+  const existingRes = await db.execute({
+    sql: "SELECT id, email_verified FROM users WHERE email = ?",
+    args: [email],
+  });
+  const existing = existingRes.rows[0] as unknown as
     | { id: number; email_verified: number }
     | undefined;
 
@@ -59,37 +67,48 @@ export async function registerAction(formData: FormData): Promise<RegisterResult
   let userId: number;
   if (existing) {
     // неподтверждённый повтор: обновляем имя/пароль/токен (D3.7)
-    db.prepare("UPDATE users SET name = ?, password_hash = ? WHERE id = ?").run(name, hashPassword(password), existing.id);
+    await db.execute({
+      sql: "UPDATE users SET name = ?, password_hash = ? WHERE id = ?",
+      args: [name, hashPassword(password), existing.id],
+    });
     userId = existing.id;
   } else {
-    const r = db.prepare(
-      "INSERT INTO users (email, name, role, password_hash, active, email_verified, created_at) VALUES (?, ?, 'kunde', ?, 1, 0, ?)",
-    ).run(email, name, hashPassword(password), Math.floor(Date.now() / 1000));
+    const r = await db.execute({
+      sql: "INSERT INTO users (email, name, role, password_hash, active, email_verified, created_at) VALUES (?, ?, 'kunde', ?, 1, 0, ?)",
+      args: [email, name, hashPassword(password), Math.floor(Date.now() / 1000)],
+    });
     userId = Number(r.lastInsertRowid);
   }
 
-  const token = issueVerifyToken(userId);
-  audit(db, userId, "register", "user", userId, existing ? "re-register unverified" : "self-registration");
+  const token = await issueVerifyToken(userId);
+  await audit(db, userId, "register", "user", userId, existing ? "re-register unverified" : "self-registration");
 
   return { ok: true, verifyUrl: `/verify?token=${token}` };
 }
 
 /** Подтверждение email по токену. Одноразовый; после подтверждения — вход вручную (D3.6). */
 export async function verifyAction(token: string): Promise<{ ok: boolean; email?: string }> {
-  const email = consumeVerifyToken(token);
+  const email = await consumeVerifyToken(token);
   return email ? { ok: true, email } : { ok: false };
 }
 
 /** Смена пароля (заготовка Э7): инвалидирует сессии. */
 export async function changePasswordAction(userId: number, oldPw: string, newPw: string): Promise<boolean> {
   const db = getDb();
-  const u = db.prepare("SELECT password_hash FROM users WHERE id = ?").get(userId) as { password_hash: string } | undefined;
+  const uRes = await db.execute({
+    sql: "SELECT password_hash FROM users WHERE id = ?",
+    args: [userId],
+  });
+  const u = uRes.rows[0] as unknown as { password_hash: string } | undefined;
   if (!u) return false;
   const { verifyPassword, invalidateUserSessions } = await import("./db");
   if (!verifyPassword(oldPw, u.password_hash) || newPw.length < 8) return false;
-  db.prepare("UPDATE users SET password_hash = ? WHERE id = ?").run(hashPassword(newPw), userId);
-  invalidateUserSessions(db, userId);
-  audit(db, userId, "password_changed", "user", userId);
+  await db.execute({
+    sql: "UPDATE users SET password_hash = ? WHERE id = ?",
+    args: [hashPassword(newPw), userId],
+  });
+  await invalidateUserSessions(db, userId);
+  await audit(db, userId, "password_changed", "user", userId);
   return true;
 }
 

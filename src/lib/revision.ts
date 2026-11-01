@@ -1,7 +1,7 @@
 // D10: двусторонняя корректировка заказа (правки только в new/confirmed; дедлайны; снимки версий).
 // Основной snapshot immutable: правки живут в orders.pending_snapshot до подтверждения другой стороной.
 
-import type Database from "better-sqlite3";
+import type { DB } from "./db";
 import { getTariffs } from "./db";
 import { calculateQuote, makeSnapshot, validateConfig, type MoveConfig, type QuoteSnapshot } from "./pricing";
 
@@ -105,12 +105,12 @@ export function canRevise(order: OrderForRevision, role: "kunde" | "logist"): { 
  * Серверный пересчёт правки (критик 2: клиент не вводит цены — патч параметров, сервер считает).
  * Возвращает новый QuoteSnapshot (со свежим quoteValidUntil) или причину отказа.
  */
-export function buildRevisionSnapshot(
-  db: Database.Database,
+export async function buildRevisionSnapshot(
+  db: import("./db").DB,
   order: OrderForRevision,
   patch: Partial<MoveConfig>,
   role: "kunde" | "logist",
-): { ok: true; snapshot: QuoteSnapshot; quote: ReturnType<typeof calculateQuote> } | { ok: false; reason: string } {
+): Promise<{ ok: true; snapshot: QuoteSnapshot; quote: ReturnType<typeof calculateQuote> } | { ok: false; reason: string }> {
   const guard = canRevise(order, role);
   if (!guard.ok) return { ok: false, reason: guard.reason };
 
@@ -121,7 +121,7 @@ export function buildRevisionSnapshot(
   } catch (e) {
     return { ok: false, reason: e instanceof Error ? e.message : "Некорректные параметры." };
   }
-  const tariffs = getTariffs(db); // перерасчёт по ТЕКУЩИМ тарифам из БД
+  const tariffs = await getTariffs(db); // перерасчёт по ТЕКУЩИМ тарифам из БД
   const quote = calculateQuote(cfg, tariffs);
   const newSnap = makeSnapshot(cfg, tariffs);
   return { ok: true, snapshot: newSnap, quote };

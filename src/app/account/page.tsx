@@ -27,9 +27,11 @@ export default async function AccountPage() {
   await connection(); // Route uses DB time (Date.now in findSession) — render at request time
   const user = await requireUser("/account");
   const db = getDb();
-  const orders = db.prepare(
-    "SELECT ref, status, move_date, from_text, to_text, gross_cents FROM orders WHERE client_id = ? ORDER BY id DESC",
-  ).all(user.id) as Array<{ ref: string; status: string; move_date: string; from_text: string; to_text: string; gross_cents: number }>;
+  const ordersRes = await db.execute({
+    sql: "SELECT ref, status, move_date, from_text, to_text, gross_cents FROM orders WHERE client_id = ? ORDER BY id DESC",
+    args: [user.id],
+  });
+  const orders = ordersRes.rows as unknown as Array<{ ref: string; status: string; move_date: string; from_text: string; to_text: string; gross_cents: number }>;
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-8">

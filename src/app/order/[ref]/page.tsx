@@ -41,7 +41,7 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
   const { msg } = await searchParams;
   const db = getDb();
   const jar = await cookies();
-  const user: SessionUser | null = findSession(db, jar.get("ms_session")?.value ?? "");
+  const user: SessionUser | null = await findSession(db, jar.get("ms_session")?.value ?? "");
   if (!user) {
     return (
       <main className="mx-auto max-w-xl px-4 py-10">
@@ -51,7 +51,11 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
     );
   }
 
-  const order = db.prepare("SELECT * FROM orders WHERE ref = ?").get(ref.toUpperCase()) as
+  const orderRes = await db.execute({
+    sql: "SELECT * FROM orders WHERE ref = ?",
+    args: [ref.toUpperCase()],
+  });
+  const order = orderRes.rows[0] as unknown as
     | (Record<string, unknown> & { id: number; ref: string; client_id: number | null; status: string; snapshot: string; volume_m3: number; distance_km: number; move_date: string; from_text: string; to_text: string; pending_snapshot: string | null; revision_requested_by: string | null })
     | undefined;
   if (!order) {
@@ -63,21 +67,44 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
   }
 
   const snap = JSON.parse(order.snapshot) as QuoteSnapshot;
-  const priceChanged = tariffDrift(snap, Number(order.gross_cents), getTariffs(db)); // D8.7: vs текущие тарифы
+  const tariffs = await getTariffs(db);
+  const priceChanged = tariffDrift(snap, Number(order.gross_cents), tariffs); // D8.7: vs текущие тарифы
   const expired = snap.quoteValidUntil < new Date().toISOString().slice(0, 10);
-  const lines = db.prepare("SELECT key, label, amount, meta FROM order_lines WHERE order_id = ? ORDER BY idx").all(order.id) as
+  const linesRes = await db.execute({
+    sql: "SELECT key, label, amount, meta FROM order_lines WHERE order_id = ? ORDER BY idx",
+    args: [order.id],
+  });
+  const lines = linesRes.rows as unknown as
     Array<{ key: string; label: string; amount: number }>;
   // D6.7: UI-триггер приёмки — протокол есть + статус enroute + просмотр = владелец-kunde
-  const proto = db.prepare("SELECT id FROM protocol WHERE order_id = ?").get(order.id);
+  const protoRes = await db.execute({
+    sql: "SELECT id FROM protocol WHERE order_id = ?",
+    args: [order.id],
+  });
+  const proto = protoRes.rows[0];
   const showAcceptance = order.status === "enroute" && !!proto && user.role === "kunde" && order.client_id === user.id;
   // D7: счёт виден клиенту после закрытия заказа
-  const invoice = db.prepare("SELECT number, amount_cents, status, due_date, paid_at FROM invoices WHERE order_id = ?").get(order.id) as
-    { number: string; amount_cents: number; status: string; due_date: string; paid_at: number | null } | undefined;
-  const invoicePaid = invoice
-    ? (db.prepare("SELECT COALESCE(SUM(amount_cents),0) AS s FROM payments WHERE order_id = ?").get(order.id) as { s: number }).s
-    : 0;
+  const invoiceRes = await db.execute({
+    sql: "SELECT number, amount_cents, status, due_date, paid_at FROM invoices WHERE order_id = ?",
+    args: [order.id],
+  });
+  const invoice = invoiceRes.rows[0] as unknown as
+    | { number: string; amount_cents: number; status: string; due_date: string; paid_at: number | null }
+    | undefined;
+  let invoicePaid = 0;
+  if (invoice) {
+    const paidRes = await db.execute({
+      sql: "SELECT COALESCE(SUM(amount_cents),0) AS s FROM payments WHERE order_id = ?",
+      args: [order.id],
+    });
+    invoicePaid = Number((paidRes.rows[0] as unknown as { s: number }).s);
+  }
   // Геометрия маршрута для карты (Leaflet; null если заказ создан до Э8+ или маршрут без геометрии)
-  const routeRow = db.prepare("SELECT geometry FROM route WHERE order_id = ?").get(order.id) as { geometry: string | null } | undefined;
+  const routeRes = await db.execute({
+    sql: "SELECT geometry FROM route WHERE order_id = ?",
+    args: [order.id],
+  });
+  const routeRow = routeRes.rows[0] as unknown as { geometry: string | null } | undefined;
   const geometry = routeRow?.geometry ? (JSON.parse(routeRow.geometry) as [number, number][]) : null;
   // D10: ревизия + история
   const revOrder = order as unknown as OrderForRevision;
@@ -87,17 +114,21 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
   const reviseGuard = revRole ? canRevise(revOrder, revRole) : { ok: false as const, reason: "" };
   const hoursLeft = Math.round(hoursUntilMove(order.move_date));
   const pendingSnap = order.pending_snapshot ? (JSON.parse(order.pending_snapshot) as QuoteSnapshot) : null;
-  const history = orderHistory(db, order.id);
-  const versions = snapshotVersions(db, order.id);
+  const history = await orderHistory(db, order.id);
+  const versions = await snapshotVersions(db, order.id);
   // D11: карточка бригады после назначения (имена + машина, БЕЗ телефонов — PII)
-  const crewRow = db.prepare(
-    `SELECT v.plate, v.label AS vehicle_label, du.name AS driver_name, cu.name AS codriver_name
+  const crewRes = await db.execute({
+    sql: `SELECT v.plate, v.label AS vehicle_label, du.name AS driver_name, cu.name AS codriver_name
      FROM assignments a
      JOIN vehicles v ON v.id = a.resource_id AND a.resource_type = 'vehicle'
      LEFT JOIN users du ON du.id = (SELECT resource_id FROM assignments WHERE order_id = a.order_id AND resource_type = 'driver' LIMIT 1)
      LEFT JOIN users cu ON cu.id = (SELECT resource_id FROM assignments WHERE order_id = a.order_id AND resource_type = 'driver' ORDER BY resource_id DESC LIMIT 1)
      WHERE a.order_id = ? AND a.resource_type = 'vehicle'`,
-  ).get(order.id) as { plate: string; vehicle_label: string; driver_name: string | null; codriver_name: string | null } | undefined;
+    args: [order.id],
+  });
+  const crewRow = crewRes.rows[0] as unknown as
+    | { plate: string; vehicle_label: string; driver_name: string | null; codriver_name: string | null }
+    | undefined;
 
   // UX-feedback: баннер результата действия, переживает router.replace(?msg=...) (D10/UX)
   const ORDER_MSG: Record<string, string> = {

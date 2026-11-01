@@ -4,11 +4,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
 import { requireRole } from "@/lib/auth";
-import { getDb, getTariffs } from "@/lib/db";
+import { getDb, getTariffs, type DB } from "@/lib/db";
 import { calculateQuote, recalculate, type QuoteSnapshot, type VehicleClass } from "@/lib/pricing";
 import { tariffDrift } from "@/lib/ops";
 import { confirmOrderAction, recalcOrderAction, cancelOrderAction, assignOrderAction, closeOrderAction, forceCloseOrderAction } from "@/lib/actions";
-import type BetterSqlite3 from "better-sqlite3";
 import RouteMapLazy from "@/components/route-map-lazy";
 import { SubmitButton } from "@/components/submit-button";
 import { RevisionForm } from "@/components/revision-form";
@@ -69,12 +68,13 @@ const todayIso = (): string => {
 };
 
 /** Действующая (не отменённая/закрытая) бронь ресурсов на дату — для отображения конфликтов. */
-function busyMap(db: BetterSqlite3.Database): Map<string, string> {
-  const rows = db.prepare(
+async function busyMap(db: DB): Promise<Map<string, string>> {
+  const res = await db.execute(
     `SELECT a.resource_type, a.resource_id, a.move_date, o.ref
      FROM assignments a JOIN orders o ON o.id = a.order_id
      WHERE o.status IN ('confirmed','assigned','enroute')`,
-  ).all() as Array<{ resource_type: string; resource_id: number; move_date: string; ref: string }>;
+  );
+  const rows = res.rows as unknown as Array<{ resource_type: string; resource_id: number; move_date: string; ref: string }>;
   const m = new Map<string, string>();
   for (const r of rows) m.set(`${r.resource_type}:${r.resource_id}:${r.move_date}`, r.ref);
   return m;
@@ -114,36 +114,49 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
   const { status: statusFilter, msg, ref } = await searchParams;
   const db = getDb();
 
-  const rows = (
-    db.prepare(
-      `SELECT id, ref, status, contact_name, volume_m3, distance_km, move_date, gross_cents, vehicle_class, snapshot, from_text, to_text, pending_snapshot, revision_requested_by
-       FROM orders WHERE status != 'cancelled'
-       ORDER BY CASE WHEN status = 'new' THEN 0 ELSE 1 END, move_date ASC, id ASC
-       LIMIT 200`,
-    ).all() as OrderRow[]
+  const rowsRes = await db.execute(
+    `SELECT id, ref, status, contact_name, volume_m3, distance_km, move_date, gross_cents, vehicle_class, snapshot, from_text, to_text, pending_snapshot, revision_requested_by
+     FROM orders WHERE status != 'cancelled'
+     ORDER BY CASE WHEN status = 'new' THEN 0 ELSE 1 END, move_date ASC, id ASC
+     LIMIT 200`,
   );
+  const rows = rowsRes.rows as unknown as OrderRow[];
 
   const filtered = statusFilter && statusFilter !== "all" ? rows.filter((r) => r.status === statusFilter) : rows;
 
-  const vehicles = db.prepare("SELECT id, plate, label, class, capacity_m3, active FROM vehicles WHERE active = 1 ORDER BY capacity_m3").all() as
+  const vehiclesRes = await db.execute("SELECT id, plate, label, class, capacity_m3, active FROM vehicles WHERE active = 1 ORDER BY capacity_m3");
+  const vehicles = vehiclesRes.rows as unknown as
     Array<{ id: number; plate: string; label: string; class: VehicleClass; capacity_m3: number; active: number }>;
-  const drivers = db.prepare("SELECT id, name FROM users WHERE role = 'driver' AND active = 1 ORDER BY name").all() as
+  const driversRes = await db.execute("SELECT id, name FROM users WHERE role = 'driver' AND active = 1 ORDER BY name");
+  const drivers = driversRes.rows as unknown as
     Array<{ id: number; name: string }>;
 
-  const busy = busyMap(db);
-  const tariffs = getTariffs(db); // D8.7/Э7: дрифт относительно ТЕКУЩИХ тарифов
+  const busy = await busyMap(db);
+  const tariffs = await getTariffs(db); // D8.7/Э7: дрифт относительно ТЕКУЩИХ тарифов
 
   // D11: сводка ближайших дней (5 дней) — заказы/машины/водители/заявки в очереди
   const { todayIsoBerlin, resourceBookings, dayAvailability } = await import("@/lib/availability");
   const today = todayIsoBerlin();
-  const summary = Array.from({ length: 5 }, (_, i) => {
+  const summary = [];
+  for (let i = 0; i < 5; i++) {
     const d = new Date(today + "T12:00:00Z");
     d.setUTCDate(d.getUTCDate() + i);
     const iso = d.toISOString().slice(0, 10);
-    const rb = resourceBookings(db, iso);
-    const av = dayAvailability(db, iso, {});
-    return { iso, orders: rb.busyVehicleIds.length, pending: rb.pendingOrders, freeV: av.freeSuitable, freeD: av.freeDrivers, maxV: av.maxVehicles, maxD: av.maxDrivers, status: av.status };
-  });
+    const rb = await resourceBookings(db, iso);
+    const av = await dayAvailability(db, iso, {});
+    summary.push({ iso, orders: rb.busyVehicleIds.length, pending: rb.pendingOrders, freeV: av.freeSuitable, freeD: av.freeDrivers, maxV: av.maxVehicles, maxD: av.maxDrivers, status: av.status });
+  }
+
+  // Геометрия маршрутов одним запросом (вместо per-row .get в цикле)
+  const geometryMap = new Map<number, [number, number][] | null>();
+  {
+    const routeRes = await db.execute(
+      "SELECT order_id, geometry FROM route WHERE order_id IN (SELECT id FROM orders WHERE status != 'cancelled' AND status != 'new')",
+    );
+    for (const r of routeRes.rows as unknown as Array<{ order_id: number; geometry: string | null }>) {
+      geometryMap.set(Number(r.order_id), r.geometry ? (JSON.parse(r.geometry) as [number, number][]) : null);
+    }
+  }
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8">
@@ -193,8 +206,8 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
           const priceChanged = tariffDrift(snap, o.gross_cents, tariffs); // D8.7: vs текущие тарифы
           const expired = new Date(snap.quoteValidUntil).getTime() < new Date(todayIso() + "T12:00:00").getTime();
           const needsSecond = (() => { try { return recalculate(snap).needsSecondDriver; } catch { return false; } })();
-          const routeRow = db.prepare("SELECT geometry FROM route WHERE order_id = ?").get(o.id) as { geometry: string | null } | undefined;
-          const geometry = routeRow?.geometry ? (JSON.parse(routeRow.geometry) as [number, number][]) : null;
+          const routeRow = geometryMap.get(o.id);
+          const geometry = routeRow ?? null;
           // D10: активная правка
           const pendingSnap = o.pending_snapshot ? (JSON.parse(o.pending_snapshot) as QuoteSnapshot) : null;
 

@@ -49,24 +49,26 @@ export interface LoginResult {
 }
 
 /** Проверка учётных данных + создание сессии. Email нормализуется в нижний регистр. */
-export function login(email: string, password: string): LoginResult {
+export async function login(email: string, password: string): Promise<LoginResult> {
   const em = email.trim().toLowerCase();
   const locked = lockoutRemaining(em);
   if (locked > 0) return { ok: false, lockoutSec: locked };
 
   const db = getDb();
-  const user = db.prepare("SELECT id, password_hash, email_verified FROM users WHERE email = ?").get(em) as
-    | { id: number; password_hash: string; email_verified: number }
-    | undefined;
-  if (!user || !verifyPassword(password, user.password_hash)) {
+  const res = await db.execute({
+    sql: "SELECT id, password_hash, email_verified FROM users WHERE email = ?",
+    args: [em],
+  });
+  const user = res.rows[0] as unknown as { id: number; password_hash: string; email_verified: number } | undefined;
+  if (!user || !verifyPassword(password, String(user.password_hash))) {
     recordFail(em);
     return { ok: false };
   }
-  if (!user.email_verified) {
+  if (!Number(user.email_verified)) {
     return { ok: false, needsVerify: true };
   }
   clearFails(em);
-  const { token, expiresAt } = createSession(db, user.id);
+  const { token, expiresAt } = await createSession(db, Number(user.id));
   return { ok: true, token, expiresAt };
 }
 
@@ -125,22 +127,29 @@ export async function requireRole(roles: Role[], redirectTo: string): Promise<Se
 /** Одноразовый токен подтверждения email (D3): 24ч, DELETE при использовании. */
 const VERIFY_TTL_S = 24 * 3600;
 
-export function issueVerifyToken(userId: number): string {
+export async function issueVerifyToken(userId: number): Promise<string> {
   const db = getDb();
   const token = randomBytes(24).toString("hex");
-  db.prepare("UPDATE users SET verify_token = ?, verify_expires = ? WHERE id = ?")
-    .run(sha256(token), Math.floor(Date.now() / 1000) + VERIFY_TTL_S, userId);
+  await db.execute({
+    sql: "UPDATE users SET verify_token = ?, verify_expires = ? WHERE id = ?",
+    args: [sha256(token), Math.floor(Date.now() / 1000) + VERIFY_TTL_S, userId],
+  });
   return token;
 }
 
 /** Подтверждение: токен одноразовый (сравнение по хешу), истёкший/чужой → null. */
-export function consumeVerifyToken(token: string): string | null {
+export async function consumeVerifyToken(token: string): Promise<string | null> {
   const db = getDb();
-  const row = db.prepare(
-    "SELECT id, email FROM users WHERE verify_token = ? AND verify_expires > ? AND email_verified = 0",
-  ).get(sha256(token), Math.floor(Date.now() / 1000)) as { id: number; email: string } | undefined;
+  const res = await db.execute({
+    sql: "SELECT id, email FROM users WHERE verify_token = ? AND verify_expires > ? AND email_verified = 0",
+    args: [sha256(token), Math.floor(Date.now() / 1000)],
+  });
+  const row = res.rows[0] as unknown as { id: number; email: string } | undefined;
   if (!row) return null;
-  db.prepare("UPDATE users SET email_verified = 1, verify_token = NULL, verify_expires = NULL WHERE id = ?").run(row.id);
-  audit(db, row.id, "email_verified", "user", row.id);
-  return row.email;
+  await db.execute({
+    sql: "UPDATE users SET email_verified = 1, verify_token = NULL, verify_expires = NULL WHERE id = ?",
+    args: [Number(row.id)],
+  });
+  await audit(db, Number(row.id), "email_verified", "user", Number(row.id));
+  return String(row.email);
 }

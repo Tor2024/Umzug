@@ -138,7 +138,7 @@ export default function HomePage() {
             email: SITE.email,
             address: { "@type": "PostalAddress", streetAddress: "Musterstraße 12", postalCode: "10115", addressLocality: "Berlin", addressCountry: "DE" },
             areaServed: "DE",
-            url: "https://pomoshnik-pereezd.example",
+            url: "https://umzug-seven.vercel.app",
           }),
         }}
       />
