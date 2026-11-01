@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+
+<html lang="de"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"secondary-fixed-dim":"#ffb599","on-background":"#0b1c30","primary-container":"#131b2e","surface-container":"#e5eeff","on-tertiary-container":"#009668","tertiary-fixed-dim":"#4edea3","inverse-on-surface":"#eaf1ff","on-tertiary-fixed":"#002113","on-secondary-fixed":"#370e00","on-surface-variant":"#45464d","surface-container-low":"#eff4ff","surface-tint":"#565e74","tertiary-container":"#002113","surface-dim":"#cbdbf5","outline":"#76777d","inverse-surface":"#213145","secondary-fixed":"#ffdbce","on-primary":"#ffffff","surface-variant":"#d3e4fe","surface-container-lowest":"#ffffff","background":"#f8f9ff","on-surface":"#0b1c30","tertiary":"#000000","inverse-primary":"#bec6e0","primary":"#000000","primary-fixed":"#dae2fd","on-primary-fixed-variant":"#3f465c","outline-variant":"#c6c6cd","error":"#ba1a1a","on-tertiary-fixed-variant":"#005236","on-primary-container":"#7c839b","on-secondary-container":"#571a00","surface":"#f8f9ff","primary-fixed-dim":"#bec6e0","on-error-container":"#93000a","tertiary-fixed":"#6ffbbe","surface-container-highest":"#d3e4fe","secondary-container":"#fd651e","on-secondary":"#ffffff","on-tertiary":"#ffffff","secondary":"#a73a00","on-primary-fixed":"#131b2e","error-container":"#ffdad6","on-secondary-fixed-variant":"#7f2b00","surface-container-high":"#dce9ff","surface-bright":"#f8f9ff","on-error":"#ffffff"},borderRadius:{DEFAULT:"0.125rem",lg:"0.25rem",xl:"0.5rem",full:"0.75rem"},spacing:{"space-sm":"0.5rem","space-lg":"1.5rem","space-xs":"0.25rem",margin:"2rem",gutter:"1.5rem","space-xl":"2.5rem","margin-mobile":"1rem","gutter-mobile":"1rem","space-md":"1rem"},fontFamily:{"headline-sm":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"label-lg":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"headline-xl-mobile":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"body-lg":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"],"tabular-data":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"body-sm":["Plus Jakarta Sans"]},fontSize:{"headline-sm":["18px",{lineHeight:"24px",letterSpacing:"-0.005em",fontWeight:"600"}],"label-sm":["11px",{lineHeight:"14px",letterSpacing:"0.04em",fontWeight:"700"}],"label-lg":["14px",{lineHeight:"20px",letterSpacing:"0.01em",fontWeight:"600"}],"headline-md":["22px",{lineHeight:"28px",letterSpacing:"-0.01em",fontWeight:"600"}],"headline-xl-mobile":["30px",{lineHeight:"38px",letterSpacing:"-0.015em",fontWeight:"700"}],"headline-xl":["44px",{lineHeight:"52px",letterSpacing:"-0.02em",fontWeight:"700"}],"body-lg":["16px",{lineHeight:"24px",fontWeight:"400"}],"headline-lg":["32px",{lineHeight:"40px",letterSpacing:"-0.015em",fontWeight:"600"}],"label-md":["12px",{lineHeight:"16px",letterSpacing:"0.02em",fontWeight:"600"}],"tabular-data":["15px",{lineHeight:"20px",fontWeight:"600"}],"body-md":["14px",{lineHeight:"20px",fontWeight:"400"}],"headline-lg-mobile":["24px",{lineHeight:"32px",letterSpacing:"-0.01em",fontWeight:"600"}],"body-sm":["12px",{lineHeight:"18px",fontWeight:"400"}]}}}}</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-low shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col pt-space-md pb-space-lg"><div class="px-space-lg pb-space-md flex items-center gap-space-sm"><img alt="MöbelSprint Logo" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VFbCh3gUUxnDO2cKqe1szGScDgySXnbQo36Li3QI3lOn5zYb_DMt6vgUKrqhwsemzRukn5ULpU8jN_RfndIyUm2boHRUivmgJ2nIaE2DbTIjbiZKEqrObSDlaoAsFk5442K6y-TB7be9I3aps-JzLhg1R-CZvYGrXJ8ku360qPnZMXXTUMuJOEbFsdzDPOkrGn6vNetEmn2Ttj8P6HdJjx-yIDQT_JWAPBvlrM60k6XQ"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-surface leading-tight font-bold">MöbelSprint</span><span class="font-label-sm text-label-sm text-secondary uppercase font-bold tracking-wider">Dispo Leitzentrale</span></div></div><div class="px-space-md my-space-xs"><div class="bg-surface-container-high rounded-lg p-space-sm flex items-center justify-between"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span><span class="font-label-sm text-label-sm text-on-surface font-bold">Telemetrie Live</span></div><span class="font-tabular-data text-label-sm text-on-surface-variant">48 LKW aktiv</span></div></div><nav class="flex-1 px-space-md py-space-sm flex flex-col gap-space-xs overflow-y-auto" data-active-classes="bg-surface-container text-on-surface font-label-lg font-bold rounded-lg"><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant px-space-sm pt-space-xs">Touren &amp; Flotte</span><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="disponenten-portal" href="#"><span class="material-symbols-outlined text-lg">local_shipping</span><span>Tourenübersicht</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="flottenstatus" href="#"><span class="material-symbols-outlined text-lg">rv_hookup</span><span>Flottenauslastung</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm transition-colors bg-surface-container text-on-surface font-label-lg font-bold rounded-lg" data-path="auftragsdisposition" href="#"><span class="material-symbols-outlined text-lg">assignment</span><span>Auftragsprüfung</span></a><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant px-space-sm pt-space-md">Telematik</span><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="volumenanalyse" href="#"><span class="material-symbols-outlined text-lg">view_in_ar</span><span>m³ Laderaumcheck</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="notfall-hotline-log" href="#"><span class="material-symbols-outlined text-lg">support_agent</span><span>24/7 Notfallprotokoll</span></a><div class="mt-auto pt-space-md"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="umzug-buchen" href="#"><span class="material-symbols-outlined text-lg">arrow_back</span><span>Zur Kundenansicht</span></a></div></nav></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 px-gutter flex items-center justify-between"><div class="flex items-center gap-space-md"><span class="font-headline-sm text-headline-sm text-on-surface">MöbelSprint Leitstand</span><span class="px-space-sm py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface font-bold">DE-OST / Berlin Hub</span></div><div class="flex items-center gap-space-md"><div class="hidden md:flex items-center gap-space-xs font-tabular-data text-label-md text-on-surface-variant"><span class="material-symbols-outlined text-base text-secondary">phone_in_talk</span><span>+49 (0) 30 8900 120 (Notfall)</span></div><div class="h-6 w-px bg-outline-variant hidden sm:block"></div><div class="flex items-center gap-space-sm"><div class="flex flex-col text-right"><span class="font-label-md text-label-md text-on-surface font-bold">Disponent D. Lehmann</span><span class="font-label-sm text-label-sm text-on-surface-variant">Schicht A / Leitstelle</span></div><div class="relative flex items-center shrink-0"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsLZJiYWrkya-jguLqHBWEzGL5ghCW0TsHt85GgbfJrReJwJRgN7ErttlM0FqW6lWA7SQbZIipRfBpDQInkScqDOY5yHV14oS471Z7I8pJBIRJRrCCLoagg5uPwxeKly83CaSHKimQl4V0SKpjUvI6nSqLGWbOqYTnoVq2ND0950TEAuUCKoEOpd3pbkHaSC9_4RNWS-B8kxwFDyfr307MO4ESmCBG4F1wwrdLyRbC"/><span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-tertiary-fixed-dim ring-2 ring-surface-container-lowest"></span></div></div></div></header><main class="w-full pt-16 px-gutter bg-surface min-h-screen"><div class="flex flex-col w-full pb-space-xl">
+<!-- Top Order Identity Bar -->
+<div class="bg-surface-container-lowest shadow-sm rounded-xl p-space-lg mb-space-lg flex flex-col xl:flex-row xl:items-center justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<div class="flex flex-wrap items-center gap-space-sm">
+<span class="font-headline-lg text-headline-lg text-on-surface">Auftrag #MS-8942</span>
+<span class="text-on-surface-variant font-headline-md text-headline-md">—</span>
+<span class="font-headline-md text-headline-md text-on-surface">Dr. Markus Weber</span>
+<span class="inline-flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-surface-container text-on-tertiary-container font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim animate-pulse"></span>
+          In Durchführung (GPS Aktiv)
+        </span>
+</div>
+<div class="flex flex-wrap items-center gap-space-md text-on-surface-variant font-label-md text-label-md">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">event_available</span>
+          Gebucht am: <strong class="text-on-surface font-semibold">12. Nov 2024</strong>
+</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-secondary">today</span>
+          Umzugstermin: <strong class="text-on-surface font-semibold">Heute, 15. Nov 2024</strong>
+</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">verified_user</span>
+          ID-Verifikation: <span class="text-on-tertiary-container font-semibold">Erfolgreich</span>
+</span>
+</div>
+</div>
+<!-- Quick Action Bar -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<a class="inline-flex items-center gap-space-xs px-space-md py-space-sm bg-surface-container hover:bg-surface-container-high text-on-surface rounded-lg font-label-lg text-label-lg transition-colors shadow-sm" href="tel:+49171459821">
+<span class="material-symbols-outlined text-base text-secondary">call</span>
+<span>Kunde anrufen (+49 171 459821)</span>
+</a>
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-sm bg-surface-container-low hover:bg-surface-container text-on-surface rounded-lg font-label-lg text-label-lg transition-colors" type="button">
+<span class="material-symbols-outlined text-base">print</span>
+<span>Fahrtenbuch drucken (PDF)</span>
+</button>
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-sm bg-surface-container-high hover:bg-surface-dim text-on-surface-variant rounded-lg font-label-md text-label-md transition-colors" type="button">
+<span class="material-symbols-outlined text-base">edit_calendar</span>
+<span>Storno / Umbuchung</span>
+</button>
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-sm bg-secondary-container hover:bg-secondary text-on-secondary rounded-lg font-label-lg text-label-lg transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-base">check_circle</span>
+<span>Rechnung freigeben</span>
+</button>
+</div>
+</div>
+<!-- 3-Column Logistics Command Grid -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg">
+<!-- PANEL 1: Routenverlauf & Telemetrie (Col 1-4) -->
+<div class="xl:col-span-4 flex flex-col gap-space-lg">
+<!-- Live GPS Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary">satellite_alt</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Telemetrie &amp; GPS</span>
+</div>
+<span class="px-space-xs py-0.5 rounded bg-surface-container font-tabular-data text-label-sm text-on-surface-variant">Update: Vor 12 Sek.</span>
+</div>
+<!-- Stylized Map Container -->
+<div class="relative w-full h-56 rounded-lg overflow-hidden bg-surface-container-high">
+<div class="w-full h-full bg-cover bg-center" data-location="Nuremberg, Germany" style=""></div>
+<!-- Overlay HUD Glass Indicator -->
+<div class="absolute top-2 left-2 right-2 bg-inverse-surface/85 backdrop-blur-md rounded-lg p-space-sm text-inverse-on-surface flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-base">location_on</span>
+<span class="font-label-md text-label-md font-bold">A9 Richtung München</span>
+</div>
+<span class="font-tabular-data text-label-sm text-surface-variant">Km 394.2 (Nürnberg-Süd)</span>
+</div>
+<!-- Pulsing Truck GPS Marker Position -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="relative flex items-center justify-center">
+<span class="absolute w-10 h-10 rounded-full bg-secondary-container/40 animate-ping"></span>
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined text-sm">local_shipping</span>
+</div>
+</div>
+<span class="mt-1 px-1.5 py-0.5 rounded bg-inverse-surface text-inverse-on-surface font-label-sm text-label-sm shadow">B-MS 104</span>
+</div>
+<div class="absolute bottom-2 left-2 right-2 grid grid-cols-3 gap-1 bg-surface-container-lowest/90 backdrop-blur-sm p-1.5 rounded-lg text-center">
+<div>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">Tempo</span>
+<span class="font-tabular-data text-label-lg text-on-surface font-bold">84 km/h</span>
+</div>
+<div>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">Restdistanz</span>
+<span class="font-tabular-data text-label-lg text-secondary font-bold">142 km</span>
+</div>
+<div>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">Wetter</span>
+<span class="font-label-md text-label-md text-on-tertiary-container font-bold flex items-center justify-center gap-0.5">
+<span class="material-symbols-outlined text-xs">wb_sunny</span> Trocken
+              </span>
+</div>
+</div>
+</div>
+<!-- Telemetry Details Strip -->
+<div class="p-space-sm bg-surface-container-low rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-on-surface-variant text-base">timelapse</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Prognostizierte Ankunft:</span>
+</div>
+<span class="font-tabular-data text-headline-sm text-on-surface font-bold text-secondary">16:45 Uhr</span>
+</div>
+</div>
+<!-- Route Milestones Timeline -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-on-surface">Streckenabschnitte</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-bold">Berlin → München (584 km)</span>
+</div>
+<div class="relative pl-6 flex flex-col gap-space-lg">
+<!-- Continuous Track Line -->
+<div class="absolute left-2.5 top-3 bottom-3 w-0.5 bg-surface-container-highest"></div>
+<!-- Step 1: Beladung Abgeschlossen -->
+<div class="relative flex flex-col gap-1">
+<div class="absolute -left-6 top-1 w-5 h-5 rounded-full bg-tertiary-fixed text-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-xs font-bold">check</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">Start: Berlin-Mitte</span>
+<span class="px-2 py-0.5 rounded bg-surface-container font-tabular-data text-label-sm text-on-tertiary-container font-semibold">08:00 – 10:30 Uhr ✓</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Torstraße 142, 10115 Berlin</p>
+<div class="flex flex-wrap gap-1 mt-1">
+<span class="px-2 py-0.5 rounded bg-surface-container-high font-label-sm text-label-sm text-on-surface">3. OG (Hinterhaus)</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high font-label-sm text-label-sm text-on-surface">Halteverbot eingerichtet ✓</span>
+<span class="px-2 py-0.5 rounded bg-tertiary-fixed font-label-sm text-label-sm text-on-tertiary-fixed font-semibold">Beladung vollständig</span>
+</div>
+</div>
+<!-- Step 2: Zwischenstopp Eingehalten -->
+<div class="relative flex flex-col gap-1">
+<div class="absolute -left-6 top-1 w-5 h-5 rounded-full bg-tertiary-fixed text-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-xs font-bold">check</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">Pausenstation: Raststätte Frankenwald</span>
+<span class="font-tabular-data text-label-sm text-on-surface-variant">13:15 – 14:00 Uhr</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">A9 Streckenkilometer 285</p>
+<div class="flex items-center gap-1 mt-1 text-on-tertiary-container font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-xs">timer</span>
+<span>Gesetzliche Ruhepause (45 Min.) protokolliert</span>
+</div>
+</div>
+<!-- Step 3: Ziel Entladung (In Progress) -->
+<div class="relative flex flex-col gap-1">
+<div class="absolute -left-6 top-1 w-5 h-5 rounded-full bg-secondary-container text-on-secondary flex items-center justify-center animate-pulse">
+<span class="material-symbols-outlined text-xs">local_shipping</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">Ziel: München-Schwabing</span>
+<span class="px-2 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-tabular-data text-label-sm font-bold">ETA: 16:45 Uhr</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Leopoldstraße 88, 80802 München</p>
+<div class="flex flex-wrap gap-1 mt-1">
+<span class="px-2 py-0.5 rounded bg-surface-container-high font-label-sm text-label-sm text-on-surface">1. OG mit Lastenaufzug</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high font-label-sm text-label-sm text-on-surface">Anfahrtsgenehmigung liegt vor</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- PANEL 2: Inventar & m³ Frachtkontrolle (Col 5-8) -->
+<div class="xl:col-span-5 flex flex-col gap-space-lg">
+<!-- Volume Capacity Visual Meter -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary">view_in_ar</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Laderaum &amp; Inventar</span>
+</div>
+<div class="flex items-center gap-space-xs font-tabular-data text-label-md text-on-surface-variant">
+<span>Messung: 3D-Volumenscan</span>
+</div>
+</div>
+<!-- Meter Graphic -->
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col gap-space-sm">
+<div class="flex items-baseline justify-between">
+<div class="flex items-baseline gap-1">
+<span class="font-headline-xl text-headline-xl text-on-surface font-bold">24.2</span>
+<span class="font-headline-md text-headline-md text-on-surface-variant">m³</span>
+<span class="ml-2 font-label-md text-label-md text-on-surface-variant">(Auslastung: 80.6% von 30.0 m³)</span>
+</div>
+<span class="font-tabular-data text-headline-sm text-headline-sm text-on-surface font-bold">48 Packstücke</span>
+</div>
+<!-- Capacity Bar -->
+<div class="w-full h-3 rounded-full bg-surface-container-highest overflow-hidden flex">
+<div class="h-full bg-secondary" style="width: 50%;"></div>
+<div class="h-full bg-secondary-container" style="width: 20%;"></div>
+<div class="h-full bg-tertiary-fixed-dim" style="width: 10.6%;"></div>
+</div>
+<div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant pt-1">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span>Möbel massiv (15 m³)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary-container"></span>
+<span>Kartons (6 m³)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-tertiary-fixed-dim"></span>
+<span>Elektronik (3.2 m³)</span>
+</div>
+</div>
+</div>
+<!-- Categorized Items Accordion / List -->
+<div class="flex flex-col gap-space-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Erfasste Frachtobjekte</span>
+<!-- Category 1: Möbel -->
+<div class="bg-surface-container-lowest rounded-lg p-space-sm shadow-sm flex flex-col gap-2">
+<div class="flex items-center justify-between bg-surface-container-low px-space-sm py-1.5 rounded">
+<div class="flex items-center gap-space-xs font-label-md text-label-md text-on-surface font-bold">
+<span class="material-symbols-outlined text-base">chair</span>
+<span>Massivmöbel &amp; Wohnbereich</span>
+</div>
+<span class="font-tabular-data text-label-sm text-on-surface-variant">4 Positionen / 9 Teile</span>
+</div>
+<ul class="flex flex-col gap-1.5 px-space-xs font-body-md text-body-md text-on-surface">
+<li class="flex items-center justify-between py-1">
+<span>1x Ecksofa Leder (demontiert, 3 Module verpackt)</span>
+<span class="font-tabular-data text-label-sm text-on-surface-variant">6.4 m³</span>
+</li>
+<li class="flex items-center justify-between py-1 bg-surface-container-low/50 px-1 rounded">
+<span>1x Eichentisch massiv (220 cm, Beine separat geschützt)</span>
+<span class="font-tabular-data text-label-sm text-on-surface-variant">2.1 m³</span>
+</li>
+<li class="flex items-center justify-between py-1">
+<span>6x Polsterstühle (gestapelt &amp; mit Stretchfolie fixiert)</span>
+<span class="font-tabular-data text-label-sm text-on-surface-variant">1.8 m³</span>
+</li>
+<li class="flex items-center justify-between py-1 bg-surface-container-low/50 px-1 rounded">
+<span>1x Boxspringbett (200x200 cm, 2 Basen + Matratze in Hülle)</span>
+<span class="font-tabular-data text-label-sm text-on-surface-variant">4.7 m³</span>
+</li>
+</ul>
+</div>
+<!-- Category 2: Elektronik & Haushaltsgeräte -->
+<div class="bg-surface-container-lowest rounded-lg p-space-sm shadow-sm flex flex-col gap-2">
+<div class="flex items-center justify-between bg-surface-container-low px-space-sm py-1.5 rounded">
+<div class="flex items-center gap-space-xs font-label-md text-label-md text-on-surface font-bold">
+<span class="material-symbols-outlined text-base">tv</span>
+<span>Elektronik, Küche &amp; Großgeräte</span>
+</div>
+<span class="font-tabular-data text-label-sm text-on-surface-variant">2 Positionen (Gefahrgut geprüft)</span>
+</div>
+<ul class="flex flex-col gap-1.5 px-space-xs font-body-md text-body-md text-on-surface">
+<li class="flex items-center justify-between py-1">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-tertiary-fixed-dim">check_circle</span>
+<span>1x LG OLED 65-Zoll (in Spezial-Flugbox gepolstert)</span>
+</div>
+<span class="font-tabular-data text-label-sm text-on-surface-variant">0.8 m³</span>
+</li>
+<li class="flex items-center justify-between py-1 bg-surface-container-low/50 px-1 rounded">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-tertiary-fixed-dim">check_circle</span>
+<span>1x Bosch Waschmaschine (Transportsicherung montiert ✓)</span>
+</div>
+<span class="font-tabular-data text-label-sm text-on-surface-variant">0.6 m³</span>
+</li>
+</ul>
+</div>
+<!-- Category 3: Kartons -->
+<div class="bg-surface-container-lowest rounded-lg p-space-sm shadow-sm flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-base text-on-surface-variant">inventory_2</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">35x Standard Bücher- &amp; Kleiderkartons (zweiwellig)</span>
+</div>
+<span class="font-tabular-data text-label-sm font-semibold text-on-surface-variant">7.8 m³</span>
+</div>
+</div>
+<!-- Protocol & Handover Proof -->
+<div class="bg-surface-container-low rounded-lg p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">Digitales Übergabeprotokoll</span>
+<span class="px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">signature</span> Signiert
+            </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Fotodokumentation vor Beladung um 08:14 Uhr erfolgreich durch Teamleiter Jens Schmidt und Kunde Dr. Weber auf Handterminal signiert.
+          </p>
+<div class="flex items-center gap-space-sm pt-1">
+<img class="w-16 h-12 object-cover rounded shadow-sm" data-alt="Clear modern photograph of organized moving truck cargo bay interior with neatly stacked furniture protected by quilted moving blankets and yellow ratchet straps inside a clean Mercedes logistics transporter." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAT00SW16UsMFl6mD5Y98WXrycRtk7yIIVJyHf9JdcgFr31Ny6-0WTATqWFKpRXqigCUiQc4o3buug2yK2r3ywujJmTi5rGr-Q51boTZxFzJ8a98hy_MCr0YemQe9Z6Fq6OO5tpRb7mVJf-UwK0uyfHtXESjYZ6MTopdDw__bHiI0ZWLFvuT3VPAoBYrnj67g6etU20gpPUSAux9CaQObk6_-zbtNFEotVNscSVAJsY"/>
+<img class="w-16 h-12 object-cover rounded shadow-sm" data-alt="Close up photograph of a digital logistics tablet showing an electronic signature from the customer and cargo checklist with green checkmarks." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHO7xLlWHWewRVUWzBSPPIkB1aXDWlB0yUmn9jPDZCA5h_OLbD5FuFK1zPP2uhrubKlnPIG7EWV5Po-sNQkmX-Jssg7X7ui3Zu-GhB0ykqw2NFNW6UnTZTxtbcwKPw81Oh9n3Hh3dXr5eGwcuyz1LhTPM05U81qzCdofWMntA9zBr0zwmDB_olp4M7ouI_Z41wolVBi1bfuphn08sd1t-ZphIuwD-ZomVXSibxg3B4"/>
+<button class="font-label-sm text-label-sm text-secondary hover:underline font-bold flex items-center gap-0.5" type="button">
+<span>Alle 8 Fotos einsehen</span>
+<span class="material-symbols-outlined text-xs">open_in_new</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- PANEL 3: Team, Abrechnung & Dispatcher Log (Col 9-12) -->
+<div class="xl:col-span-3 flex flex-col gap-space-lg">
+<!-- Assigned Team Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary">badge</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Eingeteiltes Team</span>
+</div>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container text-on-surface font-bold">Crew #4</span>
+</div>
+<!-- Vehicle Box -->
+<div class="p-space-sm bg-surface-container-low rounded-lg flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded bg-surface-container-high flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-surface">local_shipping</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-bold truncate">Mercedes Sprinter L3H2</span>
+<span class="font-tabular-data text-label-sm text-on-surface-variant">Kennzeichen: B-MS 104 (3.5t)</span>
+</div>
+</div>
+<!-- Crew Members List -->
+<div class="flex flex-col gap-space-xs">
+<!-- Teamleiter -->
+<div class="flex items-center justify-between p-space-xs hover:bg-surface-container-low rounded transition-colors">
+<div class="flex items-center gap-space-xs">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="Portrait headshot photo of an experienced German transport driver with a friendly professional expression wearing a dark work polo shirt." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSnHrHgvB0YZfvU2itFJON_2sudIqjf6m1Ecs8EDIWRiiEegIFJKStIeXCIbrtTpQoGqDeH-Tdfxwu5GWBxJ_fWToVQSTFkXIqcwCJsJAbh_uvgSUpq8F-nVeXEqKfrNVjNBoae_x9r1bzZaZTrZgUyv7eQv0gwLJdCj2s8qqKngwKuj8edbLiLvACmF6vtJPSFNa4NQRy4b2H9_6UGdLQKDBPhILHQmRTNzls69n5"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-bold">Jens Schmidt</span>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">Teamleiter / Fahrer</span>
+</div>
+</div>
+<a class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface" href="tel:0172881290" title="Fahrer anrufen">
+<span class="material-symbols-outlined text-base">call</span>
+</a>
+</div>
+<!-- Träger 1 -->
+<div class="flex items-center justify-between p-space-xs hover:bg-surface-container-low rounded transition-colors">
+<div class="flex items-center gap-space-xs">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center font-label-md text-label-md text-on-surface font-bold">AK</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-bold">Ali K.</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Möbelpacker (Schwerlast)</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-tertiary-container font-semibold">Aktiv</span>
+</div>
+<!-- Träger 2 -->
+<div class="flex items-center justify-between p-space-xs hover:bg-surface-container-low rounded transition-colors">
+<div class="flex items-center gap-space-xs">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center font-label-md text-label-md text-on-surface font-bold">DP</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-bold">Dmitri P.</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Möbelpacker (Monteur)</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-tertiary-container font-semibold">Aktiv</span>
+</div>
+</div>
+</div>
+<!-- Financials & Payment Security -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary">payments</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Zahlung &amp; Police</span>
+</div>
+<span class="px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold">Autorisiert</span>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg flex flex-col gap-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Vereinbarter Festpreis</span>
+<div class="flex items-baseline justify-between">
+<span class="font-headline-md text-headline-md text-on-surface font-bold">1.480,00 €</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">inkl. 19% MwSt.</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1">
+            Zahlungsart: <strong class="text-on-surface">Klarna Sofort / Hinterlegt</strong> (Belastung nach Entladebestätigung)
+          </span>
+</div>
+<!-- Insurance Box -->
+<div class="p-space-sm bg-surface-container-lowest rounded-lg flex items-start gap-space-xs shadow-sm">
+<span class="material-symbols-outlined text-on-tertiary-container text-base shrink-0 mt-0.5">verified</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-bold">Allianz Transport-Garantie</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Police #AZ-994120 — Deckungssumme bis 250.000 € vollwertig aktiv.</span>
+</div>
+</div>
+</div>
+<!-- Dispatcher Notizfeld & Communication Stream -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary">chat</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Disponenten-Log</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-base">lock</span>
+</div>
+<!-- Timeline Log Entries -->
+<div class="flex flex-col gap-space-sm max-h-56 overflow-y-auto pr-1">
+<div class="p-space-xs bg-surface-container-low rounded flex flex-col gap-0.5">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-secondary font-bold">SMS an Kunden</span>
+<span class="font-tabular-data text-label-sm text-on-surface-variant">14:02 Uhr</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface">"Ihr MöbelSprint-Team nähert sich. Voraussichtliche Ankunft Leopoldstraße: 16:45 Uhr."</p>
+</div>
+<div class="p-space-xs bg-surface-container-low rounded flex flex-col gap-0.5">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-bold">Fahrer Jens Schmidt</span>
+<span class="font-tabular-data text-label-sm text-on-surface-variant">10:35 Uhr</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface">"Beladung Berlin ohne Vorkommnisse beendet. Abfahrt A9 frei."</p>
+</div>
+</div>
+<!-- Add Dispatcher Note Input Form -->
+<form class="flex flex-col gap-space-xs pt-1" onsubmit="event.preventDefault();">
+<div class="relative">
+<textarea class="w-full text-body-sm font-body-sm p-space-xs rounded-lg bg-surface-container-low focus:bg-surface-container-lowest text-on-surface outline-none resize-none" placeholder="Interne Dispo-Notiz oder SMS an Fahrer/Kunde..." rows="2"></textarea>
+</div>
+<div class="flex items-center justify-between">
+<label class="flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant cursor-pointer">
+<input checked="" class="w-3.5 h-3.5 accent-secondary" type="checkbox"/>
+<span>Als SMS spiegeln</span>
+</label>
+<button class="px-space-md py-1 bg-primary hover:bg-surface-tint text-on-primary font-label-sm text-label-sm rounded-lg transition-colors" type="submit">
+              Senden
+            </button>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div></main></div></body></html>

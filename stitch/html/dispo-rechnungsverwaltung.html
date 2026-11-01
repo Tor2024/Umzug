@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+
+<html lang="de"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><title>MöbelSprint DE — Dispo Leitstand</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"tertiary-container":"#002113","outline-variant":"#c6c6cd","secondary-container":"#fd651e","on-tertiary":"#ffffff","surface":"#f8f9ff","outline":"#76777d","secondary":"#a73a00","inverse-on-surface":"#eaf1ff","primary-fixed-dim":"#bec6e0","on-secondary-container":"#571a00","on-primary":"#ffffff","inverse-surface":"#213145","surface-bright":"#f8f9ff","surface-container-lowest":"#ffffff","surface-container-highest":"#d3e4fe","on-secondary":"#ffffff","on-background":"#0b1c30","on-secondary-fixed":"#370e00","surface-container":"#e5eeff","primary":"#000000","on-surface":"#0b1c30","surface-tint":"#565e74","surface-container-high":"#dce9ff","on-primary-container":"#7c839b","on-tertiary-container":"#009668","primary-container":"#131b2e","tertiary":"#000000","error-container":"#ffdad6","secondary-fixed-dim":"#ffb599","on-surface-variant":"#45464d","on-error-container":"#93000a","secondary-fixed":"#ffdbce","inverse-primary":"#bec6e0","on-primary-fixed":"#131b2e","surface-dim":"#cbdbf5","on-primary-fixed-variant":"#3f465c","on-secondary-fixed-variant":"#7f2b00","primary-fixed":"#dae2fd","tertiary-fixed":"#6ffbbe","surface-container-low":"#eff4ff","background":"#f8f9ff","on-tertiary-fixed-variant":"#005236","on-tertiary-fixed":"#002113","tertiary-fixed-dim":"#4edea3","surface-variant":"#d3e4fe","error":"#ba1a1a","on-error":"#ffffff"},borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},spacing:{"space-xs":"0.25rem","margin":"2rem","margin-mobile":"1rem","gutter":"1.5rem","space-md":"1rem","space-lg":"1.5rem","space-sm":"0.5rem","space-xl":"2.5rem","gutter-mobile":"1rem"},fontFamily:{"body-md":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"tabular-data":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"headline-xl-mobile":["Plus Jakarta Sans"],"body-sm":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"label-lg":["Plus Jakarta Sans"],"body-lg":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"]},fontSize:{"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"headline-sm":["18px",{"lineHeight":"24px","letterSpacing":"-0.005em","fontWeight":"600"}],"tabular-data":["15px",{"lineHeight":"20px","fontWeight":"600"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.015em","fontWeight":"600"}],"headline-xl-mobile":["30px",{"lineHeight":"38px","letterSpacing":"-0.015em","fontWeight":"700"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-md":["22px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"700"}],"label-lg":["14px",{"lineHeight":"20px","letterSpacing":"0.01em","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"headline-xl":["44px",{"lineHeight":"52px","letterSpacing":"-0.02em","fontWeight":"700"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}]}}}};</script></head><body class="bg-background font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest z-50 flex flex-col shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-space-lg flex items-center justify-between bg-primary-container text-on-primary"><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded bg-secondary-container text-on-secondary flex items-center justify-center"><span class="material-symbols-outlined text-[20px]">local_shipping</span></div><div><div class="font-headline-sm text-headline-sm text-surface-container-lowest leading-none">MöbelSprint</div><span class="font-label-sm text-label-sm text-surface-container-high">Dispo-Leitstand DE</span></div></div><span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-surface-container-highest text-on-surface">PRO</span></div><div class="px-space-md py-space-sm bg-surface-container-low"><div class="flex items-center justify-between text-label-sm font-label-sm"><span class="text-outline">Status Disposition:</span><span class="flex items-center gap-1 text-on-tertiary-container font-semibold"><span class="w-2 h-2 rounded-full bg-on-tertiary-container"></span>Aktiv (24/7)</span></div></div><nav class="flex-1 p-space-md flex flex-col gap-1 overflow-y-auto" data-active-classes="bg-surface-container-high text-on-surface font-headline-sm"><span class="px-space-sm py-1 font-label-sm text-label-sm uppercase tracking-wider text-outline">Touren &amp; Flotte</span><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="dispo-leitstand" href="#"><span class="material-symbols-outlined text-[20px]">alt_route</span>Touren-Übersicht</a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="dispo-flotte" href="#"><span class="material-symbols-outlined text-[20px]">fire_truck</span>LKW- &amp; Transporter-Flotte</a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="dispo-volumen" href="#"><span class="material-symbols-outlined text-[20px]">deployed_code</span>m³ Laderaum-Rechner</a><span class="px-space-sm pt-space-md py-1 font-label-sm text-label-sm uppercase tracking-wider text-outline">Kunden &amp; Finanzen</span><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="dispo-auftraege" href="#"><span class="material-symbols-outlined text-[20px]">assignment</span>Auftragsabwicklung</a><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg transition-colors bg-surface-container-high text-on-surface font-headline-sm" data-path="dispo-rechnungen" href="#"><span class="material-symbols-outlined text-[20px]">receipt</span>§ 14 UStG Rechnungen</a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="dispo-compliance" href="#"><span class="material-symbols-outlined text-[20px]">gavel</span>Recht &amp; Fahrtenbücher</a></nav><div class="p-space-md bg-surface-container-low"><div class="flex items-center gap-space-sm"><div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex-1 min-w-0"><p class="font-label-md text-label-md text-on-surface truncate font-semibold">Disponent J. Kramer</p><p class="font-label-sm text-label-sm text-outline truncate">Zentrale Berlin Nord</p></div><a class="text-outline hover:text-on-surface p-1" data-path="umzugsrechner" href="#" title="Zur Kundenansicht"><span class="material-symbols-outlined text-[18px]">logout</span></a></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs px-2.5 py-1 rounded bg-surface-container text-on-surface font-label-sm text-label-sm"><span class="material-symbols-outlined text-[16px] text-secondary">shield</span><span>DSGVO Konformität: 100% Audit-geprüft</span></div><span class="hidden lg:inline text-outline text-body-sm font-body-sm">Bundesweite Leitstelle für gewerbliche &amp; private Umzüge</span></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs font-label-sm text-label-sm text-on-surface-variant bg-surface-container-low px-2.5 py-1 rounded"><span class="material-symbols-outlined text-[16px]">support_agent</span><span>Support: 030 8900 120</span></div><a class="font-label-md text-label-md text-secondary hover:text-on-secondary-container transition-colors" data-path="umzugsrechner" href="#">Kundenportal öffnen</a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="relative pt-16 w-full px-space-lg py-space-lg bg-background min-h-screen"><div class="flex flex-col w-full">
+<div class="flex flex-col gap-space-lg w-full">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+<div>
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm uppercase tracking-wider text-outline mb-1">
+<span>Disposition &amp; Fakturierung</span>
+<span>•</span>
+<span class="text-on-tertiary-container font-semibold">Tagesabschluss Live</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Auftrags- &amp; Fakturierungs-Leitstand</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-0.5">Rechtskonforme Verwaltung nach § 14 UStG mit fahrergestütztem Web-Checkin.</p>
+</div>
+<div class="flex items-center gap-space-sm flex-wrap">
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface text-label-sm font-label-sm">
+<span class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></span>
+<span>Fahrer-Webcheckin: <strong class="text-on-surface">6 Aktiv</strong></span>
+</div>
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary-container hover:bg-secondary text-on-secondary font-label-md text-label-md transition-all shadow-sm" id="openInvoiceModalBtn">
+<span class="material-symbols-outlined text-[18px]">add_circle</span>
+<span>+ Neue Rechnung / Angebot (§14 UStG)</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md">
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Offene Rechnungen</span>
+<span class="w-8 h-8 rounded-lg bg-error-container text-on-error-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">pending_actions</span>
+</span>
+</div>
+<div class="mt-space-md">
+<div class="font-headline-lg text-headline-lg text-on-surface tabular-nums">8.420,00 €</div>
+<div class="flex items-center gap-1.5 mt-1 font-body-sm text-body-sm text-error">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+<span>7 Aufträge ausstehend (1 Mahnung)</span>
+</div>
+</div>
+</div>
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Bezahlt Heute</span>
+<span class="w-8 h-8 rounded-lg bg-surface-container-highest text-on-surface flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+</span>
+</div>
+<div class="mt-space-md">
+<div class="font-headline-lg text-headline-lg text-on-surface tabular-nums">14.280,00 €</div>
+<div class="flex items-center gap-1.5 mt-1 font-body-sm text-body-sm text-on-tertiary-container font-medium">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+<span>100% verbucht via SEPA / Stripe / Bar</span>
+</div>
+</div>
+</div>
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Laufende Umzüge</span>
+<span class="w-8 h-8 rounded-lg bg-surface-container text-on-surface flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">local_shipping</span>
+</span>
+</div>
+<div class="mt-space-md">
+<div class="font-headline-lg text-headline-lg text-on-surface tabular-nums">6 aktiv</div>
+<div class="flex items-center gap-1.5 mt-1 font-body-sm text-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">cell_tower</span>
+<span>Fahrer-Status via Web-App (Zero-Hardware)</span>
+</div>
+</div>
+</div>
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Zur Abnahme Bereit</span>
+<span class="w-8 h-8 rounded-lg bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">draw</span>
+</span>
+</div>
+<div class="mt-space-md">
+<div class="font-headline-lg text-headline-lg text-on-surface tabular-nums">3 Aufträge</div>
+<div class="flex items-center gap-1.5 mt-1 font-body-sm text-body-sm text-secondary font-medium">
+<span class="material-symbols-outlined text-[14px]">hourglass_top</span>
+<span>Warten auf digitale Kundenquittung</span>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-space-md">
+<div class="lg:col-span-3 p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between pb-2">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Liquidität &amp; Rechnungsdurchsatz</span>
+<div class="font-headline-sm text-headline-sm text-on-surface">Umsatzrealisierung der letzten 7 Kalendertage</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-tertiary-container bg-surface-container-low px-2 py-1 rounded">Zielerreichung: 104%</span>
+</div>
+<div class="h-28 w-full mt-2">
+<svg class="w-full h-full text-secondary-container" fill="none" preserveaspectratio="none" viewbox="0 0 650 90">
+<path d="M0,75 L90,62 L180,68 L270,40 L360,48 L450,22 L540,30 L650,10 L650,90 L0,90 Z" fill="currentColor" fill-opacity="0.12"></path>
+<path d="M0,75 L90,62 L180,68 L270,40 L360,48 L450,22 L540,30 L650,10" stroke="currentColor" stroke-linecap="round" stroke-width="2.5"></path>
+<circle class="fill-secondary-container" cx="270" cy="40" r="4"></circle>
+<circle class="fill-secondary-container" cx="450" cy="22" r="4"></circle>
+<circle class="fill-secondary" cx="650" cy="10" r="5"></circle>
+</svg>
+</div>
+<div class="grid grid-cols-7 pt-2 font-label-sm text-label-sm text-outline text-center">
+<span>Mo (8.2k)</span>
+<span>Di (11.4k)</span>
+<span>Mi (9.8k)</span>
+<span>Do (15.1k)</span>
+<span>Fr (13.6k)</span>
+<span>Sa (18.4k)</span>
+<span class="font-semibold text-on-surface">Heute (14.3k)</span>
+</div>
+</div>
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between pb-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Kunden-Sprachprofil</span>
+<span class="material-symbols-outlined text-[18px] text-outline">translate</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Präferierte Dokumentensprache für SMS &amp; Rechnungsversand</p>
+<div class="space-y-2 mt-2">
+<div>
+<div class="flex justify-between font-label-sm text-label-sm mb-1">
+<span class="font-medium text-on-surface">Deutsch (DE)</span>
+<span class="tabular-nums text-outline">68%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 68%;"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between font-label-sm text-label-sm mb-1">
+<span class="font-medium text-on-surface">Englisch (EN)</span>
+<span class="tabular-nums text-outline">21%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary-container" style="width: 21%;"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between font-label-sm text-label-sm mb-1">
+<span class="font-medium text-on-surface">Arabisch (AR) &amp; Russisch (RU)</span>
+<span class="tabular-nums text-outline">11%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-outline" style="width: 11%;"></div>
+</div>
+</div>
+</div>
+<div class="mt-2 pt-2 bg-surface-container-low p-2 rounded-lg text-label-sm font-label-sm flex items-center justify-between">
+<span class="text-on-surface-variant">Autom. Sprach-Routing:</span>
+<span class="text-on-tertiary-container font-semibold">Aktiv</span>
+</div>
+</div>
+</div>
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-space-md">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex items-center gap-1 overflow-x-auto pb-1 lg:pb-0" id="filterTabs">
+<button class="tab-btn px-3 py-1.5 rounded-lg text-label-md font-label-md bg-primary text-on-primary font-medium whitespace-nowrap" data-filter="all">
+            Alle Aufträge (24)
+          </button>
+<button class="tab-btn px-3 py-1.5 rounded-lg text-label-md font-label-md text-on-surface-variant hover:bg-surface-container whitespace-nowrap" data-filter="unpaid">
+            Rechnung offen / Mahnwesen (7)
+          </button>
+<button class="tab-btn px-3 py-1.5 rounded-lg text-label-md font-label-md text-on-surface-variant hover:bg-surface-container whitespace-nowrap" data-filter="deposit">
+            Anzahlung fällig (4)
+          </button>
+<button class="tab-btn px-3 py-1.5 rounded-lg text-label-md font-label-md text-on-surface-variant hover:bg-surface-container whitespace-nowrap" data-filter="active">
+            In Durchführung (6)
+          </button>
+<button class="tab-btn px-3 py-1.5 rounded-lg text-label-md font-label-md text-on-surface-variant hover:bg-surface-container whitespace-nowrap" data-filter="done">
+            Abgeschlossen &amp; Quittiert (7)
+          </button>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="relative min-w-[280px]">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-outline">search</span>
+<input class="w-full pl-9 pr-3 py-2 text-body-sm font-body-sm rounded-lg bg-surface-container-low text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest" id="searchInput" placeholder="Auftrag, Rechnungs-Nr, Kunde, PLZ..." type="text"/>
+</div>
+<button class="p-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant" title="Tabelle aktualisieren">
+<span class="material-symbols-outlined text-[18px]">sync</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-body-sm font-body-sm">
+<thead>
+<tr class="bg-surface-container text-on-surface font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-3 px-4 rounded-l-lg">Auftrag &amp; ID</th>
+<th class="py-3 px-4">Kunde &amp; Kontakt</th>
+<th class="py-3 px-4">Strecke &amp; Termin</th>
+<th class="py-3 px-4">Fahrzeug &amp; Fahrer</th>
+<th class="py-3 px-4">§ 14 UStG Rechnung</th>
+<th class="py-3 px-4">Arbeits-Status (Web-Checkin)</th>
+<th class="py-3 px-4 text-right rounded-r-lg">Aktionen</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low" id="orderTableBody">
+<tr class="hover:bg-surface-container-low/50 transition-colors order-row" data-search="ms-8942 weber markus berlin muenchen re-2024-0894 10115 80331" data-type="unpaid">
+<td class="py-4 px-4 align-top">
+<div class="font-headline-sm text-body-md text-on-surface font-bold tabular-nums">#MS-8942</div>
+<div class="flex items-center gap-1 mt-1">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-surface-container-highest text-on-surface">Privat</span>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-surface-container text-outline">DE</span>
+</div>
+</td>
+<td class="py-4 px-4 align-top">
+<div class="font-headline-sm text-body-md text-on-surface">Dr. Markus Weber</div>
+<div class="text-on-surface-variant font-body-sm text-[12px]">+49 171 4981290</div>
+<div class="text-outline font-body-sm text-[11px]">m.weber@berlin-med.de</div>
+</td>
+<td class="py-4 px-4 align-top">
+<div class="flex items-center gap-1 font-semibold text-on-surface">
+<span>Berlin (10115)</span>
+<span class="material-symbols-outlined text-[14px] text-secondary-container">arrow_forward</span>
+<span>München (80331)</span>
+</div>
+<div class="text-on-surface-variant font-body-sm text-[12px] mt-0.5">585 km • Fernumzug (42 m³)</div>
+<div class="text-outline text-[11px]">Heute, 07:30 – 19:00 Uhr</div>
+</td>
+<td class="py-4 px-4 align-top">
+<div class="flex items-center gap-1.5 font-medium text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-secondary">local_shipping</span>
+<span>Jens S. (Lead)</span>
+</div>
+<div class="text-on-surface-variant text-[12px]">MB Sprinter 3.5t Maxi (B-MS 4402)</div>
+<div class="text-outline text-[11px]">2 Tragehelfer zugeteilt</div>
+</td>
+<td class="py-4 px-4 align-top">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-body-md text-on-surface tabular-nums">1.450,00 €</span>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-error-container text-on-error-container">Restbetrag offen</span>
+</div>
+<div class="text-body-sm text-[12px] text-outline mt-0.5">RE-2024-0894 (§ 14 UStG)</div>
+<div class="text-on-surface-variant text-[11px]">435 € Anzahlung gezahlt • <strong>1.015 € Rest</strong></div>
+</td>
+<td class="py-4 px-4 align-top">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed text-label-sm font-label-sm">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span>Arbeit beendet — Unterschrift ausstehend</span>
+</div>
+<div class="text-[11px] text-outline mt-1">Fahrer hat Web-Protokoll um 16:42 erfasst</div>
+</td>
+<td class="py-4 px-4 align-top text-right">
+<div class="flex items-center justify-end gap-1.5">
+<button class="px-2.5 py-1.5 rounded bg-surface-container-high hover:bg-surface-variant text-on-surface text-label-sm font-label-sm flex items-center gap-1" title="PDF Rechnung per Mail senden">
+<span class="material-symbols-outlined text-[16px] text-secondary">send</span>
+<span>Rechnung senden</span>
+</button>
+<button class="px-2.5 py-1.5 rounded bg-primary text-on-primary hover:bg-primary-container text-label-sm font-label-sm flex items-center gap-1" title="Zahlung verbuchen">
+<span class="material-symbols-outlined text-[16px]">account_balance</span>
+<span>Verbuchen</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors order-row" data-search="ms-8943 sarah lindenberg hamburg altona eppendorf re-2024-0895 22765 20249" data-type="done">
+<td class="py-4 px-4 align-top">
+<div class="font-headline-sm text-body-md text-on-surface font-bold tabular-nums">#MS-8943</div>
+<div class="flex items-center gap-1 mt-1">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-surface-container-highest text-on-surface">Privat</span>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-surface-container text-outline">EN</span>
+</div>
+</td>
+<td class="py-4 px-4 align-top">
+<div class="font-headline-sm text-body-md text-on-surface">Sarah Lindenberg</div>
+<div class="text-on-surface-variant font-body-sm text-[12px]">+49 176 8920141</div>
+<div class="text-outline font-body-sm text-[11px]">s.lindenberg@posteo.de</div>
+</td>
+<td class="py-4 px-4 align-top">
+<div class="flex items-center gap-1 font-semibold text-on-surface">
+<span>HH-Altona (22765)</span>
+<span class="material-symbols-outlined text-[14px] text-secondary-container">arrow_forward</span>
+<span>Eppendorf (20249)</span>
+</div>
+<div class="text-on-surface-variant font-body-sm text-[12px] mt-0.5">8 km • City-Sprint (14 m³)</div>
+<div class="text-outline text-[11px]">Heute, 10:00 – 12:45 Uhr</div>
+</td>
+<td class="py-4 px-4 align-top">
+<div class="flex items-center gap-1.5 font-medium text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-secondary">local_shipping</span>
+<span>Murat C.</span>
+</div>
+<div class="text-on-surface-variant text-[12px]">Iveco Daily 3.5t Koffer (HH-MS 1092)</div>
+<div class="text-outline text-[11px]">1 Tragehelfer zugeteilt</div>
+</td>
+<td class="py-4 px-4 align-top">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-body-md text-on-surface tabular-nums">290,00 €</span>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-surface-container-high text-on-tertiary-container">Bezahlt (100%)</span>
+</div>
+<div class="text-body-sm text-[12px] text-outline mt-0.5">RE-2024-0895 (§ 14 UStG)</div>
+<div class="text-on-tertiary-container text-[11px] font-medium">Bezahlt via PayPal Express (TxID 9481A)</div>
+</td>
+<td class="py-4 px-4 align-top">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[14px] text-on-tertiary-container">verified</span>
+<span>Erfolgreich abgeschlossen &amp; signiert</span>
+</div>
+<div class="text-[11px] text-outline mt-1">Kundenquittung digital archiviert</div>
+</td>
+<td class="py-4 px-4 align-top text-right">
+<div class="flex items-center justify-end gap-1.5">
+<button class="px-2.5 py-1.5 rounded bg-surface-container hover:bg-surface-container-high text-on-surface text-label-sm font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">receipt_long</span>
+<span>Beleg</span>
+</button>
+<button class="px-2.5 py-1.5 rounded bg-surface-container hover:bg-surface-container-high text-on-surface text-label-sm font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+<span>Protokoll</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors order-row" data-search="ms-8944 kanzlei becker frankfurt wiesbaden re-2024-0896 60311 65183" data-type="deposit">
+<td class="py-4 px-4 align-top">
+<div class="font-headline-sm text-body-md text-on-surface font-bold tabular-nums">#MS-8944</div>
+<div class="flex items-center gap-1 mt-1">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-primary text-on-primary">Gewerbe</span>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-surface-container text-outline">DE</span>
+</div>
+</td>
+<td class="py-4 px-4 align-top">
+<div class="font-headline-sm text-body-md text-on-surface">Kanzlei Dr. Becker &amp; Partner</div>
+<div class="text-on-surface-variant font-body-sm text-[12px]">+49 69 4001920</div>
+<div class="text-outline font-body-sm text-[11px]">office@becker-law.de</div>
+</td>
+<td class="py-4 px-4 align-top">
+<div class="flex items-center gap-1 font-semibold text-on-surface">
+<span>Frankfurt (60311)</span>
+<span class="material-symbols-outlined text-[14px] text-secondary-container">arrow_forward</span>
+<span>Wiesbaden (65183)</span>
+</div>
+<div class="text-on-surface-variant font-body-sm text-[12px] mt-0.5">42 km • Kanzleiumzug (85 m³)</div>
+<div class="text-outline text-[11px]">Morgen, 08:00 – 17:00 Uhr</div>
+</td>
+<td class="py-4 px-4 align-top">
+<div class="flex items-center gap-1.5 font-medium text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-secondary">fire_truck</span>
+<span>Torsten K. + Team</span>
+</div>
+<div class="text-on-surface-variant text-[12px]">MAN TGL 7.5t + Anhänger (F-MS 7720)</div>
+<div class="text-outline text-[11px]">4 Fachpacker &amp; Montagetrupp</div>
+</td>
+<td class="py-4 px-4 align-top">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-body-md text-on-surface tabular-nums">3.800,00 €</span>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-secondary-fixed text-on-secondary-fixed">Anzahlung offen</span>
+</div>
+<div class="text-body-sm text-[12px] text-outline mt-0.5">RE-2024-0896 (§ 14 UStG)</div>
+<div class="text-secondary text-[11px] font-medium">50% Vorkasse (1.900 €) via Überweisung fällig</div>
+</td>
+<td class="py-4 px-4 align-top">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-on-surface text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[14px] text-outline">schedule</span>
+<span>Geplant für morgen</span>
+</div>
+<div class="text-[11px] text-outline mt-1">Packmaterial heute vormittag zugestellt</div>
+</td>
+<td class="py-4 px-4 align-top text-right">
+<div class="flex items-center justify-end gap-1.5">
+<button class="px-2.5 py-1.5 rounded bg-surface-container-high hover:bg-surface-variant text-on-surface text-label-sm font-label-sm flex items-center gap-1" title="Zahlungserinnerung senden">
+<span class="material-symbols-outlined text-[16px] text-secondary">notification_important</span>
+<span>Mahnung / Avis</span>
+</button>
+<button class="px-2.5 py-1.5 rounded bg-primary text-on-primary hover:bg-primary-container text-label-sm font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">edit_document</span>
+<span>Anpassen</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors order-row" data-search="ms-8945 al-mansoori tariq koeln duesseldorf re-2024-0897 50667 40213" data-type="active">
+<td class="py-4 px-4 align-top">
+<div class="font-headline-sm text-body-md text-on-surface font-bold tabular-nums">#MS-8945</div>
+<div class="flex items-center gap-1 mt-1">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-surface-container-highest text-on-surface">Privat</span>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-surface-container text-outline">AR</span>
+</div>
+</td>
+<td class="py-4 px-4 align-top">
+<div class="font-headline-sm text-body-md text-on-surface">Tariq Al-Mansoori</div>
+<div class="text-on-surface-variant font-body-sm text-[12px]">+49 152 7712399</div>
+<div class="text-outline font-body-sm text-[11px]">tariq.mansoori@web.de</div>
+</td>
+<td class="py-4 px-4 align-top">
+<div class="flex items-center gap-1 font-semibold text-on-surface">
+<span>Köln (50667)</span>
+<span class="material-symbols-outlined text-[14px] text-secondary-container">arrow_forward</span>
+<span>Düsseldorf (40213)</span>
+</div>
+<div class="text-on-surface-variant font-body-sm text-[12px] mt-0.5">46 km • 3-Zimmer (32 m³)</div>
+<div class="text-outline text-[11px]">Heute, Entladung ab 15:30 Uhr</div>
+</td>
+<td class="py-4 px-4 align-top">
+<div class="flex items-center gap-1.5 font-medium text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-secondary">local_shipping</span>
+<span>Alexei V.</span>
+</div>
+<div class="text-on-surface-variant text-[12px]">MB Sprinter Koffer (K-MS 8812)</div>
+<div class="text-outline text-[11px]">2 Träger vor Ort</div>
+</td>
+<td class="py-4 px-4 align-top">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-body-md text-on-surface tabular-nums">890,00 €</span>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-surface-container-high text-on-tertiary-container">Vollständig bezahlt</span>
+</div>
+<div class="text-body-sm text-[12px] text-outline mt-0.5">RE-2024-0897 (§ 14 UStG)</div>
+<div class="text-on-surface-variant text-[11px]">Kartenzahlung am Terminal bestätigt</div>
+</td>
+<td class="py-4 px-4 align-top">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface text-label-sm font-label-sm">
+<span class="w-2 h-2 rounded-full bg-secondary-container animate-ping"></span>
+<span>In Entladung (Fahrer Web-Check: 80%)</span>
+</div>
+<div class="text-[11px] text-outline mt-1">SMS-Statusupdate auf Arabisch versendet</div>
+</td>
+<td class="py-4 px-4 align-top text-right">
+<div class="flex items-center justify-end gap-1.5">
+<button class="px-2.5 py-1.5 rounded bg-surface-container-high hover:bg-surface-variant text-on-surface text-label-sm font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">pin_drop</span>
+<span>Checkin</span>
+</button>
+<button class="px-2.5 py-1.5 rounded bg-surface-container hover:bg-surface-container-high text-on-surface text-label-sm font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">description</span>
+<span>Rechnung</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="flex flex-col sm:flex-row items-center justify-between gap-space-sm pt-space-sm text-label-sm font-label-sm text-on-surface-variant">
+<div>Zeige 4 von 24 Datensätzen • Letzte Synchronisation vor 1 Minute</div>
+<div class="flex items-center gap-2">
+<button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-container-high text-on-surface disabled:opacity-50" disabled="">Vorherige</button>
+<span class="px-2 font-medium text-on-surface">Seite 1 von 6</span>
+<button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-container-high text-on-surface">Nächste</button>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-on-tertiary-container font-headline-sm text-body-md mb-2">
+<span class="material-symbols-outlined text-[20px]">verified_user</span>
+<span>§ 14 UStG Gesetzeskonformität</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Alle ausgestellten Rechnungen enthalten unveränderbare Pflichtangaben zur Vorsteuerabzugsberechtigung für Gewerbekunden.
+          </p>
+<div class="mt-3 space-y-1.5 font-label-sm text-label-sm text-on-surface bg-surface-container-low p-3 rounded-lg">
+<div class="flex justify-between">
+<span class="text-outline">Finanzamt Berlin:</span>
+<span class="font-semibold">St.-Nr. 27/451/08912</span>
+</div>
+<div class="flex justify-between">
+<span class="text-outline">Umsatzsteuer-ID:</span>
+<span class="font-semibold">DE 319 482 910</span>
+</div>
+<div class="flex justify-between">
+<span class="text-outline">Gültige USt-Sätze:</span>
+<span class="font-semibold">19% Regelsteuersatz</span>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-outline text-label-sm font-label-sm">
+<span>GoBD-Archivierung: 10 Jahre</span>
+<span class="text-on-surface font-medium">Revisionssicher</span>
+</div>
+</div>
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-secondary font-headline-sm text-body-md mb-2">
+<span class="material-symbols-outlined text-[20px]">account_balance</span>
+<span>MöbelSprint Geschäftskonto</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            SEPA Instant Überweisungsabgleich alle 15 Minuten aktiv via Commerzbank EBICS-Schnittstelle.
+          </p>
+<div class="mt-3 space-y-1.5 font-label-sm text-label-sm text-on-surface bg-surface-container-low p-3 rounded-lg">
+<div class="flex justify-between">
+<span class="text-outline">Bankinstitut:</span>
+<span class="font-semibold">Commerzbank AG</span>
+</div>
+<div class="flex justify-between">
+<span class="text-outline">IBAN:</span>
+<span class="font-semibold tabular-nums">DE89 1004 0000 0129 4829 00</span>
+</div>
+<div class="flex justify-between">
+<span class="text-outline">BIC / SWIFT:</span>
+<span class="font-semibold">COBADEFFXXX</span>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-label-sm font-label-sm">
+<span class="text-outline">Autom. Buchungstoleranz:</span>
+<span class="text-on-tertiary-container font-semibold">± 0,00 €</span>
+</div>
+</div>
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-on-surface font-headline-sm text-body-md mb-2">
+<span class="material-symbols-outlined text-[20px] text-secondary">phonelink_ring</span>
+<span>Zero-Telemetry Philosophie</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Keine dauerhaften GPS-Tracker oder Überwachungshardware. Ablaufverfolgung basiert ausschließlich auf diskreten Meilenstein-Checkins im mobilen Fahrer-Browser.
+          </p>
+<div class="mt-3 grid grid-cols-2 gap-2 text-label-sm font-label-sm">
+<div class="bg-surface-container-low p-2 rounded text-center">
+<div class="font-headline-sm text-body-md text-on-surface font-bold">100%</div>
+<div class="text-outline text-[11px]">DSGVO konform</div>
+</div>
+<div class="bg-surface-container-low p-2 rounded text-center">
+<div class="font-headline-sm text-body-md text-on-surface font-bold">0 €</div>
+<div class="text-outline text-[11px]">Hardware-Kosten</div>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-outline text-label-sm font-label-sm">
+<span>Checkin-Schritte:</span>
+<span class="text-on-surface font-medium">Abfahrt • Beladen • Ziel • Quittung</span>
+</div>
+</div>
+</div>
+</div>
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-primary/40 backdrop-blur-sm hidden" id="invoiceModal">
+<div class="bg-surface-container-lowest rounded-xl shadow-xl w-full max-w-4xl max-h-[942px] flex flex-col overflow-hidden">
+<div class="p-space-lg bg-surface-container flex items-center justify-between">
+<div>
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-on-surface">Schnell-Rechnungserstellung</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-surface-container-highest text-on-surface">§ 14 UStG konform</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-0.5">Erstellt automatisch fortlaufende Rechnungsnummer mit Pflichtangaben.</p>
+</div>
+<button class="p-1 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container-high transition-colors" id="closeInvoiceModalBtn">
+<span class="material-symbols-outlined text-[24px]">close</span>
+</button>
+</div>
+<div class="p-space-lg overflow-y-auto flex-1 flex flex-col gap-space-lg">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface mb-1">Rechnungsnummer (fortlaufend)</label>
+<input class="w-full px-3 py-2 bg-surface-container text-on-surface font-semibold rounded-lg text-body-sm font-body-sm" readonly="" type="text" value="RE-2024-0898"/>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface mb-1">Rechnungsdatum</label>
+<input class="w-full px-3 py-2 bg-surface-container-low text-on-surface rounded-lg text-body-sm font-body-sm focus:outline-none" id="invDate" type="text" value="26.10.2024"/>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface mb-1">Zahlungsziel</label>
+<select class="w-full px-3 py-2 bg-surface-container-low text-on-surface rounded-lg text-body-sm font-body-sm focus:outline-none">
+<option>14 Tage (Standard)</option>
+<option>Sofort bei Abnahme (Bar/Karte)</option>
+<option>30 Tage (Behörden / Großkunden)</option>
+<option>7 Tage Vorkasse</option>
+</select>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<div class="p-space-md rounded-lg bg-surface-container-low">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline block mb-2">Rechnungsempfänger</span>
+<div class="space-y-2">
+<input class="w-full px-3 py-1.5 bg-surface-container-lowest text-on-surface rounded text-body-sm font-body-sm focus:outline-none" placeholder="Firma / Vollständiger Name" type="text" value="Praxis Dr. med. Roland Sommer"/>
+<input class="w-full px-3 py-1.5 bg-surface-container-lowest text-on-surface rounded text-body-sm font-body-sm focus:outline-none" placeholder="Straße &amp; Hausnummer" type="text" value="Kurfürstendamm 182"/>
+<div class="grid grid-cols-3 gap-2">
+<input class="px-3 py-1.5 bg-surface-container-lowest text-on-surface rounded text-body-sm font-body-sm focus:outline-none" placeholder="PLZ" type="text" value="10707"/>
+<input class="col-span-2 px-3 py-1.5 bg-surface-container-lowest text-on-surface rounded text-body-sm font-body-sm focus:outline-none" placeholder="Stadt" type="text" value="Berlin"/>
+</div>
+<input class="w-full px-3 py-1.5 bg-surface-container-lowest text-on-surface rounded text-body-sm font-body-sm focus:outline-none" placeholder="USt-ID (optional bei B2B)" type="text" value="DE298104812"/>
+</div>
+</div>
+<div class="p-space-md rounded-lg bg-surface-container-low">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline block mb-2">Sprachversion &amp; Benachrichtigung</span>
+<div class="space-y-3">
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface mb-1">Dokumentensprache</label>
+<div class="grid grid-cols-4 gap-1.5">
+<label class="flex items-center justify-center py-1.5 rounded bg-primary text-on-primary font-semibold text-label-sm cursor-pointer">
+<input checked="" class="hidden" name="lang" type="radio" value="DE"/> DE
+                  </label>
+<label class="flex items-center justify-center py-1.5 rounded bg-surface-container-lowest text-on-surface hover:bg-surface-container text-label-sm cursor-pointer">
+<input class="hidden" name="lang" type="radio" value="EN"/> EN
+                  </label>
+<label class="flex items-center justify-center py-1.5 rounded bg-surface-container-lowest text-on-surface hover:bg-surface-container text-label-sm cursor-pointer">
+<input class="hidden" name="lang" type="radio" value="RU"/> RU
+                  </label>
+<label class="flex items-center justify-center py-1.5 rounded bg-surface-container-lowest text-on-surface hover:bg-surface-container text-label-sm cursor-pointer">
+<input class="hidden" name="lang" type="radio" value="AR"/> AR
+                  </label>
+</div>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface mb-1">Kunden-Mobilfunknummer (für SMS-Status)</label>
+<input class="w-full px-3 py-1.5 bg-surface-container-lowest text-on-surface rounded text-body-sm font-body-sm focus:outline-none" type="tel" value="+49 170 3349182"/>
+</div>
+<div class="flex items-center gap-2 text-label-sm font-label-sm text-on-tertiary-container">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span>Zweisprachiges PDF-Layout wird automatisch erzeugt</span>
+</div>
+</div>
+</div>
+</div>
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline block mb-2">Rechnungspositionen (§ 14 Abs. 4 UStG Leistungsbeschreibung)</span>
+<div class="space-y-2">
+<div class="grid grid-cols-12 gap-2 p-2 bg-surface-container-low rounded-lg items-center">
+<input class="col-span-6 px-2.5 py-1.5 bg-surface-container-lowest rounded text-body-sm font-body-sm focus:outline-none" type="text" value="Umzugstransport 3.5t Koffer inkl. 2 Träger (Pauschale bis 25 m³)"/>
+<input class="col-span-1 px-2 py-1.5 bg-surface-container-lowest rounded text-center text-body-sm font-body-sm focus:outline-none" type="number" value="1"/>
+<span class="col-span-1 text-center text-body-sm text-outline">Stk.</span>
+<input class="col-span-2 px-2.5 py-1.5 bg-surface-container-lowest rounded text-right tabular-nums text-body-sm font-body-sm focus:outline-none" type="text" value="1.200,00"/>
+<span class="col-span-2 text-right font-semibold text-body-sm tabular-nums">1.200,00 €</span>
+</div>
+<div class="grid grid-cols-12 gap-2 p-2 bg-surface-container-low rounded-lg items-center">
+<input class="col-span-6 px-2.5 py-1.5 bg-surface-container-lowest rounded text-body-sm font-body-sm focus:outline-none" type="text" value="Packmittel-Set (30 Kartons, Stretchfolie, Klebeband, Seidenpapier)"/>
+<input class="col-span-1 px-2 py-1.5 bg-surface-container-lowest rounded text-center text-body-sm font-body-sm focus:outline-none" type="number" value="1"/>
+<span class="col-span-1 text-center text-body-sm text-outline">Pkt.</span>
+<input class="col-span-2 px-2.5 py-1.5 bg-surface-container-lowest rounded text-right tabular-nums text-body-sm font-body-sm focus:outline-none" type="text" value="95,00"/>
+<span class="col-span-2 text-right font-semibold text-body-sm tabular-nums">95,00 €</span>
+</div>
+<div class="grid grid-cols-12 gap-2 p-2 bg-surface-container-low rounded-lg items-center">
+<input class="col-span-6 px-2.5 py-1.5 bg-surface-container-lowest rounded text-body-sm font-body-sm focus:outline-none" type="text" value="Einrichtung Halteverbotszone (Start- &amp; Zieladresse inkl. Genehmigung)"/>
+<input class="col-span-1 px-2 py-1.5 bg-surface-container-lowest rounded text-center text-body-sm font-body-sm focus:outline-none" type="number" value="2"/>
+<span class="col-span-1 text-center text-body-sm text-outline">Zonen</span>
+<input class="col-span-2 px-2.5 py-1.5 bg-surface-container-lowest rounded text-right tabular-nums text-body-sm font-body-sm focus:outline-none" type="text" value="110,00"/>
+<span class="col-span-2 text-right font-semibold text-body-sm tabular-nums">220,00 €</span>
+</div>
+</div>
+<button class="mt-2 text-secondary hover:text-on-secondary-container text-label-md font-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">add</span>
+<span>Weitere Position hinzufügen</span>
+</button>
+</div>
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col md:flex-row justify-between items-start md:items-end gap-space-md">
+<div class="text-body-sm font-body-sm text-outline space-y-1">
+<div>Steuernummer: <strong>27/451/08912</strong> • USt-ID: <strong>DE319482910</strong></div>
+<div>Bankverbindung: <strong>Commerzbank AG • IBAN DE89 1004 0000 0129 4829 00</strong></div>
+<div class="text-on-tertiary-container flex items-center gap-1 font-medium mt-1">
+<span class="material-symbols-outlined text-[14px]">task_alt</span>
+<span>Rechtliche Konformität nach § 14 UStG garantiert</span>
+</div>
+</div>
+<div class="w-full md:w-64 space-y-1.5 text-right font-body-sm">
+<div class="flex justify-between text-on-surface-variant">
+<span>Nettobetrag:</span>
+<span class="tabular-nums">1.515,00 €</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span>zzgl. 19% MwSt:</span>
+<span class="tabular-nums">287,85 €</span>
+</div>
+<div class="flex justify-between font-headline-sm text-headline-sm text-on-surface pt-2 border-t border-outline-variant/30">
+<span>Gesamtbetrag:</span>
+<span class="tabular-nums font-bold">1.802,85 €</span>
+</div>
+</div>
+</div>
+</div>
+<div class="p-space-md bg-surface-container flex items-center justify-between">
+<button class="px-4 py-2 rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface font-label-md text-label-md transition-colors" id="cancelModalBtn">
+          Abbrechen
+        </button>
+<div class="flex items-center gap-2">
+<button class="px-4 py-2 rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface font-label-md text-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">print</span>
+<span>Vorschau (PDF)</span>
+</button>
+<button class="px-4 py-2 rounded-lg bg-secondary-container hover:bg-secondary text-on-secondary font-label-md text-label-md flex items-center gap-1.5 shadow-sm" id="createInvoiceAction">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span>Rechnung final buchen &amp; versenden</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none" id="toastNotification">
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary text-on-primary shadow-xl">
+<span class="material-symbols-outlined text-[20px] text-on-tertiary-container">check_circle</span>
+<div class="text-body-sm font-body-sm">
+<div class="font-semibold text-on-primary">Rechnung erfolgreich generiert</div>
+<div class="text-outline-variant text-[12px]">RE-2024-0898 per Email &amp; SMS versendet.</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    const searchInput = document.getElementById('searchInput');
+    const orderRows = document.querySelectorAll('.order-row');
+    const tabButtons = document.querySelectorAll('#filterTabs button');
+    let currentFilter = 'all';
+
+    function filterTable() {
+      const query = (searchInput.value || '').toLowerCase().trim();
+
+      orderRows.forEach(row => {
+        const type = row.getAttribute('data-type');
+        const searchData = (row.getAttribute('data-search') || '').toLowerCase();
+
+        const matchesQuery = !query || searchData.includes(query);
+        const matchesTab = (currentFilter === 'all') || (type === currentFilter);
+
+        if (matchesQuery && matchesTab) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', filterTable);
+    }
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabButtons.forEach(b => {
+          b.className = 'tab-btn px-3 py-1.5 rounded-lg text-label-md font-label-md text-on-surface-variant hover:bg-surface-container whitespace-nowrap';
+        });
+        btn.className = 'tab-btn px-3 py-1.5 rounded-lg text-label-md font-label-md bg-primary text-on-primary font-medium whitespace-nowrap';
+        currentFilter = btn.getAttribute('data-filter');
+        filterTable();
+      });
+    });
+
+    const modal = document.getElementById('invoiceModal');
+    const openBtn = document.getElementById('openInvoiceModalBtn');
+    const closeBtn = document.getElementById('closeInvoiceModalBtn');
+    const cancelBtn = document.getElementById('cancelModalBtn');
+    const createAction = document.getElementById('createInvoiceAction');
+    const toast = document.getElementById('toastNotification');
+
+    function openModal() {
+      if (modal) modal.classList.remove('hidden');
+    }
+    function closeModal() {
+      if (modal) modal.classList.add('hidden');
+    }
+
+    if (openBtn) openBtn.addEventListener('click', openModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+    }
+
+    if (createAction) {
+      createAction.addEventListener('click', () => {
+        closeModal();
+        if (toast) {
+          toast.classList.remove('translate-y-20', 'opacity-0');
+          setTimeout(() => {
+            toast.classList.add('translate-y-20', 'opacity-0');
+          }, 4000);
+        }
+      });
+    }
+  })();
+</script></main></div></body></html>

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+
+<html lang="de"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-primary-fixed":"#131b2e","surface-bright":"#f8f9ff","on-background":"#0b1c30","on-error-container":"#93000a","on-tertiary-fixed-variant":"#005236","tertiary-container":"#002113","on-primary-fixed-variant":"#3f465c","error-container":"#ffdad6","tertiary-fixed-dim":"#4edea3","surface-dim":"#cbdbf5","surface-container":"#e5eeff","on-secondary-container":"#571a00","on-primary":"#ffffff","surface-container-low":"#eff4ff","background":"#f8f9ff","surface-container-highest":"#d3e4fe","error":"#ba1a1a","secondary-fixed":"#ffdbce","on-tertiary-fixed":"#002113","inverse-on-surface":"#eaf1ff","on-secondary":"#ffffff","surface":"#f8f9ff","surface-container-high":"#dce9ff","on-surface":"#0b1c30","on-secondary-fixed":"#370e00","on-error":"#ffffff","inverse-primary":"#bec6e0","tertiary-fixed":"#6ffbbe","surface-variant":"#d3e4fe","on-tertiary":"#ffffff","secondary":"#a73a00","on-surface-variant":"#45464d","secondary-fixed-dim":"#ffb599","primary":"#000000","primary-fixed":"#dae2fd","tertiary":"#000000","surface-container-lowest":"#ffffff","primary-fixed-dim":"#bec6e0","on-secondary-fixed-variant":"#7f2b00","on-primary-container":"#7c839b","secondary-container":"#fd651e","outline":"#76777d","surface-tint":"#565e74","outline-variant":"#c6c6cd","inverse-surface":"#213145","primary-container":"#131b2e","on-tertiary-container":"#009668"},borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},spacing:{"space-md":"1rem","gutter-mobile":"1rem","margin-mobile":"1rem","space-lg":"1.5rem","space-xl":"2.5rem","gutter":"1.5rem","space-xs":"0.25rem","margin":"2rem","space-sm":"0.5rem"},fontFamily:{"headline-lg":["Plus Jakarta Sans"],"label-lg":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"],"body-sm":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"tabular-data":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"headline-xl-mobile":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"body-lg":["Plus Jakarta Sans"]},fontSize:{"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.015em","fontWeight":"600"}],"label-lg":["14px",{"lineHeight":"20px","letterSpacing":"0.01em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"headline-sm":["18px",{"lineHeight":"24px","letterSpacing":"-0.005em","fontWeight":"600"}],"headline-xl":["44px",{"lineHeight":"52px","letterSpacing":"-0.02em","fontWeight":"700"}],"tabular-data":["15px",{"lineHeight":"20px","fontWeight":"600"}],"headline-md":["22px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-xl-mobile":["30px",{"lineHeight":"38px","letterSpacing":"-0.015em","fontWeight":"700"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"700"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}]}}}}</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-16 px-space-md flex items-center gap-space-sm bg-surface-container-low"><div class="flex items-center justify-center w-8 h-8 rounded-lg bg-primary-container text-on-primary font-headline-sm text-headline-sm font-bold">M</div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm font-bold text-on-surface leading-none tracking-tight">MöbelSprint</span><span class="font-label-sm text-label-sm uppercase text-secondary font-bold tracking-widest">PRO Leitstand</span></div></div><div class="px-space-md py-space-sm"><div class="flex items-center justify-between px-space-sm py-space-xs rounded-lg bg-surface-container-low"><span class="font-label-sm text-label-sm uppercase text-on-surface-variant font-bold">Systemstatus</span><span class="flex items-center gap-1 font-label-sm text-label-sm text-on-tertiary-container font-semibold"><span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim inline-block"></span> Live DISPO</span></div></div><nav class="px-space-sm space-y-space-xs mt-space-xs" data-active-classes="bg-surface-container-high text-on-surface font-semibold"><div class="px-space-sm pt-space-sm pb-space-xs font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Logistik-Steuerung</div><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="dispo-leitstand" href="#"><span class="material-symbols-outlined text-[20px]">hub</span><span>Dispo-Leitstand</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="touren-planung-disposition" href="#"><span class="material-symbols-outlined text-[20px]">alt_route</span><span>Touren-Planung &amp; Disposition</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="hvz-behordenmanager" href="#"><span class="material-symbols-outlined text-[20px]">traffic</span><span>HVZ-Behördenmanager</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="flotten-kapazitaten" href="#"><span class="material-symbols-outlined text-[20px]">local_shipping</span><span>Flotten-Kapazitäten</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="m3-laderaum-rechner" href="#"><span class="material-symbols-outlined text-[20px]">view_in_ar</span><span>m³ Laderaum-Rechner</span></a><div class="px-space-sm pt-space-md pb-space-xs font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Compliance &amp; Abrechnung</div><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="schadensregulierung-hgb" href="#"><span class="material-symbols-outlined text-[20px]">verified_user</span><span>Schadensregulierung HGB</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="datev-finanzen" href="#"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span>DATEV &amp; Finanzen</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="rbac-dsgvo" href="#"><span class="material-symbols-outlined text-[20px]">admin_panel_settings</span><span>RBAC &amp; DSGVO</span></a></nav></div><div class="p-space-md bg-surface-container-low m-space-sm rounded-xl"><div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm mb-1"><span>Flottenauslastung</span><span class="font-bold font-tabular-data text-tabular-data text-on-surface">87%</span></div><div class="w-full h-1.5 rounded-full bg-surface-container-high overflow-hidden"><div class="h-full bg-secondary w-[87%]"></div></div><div class="flex items-center justify-between mt-2 font-label-sm text-label-sm text-on-surface-variant"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">speed</span> Nord-Achse</span><span class="text-secondary font-semibold">14 Touren aktiv</span></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-gutter"><nav class="hidden xl:flex items-center gap-1" data-active-classes="bg-surface-container-high text-on-surface font-semibold"><a class="px-3 py-1.5 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="dispo-leitstand" href="#">Dispo-Leitstand</a><a class="px-3 py-1.5 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="touren-planung-disposition" href="#">Touren-Planung</a><a class="px-3 py-1.5 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="hvz-behordenmanager" href="#">Halteverbotszonen (HVZ)</a><a class="px-3 py-1.5 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="schadensregulierung-hgb" href="#">Schadensregulierung &amp; Reklamationen</a><a class="px-3 py-1.5 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="datev-finanzen" href="#">DATEV &amp; Finanzen</a><a class="px-3 py-1.5 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="rbac-dsgvo" href="#">RBAC &amp; DSGVO</a></nav><div class="flex items-center gap-space-md ml-auto"><div class="flex items-center bg-surface-container-low rounded-lg p-0.5 font-label-sm text-label-sm font-semibold"><button class="px-2 py-1 rounded bg-surface-container-lowest text-on-surface shadow-[0_1px_4px_rgba(0,0,0,0.04)]" type="button">DE</button><button class="px-2 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors" type="button">EN</button><button class="px-2 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors" type="button">RU</button><button class="px-2 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors" type="button">AR</button></div><div class="h-6 w-px bg-outline-variant/40"></div><div class="flex items-center gap-space-sm pl-1"><div class="flex flex-col text-right hidden sm:flex"><span class="font-label-lg text-label-lg text-on-surface font-semibold leading-tight">D. Obermeier</span><span class="font-label-sm text-label-sm text-on-surface-variant">Hauptdisponent (Nord)</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="relative pt-16 bg-surface min-h-screen px-space-gutter py-space-md"><div class="flex flex-col w-full gap-space-lg">
+<!-- Header Banner & Operational Mode -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md bg-surface-container-lowest p-space-lg rounded-xl shadow-sm">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-primary-container text-on-primary flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-[28px]">radar</span>
+</div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-md text-headline-md font-bold tracking-tight text-on-surface">Zentraler Leitstand Disposition</span>
+<span class="px-2 py-0.5 rounded-full bg-tertiary-fixed-dim/25 text-on-tertiary-container font-label-sm text-label-sm font-bold flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-on-tertiary-container animate-pulse"></span> ECHTZEIT-SYNCHRONISATION
+          </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Schichtübersicht heute: Fr, 24. Mai • Dispositionsbezirk DE-Nord/Ost/Süd • Algorithmus OSRM v5.24 aktiv</p>
+</div>
+</div>
+<!-- Live Controls -->
+<div class="flex items-center gap-space-sm flex-wrap">
+<div class="bg-surface-container-low px-3 py-1.5 rounded-lg flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-[18px] text-secondary">update</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wide text-on-surface-variant">Aktualisierung:</span>
+<span class="font-tabular-data text-tabular-data font-bold">14:28:10</span>
+</div>
+<button class="px-3.5 py-2 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-lg text-label-lg transition-colors flex items-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">autorenew</span>
+<span>Flotte synchr.</span>
+</button>
+<button class="px-4 py-2 rounded-lg bg-secondary hover:bg-on-secondary-container text-on-secondary font-label-lg text-label-lg transition-all flex items-center gap-2 shadow-md">
+<span class="material-symbols-outlined text-[18px]">add_task</span>
+<span>Neuer Express-Auftrag</span>
+</button>
+</div>
+</div>
+<!-- KPI Metrics Bar -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md">
+<!-- KPI 1 -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Aktive Touren Heute</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline-xl text-headline-xl text-on-surface font-bold">8</span>
+<span class="font-label-md text-label-md text-on-tertiary-container font-semibold">/ 8 im Einsatz</span>
+</div>
+</div>
+<div class="p-2.5 rounded-xl bg-tertiary-fixed/30 text-on-tertiary-fixed-variant">
+<span class="material-symbols-outlined text-[24px]">local_shipping</span>
+</div>
+</div>
+<div class="mt-space-md pt-2 flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-on-tertiary-container font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span>100% im Zeitplan (0 Verzug)</span>
+</div>
+<span class="font-tabular-data text-tabular-data text-on-surface-variant">Pünktlich</span>
+</div>
+<div class="absolute bottom-0 left-0 right-0 h-1 bg-tertiary-fixed-dim"></div>
+</div>
+<!-- KPI 2 -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Flotten-Auslastung</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline-xl text-headline-xl text-on-surface font-bold">87.4%</span>
+<span class="font-label-md text-label-md text-secondary font-semibold">+4.2% ggü. Vortag</span>
+</div>
+</div>
+<div class="p-2.5 rounded-xl bg-secondary-fixed/50 text-on-secondary-fixed-variant">
+<span class="material-symbols-outlined text-[24px]">inventory_2</span>
+</div>
+</div>
+<div class="mt-space-md">
+<div class="flex justify-between font-label-sm text-label-sm mb-1 text-on-surface-variant">
+<span>312 m³ beladen</span>
+<span class="font-tabular-data text-tabular-data text-on-surface font-bold">357 m³ Gesamt</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container-high overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 87.4%;"></div>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 right-0 h-1 bg-secondary"></div>
+</div>
+<!-- KPI 3 -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Fahrzeug-Klassen Aktiv</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline-xl text-headline-xl text-on-surface font-bold">7</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Fahrzeuge online</span>
+</div>
+</div>
+<div class="p-2.5 rounded-xl bg-surface-container-high text-primary">
+<span class="material-symbols-outlined text-[24px]">commute</span>
+</div>
+</div>
+<div class="mt-space-md space-y-1">
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-on-surface-variant">4x Sprinter 3.5t (Kl. B)</span>
+<span class="font-bold text-on-surface">100% Bereit</span>
+</div>
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-on-surface-variant">2x MAN TGL 7.5t (C1) • 1x 12t (C)</span>
+<span class="font-bold text-on-surface">Fahrt / Ladevorg.</span>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 right-0 h-1 bg-primary-container"></div>
+</div>
+<!-- KPI 4 -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Telematik &amp; Umwelt</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline-xl text-headline-xl text-on-tertiary-container font-bold">100%</span>
+<span class="font-label-md text-label-md text-on-tertiary-container font-semibold">Grüne Plakette</span>
+</div>
+</div>
+<div class="p-2.5 rounded-xl bg-tertiary-fixed/30 text-on-tertiary-fixed-variant">
+<span class="material-symbols-outlined text-[24px]">eco</span>
+</div>
+</div>
+<div class="mt-space-md pt-2 flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-on-surface font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] text-secondary">traffic</span>
+<span>OSRM Stau-Routing: <strong>Aktiv</strong></span>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Euro 6d</span>
+</div>
+<div class="absolute bottom-0 left-0 right-0 h-1 bg-tertiary-fixed-dim"></div>
+</div>
+</div>
+<!-- Main Grid: Timeline / Gantt vs Disposition Workspace -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- LEFT PANEL: Gantt-Timeline & Tourenplan (7 Cols) -->
+<section class="lg:col-span-7 flex flex-col gap-space-md">
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+<div class="flex items-center justify-between pb-space-sm mb-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[22px] text-primary">view_timeline</span>
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface">Touren-Tagesplan &amp; Gantt-Disposition</h2>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-2.5 py-1 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm font-semibold">Heute 07:00 – 20:00 Uhr</span>
+<button class="p-1 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+</button>
+</div>
+</div>
+<!-- Timeline Scale Header -->
+<div class="bg-surface-container-low p-2.5 rounded-lg flex items-center text-on-surface-variant font-label-sm text-label-sm font-bold">
+<div class="w-48 shrink-0">FAHRZEUG &amp; DISPO-TEAM</div>
+<div class="flex-1 grid grid-cols-6 text-center">
+<span>08:00</span>
+<span>10:00</span>
+<span>12:00</span>
+<span>14:00</span>
+<span>16:00</span>
+<span>18:00</span>
+</div>
+</div>
+<!-- Tour Cards / Gantt Tracks -->
+<div class="space-y-space-sm mt-space-sm">
+<!-- Tour 1: MS-8942 Jens Schmidt -->
+<div class="p-space-sm rounded-xl bg-surface-container-lowest hover:bg-surface-container-low/50 transition-all shadow-sm">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-start gap-space-sm w-48 shrink-0">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary font-bold">
+<span class="material-symbols-outlined text-[20px]">local_shipping</span>
+</div>
+<div>
+<div class="flex items-center gap-1">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">#MS-8942</span>
+<span class="px-1.5 py-0.2 rounded bg-tertiary-fixed/30 text-on-tertiary-fixed-variant font-label-sm text-label-sm font-bold">Aktiv</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant block">J. Schmidt • B-MS 104</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Sprinter 3.5t Koffer</span>
+</div>
+</div>
+<!-- Gantt Bar Visualization -->
+<div class="flex-1 flex flex-col justify-center">
+<div class="relative w-full h-8 bg-surface-container-high rounded-lg overflow-hidden flex items-center">
+<!-- Segment 1: Beladung -->
+<div class="absolute left-[10%] w-[18%] h-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-label-sm text-label-sm font-bold px-1 truncate" title="Berlin-Mitte Beladung">
+                    Beladen 08:15
+                  </div>
+<!-- Segment 2: Transit A9 -->
+<div class="absolute left-[28%] w-[42%] h-full bg-surface-container-highest text-on-surface flex items-center justify-center font-label-sm text-label-sm font-semibold px-1 truncate" title="A9 Transit 585 km">
+                    Transit A9 (585 km)
+                  </div>
+<!-- Segment 3: Entladung vor Ort -->
+<div class="absolute left-[70%] w-[25%] h-full bg-secondary text-on-secondary flex items-center justify-center font-label-sm text-label-sm font-bold px-1 truncate animate-pulse" title="München Entladung">
+                    Entladung MUC 16:30
+                  </div>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm mt-1 px-1">
+<span>Berlin-Mitte <span class="material-symbols-outlined text-[12px] inline">arrow_forward</span> München-Sendling</span>
+<span class="font-tabular-data text-tabular-data font-bold text-secondary">12.7 m³ • 48 Packstücke</span>
+</div>
+</div>
+</div>
+<div class="mt-2 pt-2 flex items-center justify-between bg-surface-container-low px-3 py-1.5 rounded-lg">
+<span class="font-label-sm text-label-sm text-on-surface font-semibold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim">where_to_vote</span>
+                Fahrzeug vor Ort • Parkverbot München genehmigt (HVZ-771)
+              </span>
+<button class="text-secondary font-label-sm text-label-sm font-bold hover:underline flex items-center gap-0.5">
+                Telematik Live <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Tour 2: MS-8943 Murat C. -->
+<div class="p-space-sm rounded-xl bg-surface-container-lowest hover:bg-surface-container-low/50 transition-all shadow-sm">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-start gap-space-sm w-48 shrink-0">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-on-tertiary-container font-bold">
+<span class="material-symbols-outlined text-[20px]">task_alt</span>
+</div>
+<div>
+<div class="flex items-center gap-1">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">#MS-8943</span>
+<span class="px-1.5 py-0.2 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">Fertig</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant block">Murat C. • HH-MS 1092</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Iveco Daily 3.5t</span>
+</div>
+</div>
+<!-- Gantt Bar -->
+<div class="flex-1 flex flex-col justify-center">
+<div class="relative w-full h-8 bg-surface-container-high rounded-lg overflow-hidden flex items-center">
+<div class="absolute left-[5%] w-[45%] h-full bg-tertiary-fixed-dim/40 text-on-tertiary-container flex items-center justify-center font-label-sm text-label-sm font-bold px-1 truncate">
+                    HH-Altona -&gt; Eppendorf (Abgeschlossen 12:45)
+                  </div>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm mt-1 px-1">
+<span>Nahumzug Altona Nord</span>
+<span class="font-tabular-data text-tabular-data font-semibold text-on-surface">8.5 m³ • Abnahme digital signiert</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Tour 3: MS-8944 Torsten K. -->
+<div class="p-space-sm rounded-xl bg-surface-container-lowest hover:bg-surface-container-low/50 transition-all shadow-sm">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-start gap-space-sm w-48 shrink-0">
+<div class="w-8 h-8 rounded-lg bg-secondary-fixed/50 flex items-center justify-center text-on-secondary-fixed-variant font-bold">
+<span class="material-symbols-outlined text-[20px]">fire_truck</span>
+</div>
+<div>
+<div class="flex items-center gap-1">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">#MS-8944</span>
+<span class="px-1.5 py-0.2 rounded bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-bold">Vorbeladung</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant block">Torsten K. • F-MS 7720</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">MAN TGL 7.5t (C1)</span>
+</div>
+</div>
+<!-- Gantt Bar -->
+<div class="flex-1 flex flex-col justify-center">
+<div class="relative w-full h-8 bg-surface-container-high rounded-lg overflow-hidden flex items-center">
+<div class="absolute left-[50%] w-[35%] h-full bg-secondary-container text-on-secondary flex items-center justify-center font-label-sm text-label-sm font-bold px-1 truncate shadow-sm">
+                    Vorbeladung Hub FRA (15:00 - 18:30)
+                  </div>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm mt-1 px-1">
+<span>Frankfurt Kanzleiumzug -&gt; Wiesbaden</span>
+<span class="font-tabular-data text-tabular-data font-bold text-secondary">42.0 m³ • 4 Träger &amp; Schreiner</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Tour 4: MS-8945 Alexei V. -->
+<div class="p-space-sm rounded-xl bg-surface-container-lowest hover:bg-surface-container-low/50 transition-all shadow-sm">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-start gap-space-sm w-48 shrink-0">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary font-bold">
+<span class="material-symbols-outlined text-[20px]">local_shipping</span>
+</div>
+<div>
+<div class="flex items-center gap-1">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">#MS-8945</span>
+<span class="px-1.5 py-0.2 rounded bg-surface-container-highest text-on-surface font-label-sm text-label-sm">Rückfahrt</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant block">Alexei V. • K-MS 8812</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Sprinter 3.5t Koffer</span>
+</div>
+</div>
+<!-- Gantt Bar -->
+<div class="flex-1 flex flex-col justify-center">
+<div class="relative w-full h-8 bg-surface-container-high rounded-lg overflow-hidden flex items-center">
+<div class="absolute left-[20%] w-[30%] h-full bg-surface-dim text-on-surface flex items-center justify-center font-label-sm text-label-sm font-semibold px-1 truncate">
+                    Köln -&gt; Düsseldorf (Geliefert)
+                  </div>
+<div class="absolute left-[52%] w-[22%] h-full bg-primary-container text-on-primary flex items-center justify-center font-label-sm text-label-sm font-bold px-1 truncate">
+                    A59 Rückfahrt Hub
+                  </div>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm mt-1 px-1">
+<span>Düsseldorf Bilk -&gt; Köln West</span>
+<span class="font-tabular-data text-tabular-data font-semibold text-on-surface">14.0 m³ Laderaum leer</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Depot Flotten-Status Mini Visual -->
+<div class="mt-space-md p-space-md bg-surface-container-low rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-space-md">
+<span class="material-symbols-outlined text-[32px] text-secondary">garage_door</span>
+<div>
+<span class="font-label-lg text-label-lg font-bold text-on-surface">Depot-Kapazität Bereitstellung</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">2 Reserve-Transporter (B-MS 105, B-MS 106) einsatzbereit auf Betriebshof Berlin</p>
+</div>
+</div>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-highest hover:bg-surface-container text-on-surface font-label-sm text-label-sm font-bold transition-colors">
+            Fahrzeugpool prüfen
+          </button>
+</div>
+</div>
+<!-- Live GPS & Telematik Snapshot -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-secondary">map</span>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">Flotten-Ortung &amp; OSRM Routennetz</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">Aktualisiert alle 15 Sek.</span>
+</div>
+<!-- Map Canvas Placeholder -->
+<div class="w-full h-56 bg-cover bg-center rounded-xl relative overflow-hidden shadow-inner flex flex-col justify-end p-space-md" data-location="Germany Logistics Hub Corridor" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDvQSmGiDFmxGQs47_Wdm2v5GDbWD1HvvQ4yaPkvOn6t6EpzM0agI95LH38FhgZwgpP-Oyg-uOSfQne3IYntpfLAYtX3JfbZ0JBmQA4ianLYyWNasGl8G1Kc8JagJe34sCxwoJEdZSWqF8LDEZBdIN3MAV10EsoKujka9ytBl_2RgBkvlXvkT67SraXnqOpMWIu06p50r9iGarRqOMq5juzZOtwCQVyqJMY_cBWSTKC')">
+<div class="absolute inset-0 bg-gradient-to-t from-primary-container/85 via-primary-container/30 to-transparent pointer-events-none"></div>
+<div class="relative z-10 flex items-center justify-between text-on-primary">
+<div>
+<span class="font-headline-sm text-headline-sm font-bold block">A9 Korridor: Berlin <span class="material-symbols-outlined text-[14px] inline">arrow_forward</span> München</span>
+<span class="font-label-sm text-label-sm text-inverse-on-surface">585 km • Keine Behinderungen • OSRM dynamisch aktiv</span>
+</div>
+<span class="px-3 py-1 rounded bg-secondary text-on-secondary font-label-sm text-label-sm font-bold shadow-md">
+              Mautfrei (3.5t)
+            </span>
+</div>
+</div>
+</div>
+</section>
+<!-- RIGHT PANEL: Live-Disposition & Laderaum-Rechner (5 Cols) -->
+<section class="lg:col-span-5 flex flex-col gap-space-md">
+<!-- Unassigned Orders Box (Schnelle Auftragszuteilung) -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+<div class="flex items-center justify-between pb-space-sm mb-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-secondary">inbox</span>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">Unzugeordnete Aufträge</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold">2 wartend</span>
+</div>
+<div class="space-y-space-xs">
+<!-- Unassigned Item 1 -->
+<div class="p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container transition-all flex items-center justify-between group cursor-grab">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant group-hover:text-secondary">drag_indicator</span>
+<div>
+<span class="font-label-lg text-label-lg font-bold text-on-surface">#AUF-9021 • 3-Zimmer Wohnung</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant block">Berlin-Pankow -&gt; Potsdam • 24.5 m³ • 1.420 kg</span>
+</div>
+</div>
+<button class="px-2.5 py-1 rounded bg-primary hover:bg-primary-container text-on-primary font-label-sm text-label-sm font-semibold transition-colors shadow-sm">
+              Zuweisen
+            </button>
+</div>
+<!-- Unassigned Item 2 -->
+<div class="p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container transition-all flex items-center justify-between group cursor-grab">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant group-hover:text-secondary">drag_indicator</span>
+<div>
+<span class="font-label-lg text-label-lg font-bold text-on-surface">#AUF-9024 • Klaviertransport Express</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant block">Berlin-Kreuzberg -&gt; Charlottenburg • 4.8 m³ • 310 kg</span>
+</div>
+</div>
+<button class="px-2.5 py-1 rounded bg-primary hover:bg-primary-container text-on-primary font-label-sm text-label-sm font-semibold transition-colors shadow-sm">
+              Zuweisen
+            </button>
+</div>
+</div>
+</div>
+<!-- m³ Laderaum-Rechner & Gewichts-Prüfung -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+<div class="flex items-center justify-between pb-space-sm mb-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-primary">view_in_ar</span>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">Laderaum- &amp; Achslast-Rechner</span>
+</div>
+<span class="font-label-sm text-label-sm font-bold text-on-tertiary-container bg-tertiary-fixed/30 px-2 py-0.5 rounded">
+            DIN 75410 Konform
+          </span>
+</div>
+<!-- Vehicle Selected Header -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-center justify-between mb-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center font-bold text-primary">
+<span class="material-symbols-outlined">directions_car</span>
+</div>
+<div>
+<span class="font-label-lg text-label-lg font-bold text-on-surface">Sprinter 3.5t Koffer XXL (B-MS 104)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Laderaum: 4.20m x 2.10m x 2.20m (19.4 m³)</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant">tune</span>
+</div>
+<!-- Interactive Volume & Weight Meters -->
+<div class="space-y-space-md">
+<!-- Volume Util Meter -->
+<div>
+<div class="flex items-center justify-between text-on-surface mb-1">
+<span class="font-label-md text-label-md text-on-surface-variant font-semibold">Volumenauslastung</span>
+<span class="font-tabular-data text-tabular-data font-bold text-on-surface">12.7 m³ / 19.4 m³ (65.4%)</span>
+</div>
+<div class="w-full h-3 rounded-full bg-surface-container-high overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 65.4%;"></div>
+</div>
+<div class="flex justify-between text-on-surface-variant font-label-sm text-label-sm mt-1">
+<span>Restvolumen: <strong>6.7 m³ frei</strong></span>
+<span>Staugrad: Optimal</span>
+</div>
+</div>
+<!-- Weight & Achslast-Ampel -->
+<div class="p-space-sm rounded-xl bg-surface-container-low">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-tertiary-fixed-dim">scale</span>
+<span class="font-label-lg text-label-lg font-bold text-on-surface">Achslast &amp; Gesamtgewicht (zGG)</span>
+</div>
+<!-- Status Pill Ampel -->
+<span class="px-2 py-0.5 rounded-full bg-tertiary-fixed/30 text-on-tertiary-fixed-variant font-label-sm text-label-sm font-bold flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span> Ampel: GRÜN
+              </span>
+</div>
+<!-- Value Comparison -->
+<div class="grid grid-cols-2 gap-2 text-center mb-2">
+<div class="bg-surface-container-lowest p-2 rounded-lg">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Ist-Gewicht Beladen</span>
+<span class="font-tabular-data text-tabular-data font-bold text-on-surface text-[17px]">2.840 kg</span>
+</div>
+<div class="bg-surface-container-lowest p-2 rounded-lg">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Max. Zulässig (zGG)</span>
+<span class="font-tabular-data text-tabular-data font-bold text-on-surface text-[17px]">3.500 kg</span>
+</div>
+</div>
+<div class="w-full h-2.5 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="h-full bg-tertiary-fixed-dim rounded-full" style="width: 81.1%;"></div>
+</div>
+<div class="flex justify-between items-center mt-1.5 font-label-sm text-label-sm text-on-surface-variant">
+<span>Nutzlastreserve: <strong>+660 kg Puffer</strong></span>
+<span class="text-on-tertiary-container font-semibold">Keine Überladung</span>
+</div>
+</div>
+<!-- Furniture Cargo Preview Placeholder -->
+<div class="flex items-center gap-space-sm p-space-sm rounded-lg bg-surface-container-high/40">
+<img class="w-16 h-16 rounded object-cover shadow-sm" data-alt="Technical schematics of commercial moving truck loading compartment with stacked modular cargo furniture and securing tension straps, clean CAD style visualization in studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4wy2hc2riC5sJvIqJcpLTzH6jmGkchZ-cIFKN1LeG7ADZmykqHAM-pyTOZaZoua4N1CA8fDJCXCNgUKpUC1g9v9tHNMET2w-d75cUGH7nn3459DhpH45AQWgPH50IaFsQzhirNZlKOprtRFzWqmg4nm4inyLn50kfvYg_J8gXCAgReD7hBuJ4-mWTDXosaCnPGoyPowGo3OTC1nxHoLA3pIzSNjy5rEIwXxJJULiN"/>
+<div class="flex-1">
+<span class="font-label-md text-label-md font-bold text-on-surface block">Ladungssicherung &amp; Schwerpunkt</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Formschlüssig verladen. Schwergut (Waschmaschine, Sideboard) auf Vorderachse zentriert.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Crew Assignment Card (Besatzung) -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+<div class="flex items-center justify-between pb-space-xs mb-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-secondary">group</span>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">Besatzung &amp; Montage-Skill</span>
+</div>
+<button class="text-secondary font-label-sm text-label-sm font-bold hover:underline">
+            + Teammitglied
+          </button>
+</div>
+<div class="space-y-space-xs">
+<!-- Member 1 -->
+<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container-low">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-bold font-label-sm text-label-sm">
+                JS
+              </div>
+<div>
+<span class="font-label-md text-label-md font-bold text-on-surface block">Jens Schmidt</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Fahrer (Kl. B) • Teamleiter</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm">Fahrzeit: 4h 15m</span>
+</div>
+<!-- Member 2 -->
+<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container-low">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center font-bold font-label-sm text-label-sm">
+                MK
+              </div>
+<div>
+<span class="font-label-md text-label-md font-bold text-on-surface block">Max Krüger</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Möbelpacker / Träger</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-tertiary-fixed/30 text-on-tertiary-container font-label-sm text-label-sm font-semibold">Vor Ort</span>
+</div>
+<!-- Special Request Alert -->
+<div class="p-2.5 rounded-lg bg-secondary-fixed/30 flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-secondary-fixed-variant">
+<span class="material-symbols-outlined text-[18px]">handyman</span>
+<span class="font-label-sm text-label-sm font-bold">Küchenschreiner für München Sendling angefordert</span>
+</div>
+<button class="px-2 py-1 rounded bg-secondary hover:bg-on-secondary-container text-on-secondary font-label-sm text-label-sm font-semibold transition-colors">
+              Sub-Unternehmer buchen
+            </button>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Bottom Action Bar & Integration Controls -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<!-- Left Integration Modules: ArbZG & Tankkarten -->
+<div class="flex flex-wrap items-center gap-space-lg">
+<!-- ArbZG Compliance Watcher -->
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-tertiary-fixed/40 text-on-tertiary-fixed-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">verified_user</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">ArbZG § 3 Ruhezeiten-Wächter</span>
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Alle Fahrer im grünen Lenkzeit-Bereich (Max. 9h/Tag eingehalten)</span>
+</div>
+</div>
+<!-- Fuel & Card Integration -->
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">local_gas_station</span>
+</div>
+<div>
+<span class="font-label-lg text-label-lg font-bold text-on-surface">DKV / Shell Card Schnittstelle</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Autom. Belegabgleich DATEV &amp; Flotten-Tankkonto aktiv</span>
+</div>
+</div>
+</div>
+<!-- Right Dispatch Action Triggers -->
+<div class="flex items-center gap-space-sm flex-wrap">
+<button class="px-4 py-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-lg text-label-lg transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">print</span>
+<span>Frachtbrief CMR Drucken</span>
+</button>
+<button class="px-4 py-2.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-lg text-label-lg transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">qr_code_2</span>
+<span>Fahrer Web-Checkin QR</span>
+</button>
+<button class="px-5 py-2.5 rounded-lg bg-secondary hover:bg-on-secondary-container text-on-secondary font-label-lg text-label-lg transition-all flex items-center gap-2 shadow-md">
+<span class="material-symbols-outlined text-[20px]">send_to_mobile</span>
+<span>Tour per SMS &amp; WhatsApp an Fahrer senden</span>
+</button>
+</div>
+</div>
+</div>
+</div></main></div></body></html>

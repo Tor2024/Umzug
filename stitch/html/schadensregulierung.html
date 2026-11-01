@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+
+<html lang="de"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "on-secondary": "#ffffff",
+          "surface-dim": "#cbdbf5",
+          "secondary": "#a73a00",
+          "on-surface-variant": "#45464d",
+          "on-tertiary-fixed-variant": "#005236",
+          "on-tertiary": "#ffffff",
+          "tertiary-container": "#002113",
+          "error-container": "#ffdad6",
+          "surface-variant": "#d3e4fe",
+          "secondary-container": "#fd651e",
+          "surface-container": "#e5eeff",
+          "surface": "#f8f9ff",
+          "tertiary-fixed": "#6ffbbe",
+          "tertiary": "#000000",
+          "on-primary-fixed-variant": "#3f465c",
+          "primary": "#000000",
+          "on-tertiary-fixed": "#002113",
+          "surface-container-lowest": "#ffffff",
+          "on-error-container": "#93000a",
+          "secondary-fixed": "#ffdbce",
+          "error": "#ba1a1a",
+          "on-secondary-fixed": "#370e00",
+          "primary-fixed-dim": "#bec6e0",
+          "surface-container-high": "#dce9ff",
+          "inverse-on-surface": "#eaf1ff",
+          "secondary-fixed-dim": "#ffb599",
+          "outline-variant": "#c6c6cd",
+          "on-surface": "#0b1c30",
+          "tertiary-fixed-dim": "#4edea3",
+          "on-secondary-container": "#571a00",
+          "surface-container-highest": "#d3e4fe",
+          "on-primary": "#ffffff",
+          "primary-container": "#131b2e",
+          "outline": "#76777d",
+          "surface-container-low": "#eff4ff",
+          "surface-tint": "#565e74",
+          "primary-fixed": "#dae2fd",
+          "on-primary-container": "#7c839b",
+          "inverse-surface": "#213145",
+          "background": "#f8f9ff",
+          "inverse-primary": "#bec6e0",
+          "surface-bright": "#f8f9ff",
+          "on-secondary-fixed-variant": "#7f2b00",
+          "on-tertiary-container": "#009668",
+          "on-background": "#0b1c30",
+          "on-error": "#ffffff",
+          "on-primary-fixed": "#131b2e"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.125rem",
+          "lg": "0.25rem",
+          "xl": "0.5rem",
+          "full": "0.75rem"
+        },
+        "spacing": {
+          "space-lg": "1.5rem",
+          "space-sm": "0.5rem",
+          "gutter": "1.5rem",
+          "space-xs": "0.25rem",
+          "margin-mobile": "1rem",
+          "margin": "2rem",
+          "space-xl": "2.5rem",
+          "gutter-mobile": "1rem",
+          "space-md": "1rem"
+        },
+        "fontFamily": {
+          "body-md": [
+            "Plus Jakarta Sans"
+          ],
+          "label-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "label-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-lg-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "body-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "body-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "label-md": [
+            "Plus Jakarta Sans"
+          ],
+          "tabular-data": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-xl": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-xl-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-md": [
+            "Plus Jakarta Sans"
+          ]
+        },
+        "fontSize": {
+          "body-md": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "400"
+            }
+          ],
+          "label-sm": [
+            "11px",
+            {
+              "lineHeight": "14px",
+              "letterSpacing": "0.04em",
+              "fontWeight": "700"
+            }
+          ],
+          "headline-lg": [
+            "32px",
+            {
+              "lineHeight": "40px",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "600"
+            }
+          ],
+          "label-lg": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "letterSpacing": "0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-sm": [
+            "18px",
+            {
+              "lineHeight": "24px",
+              "letterSpacing": "-0.005em",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-lg-mobile": [
+            "24px",
+            {
+              "lineHeight": "32px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "body-lg": [
+            "16px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "400"
+            }
+          ],
+          "body-sm": [
+            "12px",
+            {
+              "lineHeight": "18px",
+              "fontWeight": "400"
+            }
+          ],
+          "label-md": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "letterSpacing": "0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "tabular-data": [
+            "15px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-xl": [
+            "44px",
+            {
+              "lineHeight": "52px",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "700"
+            }
+          ],
+          "headline-xl-mobile": [
+            "30px",
+            {
+              "lineHeight": "38px",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "700"
+            }
+          ],
+          "headline-md": [
+            "22px",
+            {
+              "lineHeight": "28px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-16 px-space-md flex items-center justify-between bg-surface-container-low"><div class="flex items-center gap-space-sm"><div class="w-7 h-7 rounded bg-secondary flex items-center justify-center"><span class="material-symbols-outlined text-on-secondary text-[18px]">local_shipping</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm font-bold text-on-surface tracking-tight leading-none">MöbelSprint</span><span class="font-label-sm text-label-sm text-secondary uppercase font-bold tracking-wider leading-none mt-space-xs">Pro Leitstand</span></div></div><div class="flex items-center gap-space-xs px-space-xs py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm"><span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span><span>LIVE</span></div></div><div class="px-space-md pt-space-md pb-space-xs"><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Logistik-Steuerung</span></div><nav class="flex flex-col gap-0.5 px-space-sm" data-active-classes="bg-surface-container text-on-surface font-label-lg rounded"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="dispo-leitstand" href="#"><span class="material-symbols-outlined text-[20px]">hub</span><span>Dispo-Leitstand</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="touren-uebersicht" href="#"><span class="material-symbols-outlined text-[20px]">alt_route</span><span>Touren-Übersicht</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="flotten-management" href="#"><span class="material-symbols-outlined text-[20px]">rv_hookup</span><span>Flotten-Kapazitäten</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="volumen-kalkulation" href="#"><span class="material-symbols-outlined text-[20px]">view_in_ar</span><span>m³ Laderaum-Rechner</span></a></nav><div class="px-space-md pt-space-lg pb-space-xs"><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Compliance &amp; Abrechnung</span></div><nav class="flex flex-col gap-0.5 px-space-sm" data-active-classes="bg-surface-container text-on-surface font-label-lg rounded"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="schadensregulierung-reklamationen" href="#"><span class="material-symbols-outlined text-[20px]">verified_user</span><span>Schadensregulierung</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded font-label-lg text-label-lg text-on-surface-variant hover:bg-space-container-low hover:text-on-surface transition-colors" data-path="datev-finanzen" href="#"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span>DATEV &amp; Finanzen</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="rbac-dsgvo" href="#"><span class="material-symbols-outlined text-[20px]">admin_panel_settings</span><span>RBAC &amp; DSGVO</span></a></nav></div><div class="p-space-md bg-surface-container-low"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-sm text-label-sm text-on-surface-variant font-bold">TÜV CERT DE-2024</span><span class="font-label-sm text-label-sm text-on-tertiary-container font-bold">Geprüft</span></div><div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden"><div class="bg-secondary h-full w-[82%]"></div></div><div class="flex justify-between items-center mt-space-xs"><span class="font-body-sm text-body-sm text-on-surface-variant">Flottenauslastung</span><span class="font-tabular-data text-tabular-data text-on-surface">82% m³</span></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-gutter"><nav class="hidden lg:flex items-center gap-space-lg" data-active-classes="text-on-surface font-semibold"><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="dispo-leitstand" href="#">Dispo-Leitstand</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="touren-uebersicht" href="#">Touren-Übersicht</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="schadensregulierung-reklamationen" href="#">Schadensregulierung &amp; Reklamationen</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="datev-finanzen" href="#">DATEV &amp; Finanzen</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="rbac-dsgvo" href="#">RBAC &amp; DSGVO</a></nav><div class="flex items-center gap-space-md ml-auto"><div class="flex items-center gap-space-xs px-space-sm py-1 rounded bg-error-container text-on-error-container font-label-sm text-label-sm"><span class="material-symbols-outlined text-[16px]">e911_emergency</span><span class="font-bold tracking-tight">NOTFALL-HOTLINE: +49 800 663235</span></div><div class="flex items-center gap-1 bg-surface-container px-space-xs py-1 rounded"><span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface-container-lowest text-on-surface font-bold cursor-pointer">DE</span><span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded text-on-surface-variant hover:text-on-surface cursor-pointer">EN</span><span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded text-on-surface-variant hover:text-on-surface cursor-pointer">RU</span><span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded text-on-surface-variant hover:text-on-surface cursor-pointer">AR</span></div><div class="flex items-center gap-space-sm pl-space-sm"><div class="flex flex-col text-right"><span class="font-label-md text-label-md text-on-surface leading-none">D. Obermeier</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-none mt-0.5">Hauptdisponent (Nord)</span></div><div class="relative"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-tertiary-fixed-dim ring-2 ring-surface-container-lowest"></span></div></div></div></header><main class="relative pt-16 w-full min-h-screen bg-surface px-gutter py-space-lg"><div class="flex flex-col w-full">
+<!-- Sub-Header Status Row -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-lg">
+<div>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider mb-1">
+<span>Logistik-Zertifizierung DE-V3</span>
+<span>•</span>
+<span class="text-secondary font-bold">HGB § 451f Konformität</span>
+</div>
+<div class="flex items-baseline gap-space-sm">
+<h1 class="font-headline-lg text-headline-lg text-on-surface font-bold tracking-tight">Schadensregulierung &amp; Reklamationen</h1>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-semibold">Allianz Rahmenvertrag #AZ-994182-MS</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Rechtssicheres Prüfprotokoll nach Handelsgesetzbuch (HGB) mit direkter digitaler Schadensmeldung an die Allianz Global Logistics.</p>
+</div>
+<div class="flex items-center gap-space-sm self-start md:self-auto">
+<button class="flex items-center gap-space-xs px-space-md py-2 rounded bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">download_for_offline</span>
+<span>Rechtsdossier PDF</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-2 rounded bg-secondary hover:bg-secondary-container text-on-secondary font-label-md text-label-md transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">add_circle</span>
+<span>Neuen Schadensfall anlegen</span>
+</button>
+</div>
+</div>
+<!-- Section 1: KPI Cards Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md mb-space-xl">
+<!-- KPI 1 -->
+<div class="bg-surface-container-lowest rounded-lg p-space-md shadow-sm relative overflow-hidden flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-bold tracking-wider">Offene Reklamationen</span>
+<span class="w-8 h-8 rounded bg-error-container text-on-error-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">gavel</span>
+</span>
+</div>
+<div class="mt-space-sm">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-lg text-headline-lg text-on-surface font-bold">3</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Fälle aktiv</span>
+</div>
+<div class="flex items-center gap-space-xs mt-1">
+<span class="px-1.5 py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">1 Dringend</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">2 in Prüfung</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs text-on-surface-variant font-body-sm text-body-sm flex items-center justify-between bg-surface-container-low -mx-space-md -mb-space-md px-space-md py-1.5">
+<span>Priorität: Sendling/München</span>
+<span class="font-bold text-secondary">Aktion erf.</span>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="bg-surface-container-lowest rounded-lg p-space-md shadow-sm relative overflow-hidden flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-bold tracking-wider">Regulierte Schadenssumme</span>
+<span class="w-8 h-8 rounded bg-surface-container text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+</span>
+</div>
+<div class="mt-space-sm">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-lg text-headline-lg text-on-surface font-bold tabular-nums">1.240,00 €</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/ Nov 2024</span>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full mt-2 overflow-hidden">
+<div class="bg-secondary h-full w-[0.5%]"></div>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs text-on-surface-variant font-body-sm text-body-sm flex items-center justify-between bg-surface-container-low -mx-space-md -mb-space-md px-space-md py-1.5">
+<span>Allianz-Deckung: 250.000 €</span>
+<span class="text-on-tertiary-container font-bold">0.49% Restrisiko</span>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="bg-surface-container-lowest rounded-lg p-space-md shadow-sm relative overflow-hidden flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-bold tracking-wider">Regulierungsdauer</span>
+<span class="w-8 h-8 rounded bg-surface-container text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">pace</span>
+</span>
+</div>
+<div class="mt-space-sm">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-lg text-headline-lg text-on-surface font-bold tabular-nums">2.4</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Werktage</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-tertiary-container font-semibold mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">trending_down</span>
+<span>-0.8 Tage vs. Branchenschnitt</span>
+</p>
+</div>
+<div class="mt-space-md pt-space-xs text-on-surface-variant font-body-sm text-body-sm flex items-center justify-between bg-surface-container-low -mx-space-md -mb-space-md px-space-md py-1.5">
+<span>SLA-Ziel: &lt; 3.0 Tage</span>
+<span class="font-bold text-on-tertiary-container">100% Eingehalten</span>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="bg-surface-container-lowest rounded-lg p-space-md shadow-sm relative overflow-hidden flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-bold tracking-wider">HGB § 451f Rügefrist-Wächter</span>
+<span class="w-8 h-8 rounded bg-surface-container-high text-on-surface flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">security_update_warning</span>
+</span>
+</div>
+<div class="mt-space-sm">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-lg text-headline-lg text-on-surface font-bold tabular-nums">7</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Tage Höchstfrist</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Verdeckte Transportschäden ab Ablieferung</p>
+</div>
+<div class="mt-space-md pt-space-xs text-on-surface-variant font-body-sm text-body-sm flex items-center justify-between bg-surface-container-low -mx-space-md -mb-space-md px-space-md py-1.5">
+<span>Aktiv überwacht: 18 Touren</span>
+<span class="font-bold text-secondary">0 Fristüberschr.</span>
+</div>
+</div>
+</div>
+<!-- Section 2: Active Case Investigation (Case #SCH-8942-01) -->
+<div class="bg-surface-container-lowest rounded-lg shadow-sm p-space-md lg:p-space-lg mb-space-xl">
+<!-- Header of Investigation -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between pb-space-md mb-space-md gap-space-sm bg-surface-container-low -mx-space-md lg:-mx-space-lg -mt-space-md lg:-mt-space-lg p-space-md lg:p-space-lg rounded-t-lg">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[28px]">search_insights</span>
+</div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider text-secondary">Aktiver Hauptfall</span>
+<span class="text-on-surface-variant">•</span>
+<span class="font-tabular-data text-tabular-data font-bold text-on-surface">Vorgang #SCH-8942-01</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm">Auftrag #MS-8942</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface font-bold mt-0.5">Schadensgutachten: Eichen-Massivholztisch (220 cm)</h2>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-space-xs">
+<span class="px-2.5 py-1 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-secondary">autorenew</span>
+          In Regulierung / Allianz Vorprüfung
+        </span>
+<span class="px-2.5 py-1 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">hourglass_top</span>
+          Rügefrist: Noch 3 Tage gültig
+        </span>
+</div>
+</div>
+<!-- Metadata Grid -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-space-md p-space-md bg-surface rounded-lg mb-space-lg text-on-surface">
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block uppercase font-bold">Geschädigter Kunde</span>
+<span class="font-label-lg text-label-lg font-bold block mt-0.5">Dr. Markus Weber</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Sendling, München (Etage 3)</span>
+</div>
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block uppercase font-bold">Fahrer &amp; Fahrzeug</span>
+<span class="font-label-lg text-label-lg font-bold block mt-0.5">Jens Schmidt</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Sprinter 3.5t (B-MS 104)</span>
+</div>
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block uppercase font-bold">Meldungszeitpunkt</span>
+<span class="font-label-lg text-label-lg font-bold block mt-0.5">15.11.2024 • 17:10 Uhr</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Fristende: 22.11.2024 (23:59)</span>
+</div>
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block uppercase font-bold">Schadensursache lt. Fahrer</span>
+<span class="font-label-lg text-label-lg font-bold block mt-0.5">Enges Treppenhaus</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Kontakt mit Wandkante bei Drehung</span>
+</div>
+</div>
+<!-- Layout Columns: Photos & Calculations -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+<!-- Left Column: Photo Dossier (7 cols) -->
+<div class="lg:col-span-7 flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[20px]">photo_library</span>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">Vergleichendes Foto-Dossier (§ 451h HGB Beweislast)</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">GPS-validierte Zeitstempel</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Vorher Photo -->
+<div class="bg-surface-container-low rounded-lg overflow-hidden flex flex-col shadow-sm">
+<div class="relative h-56 bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="High-resolution close-up of a pristine, flawless natural solid oak dining table surface packed neatly inside a moving truck during morning loading in Berlin, captured with clear industrial lighting and zero marks or scratches on the edge" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1pLSecbbWDHNHCgpT9N_tiqzqruMe69tZ7vQlG-034MpOw6xeWFSGaUb1FBc3mGcl12Lg-7fF3QOeFpPN4hOXBD2hIHzP8v_gKXTdfLgPGtsJjIi-2kulJs3mPX02FAGpb5yNg4xsAaXcO8aTLeb58sRYADI_ARCqfpsv41lgNCcJWkVp505fDrkD5kOW6UtrRZJc-XZ9UTODnDWnQsymnMA9B9fqXYxEBytCh9r1"/>
+<div class="absolute top-2 left-2 px-2 py-1 rounded bg-primary/80 backdrop-blur-md text-on-primary font-label-sm text-label-sm uppercase font-bold">
+                Vorher (Beladung)
+              </div>
+<div class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-surface/90 text-on-surface font-label-sm text-label-sm tabular-nums">
+                Berlin • 08:42 Uhr
+              </div>
+</div>
+<div class="p-space-sm flex flex-col gap-1">
+<div class="flex justify-between items-center text-on-surface">
+<span class="font-label-md text-label-md font-bold">Digitales Fahrerprotokoll</span>
+<span class="font-label-sm text-label-sm text-on-tertiary-container font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> Ohne Mängel
+                </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Kanten und Gehrungen durch Luftpolsterfolie geschützt. Keine Vorbeschädigung dokumentiert.</p>
+<span class="font-label-sm text-label-sm text-on-surface-variant pt-1">Geo-Tag: 52.5200° N, 13.4050° E</span>
+</div>
+</div>
+<!-- Nachher Photo -->
+<div class="bg-surface-container-low rounded-lg overflow-hidden flex flex-col shadow-sm">
+<div class="relative h-56 bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Detailed macro photo of a damaged edge on a solid oak tabletop showing a distinct 4-centimeter pressure scratch and small dent along the bevel, measured precisely with a yellow carpenter folding ruler positioned adjacent to the flaw in indoor ambient room lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBw5xbPlTK1i6jPjDs-CfN2zRpWJCp9m6tc9eliADrNvxZ87IdWSH2lhV_NfWABNG7jVMHGjbqx_0AeKUaWOQ1AmXDDP0kac_sn50F6XZYj3Mj-ZGAmYnsa88JjV2gHv4f1jy2IK9iEnWNwl6mmpzPvyi4LSq29ZwvkzVxNRqlAQQKXE8DP0NSN5i55t9NubwBTPNfjrRS2igAAJbYK-djzsxKNdWNKOGIhU-5AmAad"/>
+<div class="absolute top-2 left-2 px-2 py-1 rounded bg-secondary text-on-secondary font-label-sm text-label-sm uppercase font-bold">
+                Nachher (Entladung)
+              </div>
+<div class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-surface/90 text-on-surface font-label-sm text-label-sm tabular-nums">
+                München • 16:35 Uhr
+              </div>
+</div>
+<div class="p-space-sm flex flex-col gap-1">
+<div class="flex justify-between items-center text-on-surface">
+<span class="font-label-md text-label-md font-bold">Detailaufnahme mit Maßband</span>
+<span class="font-label-sm text-label-sm text-error font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[14px]">warning</span> Druckkratzer (4.2 cm)
+                </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Lackabplatzung und Holzfaserstauchung rechte Längsseite. Treppenhaus-Wandkontakt bestätigt.</p>
+<span class="font-label-sm text-label-sm text-on-surface-variant pt-1">Geo-Tag: 48.1172° N, 11.5432° E</span>
+</div>
+</div>
+</div>
+<!-- Damage Description Box -->
+<div class="p-space-md rounded bg-surface-container-low text-on-surface">
+<span class="font-label-sm text-label-sm uppercase font-bold text-on-surface-variant block mb-1">Detaillierte Schadensanalyse &amp; Haftungsfeststellung</span>
+<p class="font-body-md text-body-md leading-relaxed">
+            Bei der Verbringung durch das 3. Obergeschoss (Sendling) kollidierte das Transportgut trotz Fliesunterlage an der Treppenhauskante. 
+            Kausalität ist durch den Bildvergleich eindeutig belegt. Gemäß <strong>§ 451a HGB</strong> haftet der Möbelspediteur für Schäden, die zwischen Übernahme und Ablieferung entstehen. 
+            Eine vertragliche Haftungsbegrenzung auf 620 €/m³ Laderaum greift nicht ein, da der Schaden unterhalb des berechneten m³-Höchstbetrags (1.860,00 €) liegt.
+          </p>
+</div>
+</div>
+<!-- Right Column: Cost & Settlement Calculator (5 cols) -->
+<div class="lg:col-span-5 flex flex-col justify-between bg-surface-container-low rounded-lg p-space-md shadow-sm">
+<div>
+<div class="flex items-center justify-between pb-space-sm mb-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[20px]">calculate</span>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">Schadenskalkulation &amp; Optionen</span>
+</div>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-bold">Auto-Bewertung</span>
+</div>
+<!-- Cost Breakdown List -->
+<div class="flex flex-col gap-space-sm">
+<div class="p-space-sm rounded bg-surface-container-lowest flex justify-between items-center">
+<div>
+<span class="font-label-md text-label-md font-bold text-on-surface block">Wiederbeschaffungs- / Zeitwert</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Rechnungskauf 2022 (Designkontor)</span>
+</div>
+<span class="font-tabular-data text-tabular-data font-bold text-on-surface tabular-nums">850,00 €</span>
+</div>
+<div class="p-space-sm rounded bg-surface-container-lowest flex justify-between items-center">
+<div>
+<span class="font-label-md text-label-md font-bold text-on-surface block">Kostenvoranschlag Restaurierung</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Tischlerei Holzkunst München (Partnerbetrieb)</span>
+</div>
+<div class="text-right">
+<span class="font-tabular-data text-tabular-data font-bold text-secondary tabular-nums">180,00 €</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant block">inkl. 19% MwSt.</span>
+</div>
+</div>
+<!-- Recommended Option -->
+<div class="p-space-sm rounded bg-surface-container-high flex flex-col gap-space-xs">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-secondary text-[18px]">verified</span>
+<span class="font-label-md text-label-md font-bold text-on-surface">Empfohlene Kulanz-Sofortentschädigung</span>
+</div>
+<span class="font-tabular-data text-tabular-data font-bold text-on-surface tabular-nums">150,00 €</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Vorteil: Kein Speditionsaufwand für Möbeltransport zum Tischler, keine Mietminderung, sofortige Einigung mit Verzichtserklärung (Generalquittung nach § 397 BGB).
+              </p>
+</div>
+</div>
+</div>
+<!-- Action Control Buttons -->
+<div class="flex flex-col gap-space-xs mt-space-md pt-space-sm">
+<button class="w-full flex items-center justify-center gap-space-xs px-space-md py-2.5 rounded bg-secondary hover:bg-secondary-container text-on-secondary font-label-lg text-label-lg font-bold shadow-sm transition-colors">
+<span class="material-symbols-outlined text-[18px]">bolt</span>
+<span>Sofort-Entschädigung 150 € freigeben (Stripe/Bank Refund)</span>
+</button>
+<button class="w-full flex items-center justify-center gap-space-xs px-space-md py-2 rounded bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md font-semibold transition-colors">
+<span class="material-symbols-outlined text-[18px]">cloud_upload</span>
+<span>Allianz Schadensmeldung einreichen (SOFORT-API)</span>
+</button>
+<div class="grid grid-cols-2 gap-space-xs mt-1">
+<button class="flex items-center justify-center gap-1 px-space-sm py-2 rounded bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors">
+<span class="material-symbols-outlined text-[16px]">cancel</span>
+<span>Schaden ablehnen (§ 451g)</span>
+</button>
+<button class="flex items-center justify-center gap-1 px-space-sm py-2 rounded bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors">
+<span class="material-symbols-outlined text-[16px]">mail</span>
+<span>Kundeninfo (DE/EN/RU/AR)</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 3: Rechtskonformes Beschwerde- & Fristen-Register (Table) -->
+<div class="bg-surface-container-lowest rounded-lg shadow-sm p-space-md lg:p-space-lg mb-space-lg">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md mb-space-md">
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[22px]">history_edu</span>
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface">Rechtskonformes Beschwerde- &amp; Fristen-Register</h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Laufende und archivierte Vorgänge mit automatischer Fristprüfung nach Handelsrecht.</p>
+</div>
+<div class="flex items-center gap-space-xs">
+<div class="relative">
+<input class="h-9 pl-8 pr-3 text-body-sm font-body-sm rounded bg-surface-container text-on-surface placeholder:text-on-surface-variant focus:outline-none" placeholder="Vorgang oder Kunde suchen..." type="text"/>
+<span class="material-symbols-outlined absolute left-2 top-2 text-on-surface-variant text-[18px]">search</span>
+</div>
+<button class="h-9 px-3 rounded bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">filter_list</span>
+<span>Filter</span>
+</button>
+</div>
+</div>
+<!-- Table Container -->
+<div class="overflow-x-auto">
+<table class="w-full text-left font-body-md text-body-md">
+<thead>
+<tr class="bg-surface-container text-on-surface font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-3 px-space-md rounded-l">Vorgang / Auftrag</th>
+<th class="py-3 px-space-md">Kunde &amp; Ort</th>
+<th class="py-3 px-space-md">Schadensobjekt</th>
+<th class="py-3 px-space-md">Schadenshöhe</th>
+<th class="py-3 px-space-md">HGB-Meldefrist (§ 451f)</th>
+<th class="py-3 px-space-md">Bearbeiter</th>
+<th class="py-3 px-space-md rounded-r text-right">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y-0">
+<!-- Row 1: Active Main Case -->
+<tr class="bg-surface-container-high/40 hover:bg-surface-container-high transition-colors">
+<td class="py-3.5 px-space-md">
+<span class="font-tabular-data text-tabular-data font-bold text-secondary block">#SCH-8942-01</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">MS-8942</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-label-md text-label-md font-bold text-on-surface block">Dr. Markus Weber</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">München-Sendling</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-label-md text-label-md text-on-surface block font-semibold">Eichen-Esstisch (Massiv)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Kantenkratzer Treppenhaus</span>
+</td>
+<td class="py-3.5 px-space-md font-tabular-data text-tabular-data font-bold text-on-surface tabular-nums">
+              180,00 €
+            </td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[14px]">timer</span> Noch 3 Tage
+              </span>
+</td>
+<td class="py-3.5 px-space-md font-body-sm text-body-sm text-on-surface">
+              D. Obermeier
+            </td>
+<td class="py-3.5 px-space-md text-right">
+<span class="inline-block px-2.5 py-1 rounded bg-secondary text-on-secondary font-label-sm text-label-sm font-bold">
+                In Regulierung
+              </span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container transition-colors">
+<td class="py-3.5 px-space-md">
+<span class="font-tabular-data text-tabular-data font-bold text-on-surface block">#SCH-8910-02</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">MS-8910</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-label-md text-label-md font-bold text-on-surface block">Sybille Kramer</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Hamburg-Altona</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-label-md text-label-md text-on-surface block font-semibold">Spiegelkommode Rokoko</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Glassprung Transport</span>
+</td>
+<td class="py-3.5 px-space-md font-tabular-data text-tabular-data font-bold text-on-surface tabular-nums">
+              640,00 €
+            </td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[14px]">check</span> Fristgerecht
+              </span>
+</td>
+<td class="py-3.5 px-space-md font-body-sm text-body-sm text-on-surface">
+              A. Kroll
+            </td>
+<td class="py-3.5 px-space-md text-right">
+<span class="inline-block px-2.5 py-1 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm font-bold">
+                Gutachter beauftragt
+              </span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container transition-colors">
+<td class="py-3.5 px-space-md">
+<span class="font-tabular-data text-tabular-data font-bold text-on-surface block">#SCH-8874-01</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">MS-8874</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-label-md text-label-md font-bold text-on-surface block">Can Automotive GmbH</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Stuttgart-Mitte</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-label-md text-label-md text-on-surface block font-semibold">Server-Rack Seitenteil</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Verbiegung bei Verladung</span>
+</td>
+<td class="py-3.5 px-space-md font-tabular-data text-tabular-data font-bold text-on-surface tabular-nums">
+              420,00 €
+            </td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+                Sofortquittiert
+              </span>
+</td>
+<td class="py-3.5 px-space-md font-body-sm text-body-sm text-on-surface">
+              D. Obermeier
+            </td>
+<td class="py-3.5 px-space-md text-right">
+<span class="inline-block px-2.5 py-1 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold">
+                Ausgezahlt (Stripe)
+              </span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container transition-colors">
+<td class="py-3.5 px-space-md">
+<span class="font-tabular-data text-tabular-data font-bold text-on-surface block">#SCH-8799-03</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">MS-8799</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-label-md text-label-md font-bold text-on-surface block">Familie Lindemann</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Köln-Deutz</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-label-md text-label-md text-on-surface block font-semibold">Bücherregal Kiefer</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Altschaden gemeldet nach 14 Tagen</span>
+</td>
+<td class="py-3.5 px-space-md font-tabular-data text-tabular-data font-bold text-on-surface tabular-nums">
+              95,00 €
+            </td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+                Frist abgelaufen (Tag 14)
+              </span>
+</td>
+<td class="py-3.5 px-space-md font-body-sm text-body-sm text-on-surface">
+              H. Völker
+            </td>
+<td class="py-3.5 px-space-md text-right">
+<span class="inline-block px-2.5 py-1 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-bold">
+                Rechtssicher abgewiesen
+              </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer Pagination / Summary -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-space-sm pt-space-md mt-space-md bg-surface-container-low -mx-space-md lg:-mx-space-lg -mb-space-md lg:-mb-space-lg px-space-md lg:px-space-lg py-space-sm rounded-b-lg text-on-surface-variant font-body-sm text-body-sm">
+<div class="flex items-center gap-space-xs">
+<span>Zeige 1-4 von 38 Schadensakten (Geschäftsjahr 2024)</span>
+<span>•</span>
+<span class="text-on-tertiary-container font-semibold">Rechtsprüfungsquote: 100%</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="px-2 py-1 rounded bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm">Zurück</button>
+<button class="px-2 py-1 rounded bg-secondary text-on-secondary font-label-sm text-label-sm font-bold">1</button>
+<button class="px-2 py-1 rounded bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm">2</button>
+<button class="px-2 py-1 rounded bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm">3</button>
+<button class="px-2 py-1 rounded bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm">Weiter</button>
+</div>
+</div>
+</div>
+<!-- Section 4: Legal Compliance Banner (HGB & Insurance Guarantees) -->
+<div class="bg-primary text-on-primary rounded-lg p-space-md lg:p-space-lg shadow-sm flex flex-col md:flex-row items-start md:items-center gap-space-md justify-between">
+<div class="flex items-start gap-space-md">
+<div class="w-10 h-10 rounded bg-secondary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-secondary text-[22px]">policy</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm font-bold">Rechtliche Grundlagen &amp; Haftungsausschluss</span>
+<p class="font-body-md text-body-md text-on-primary-container mt-1 max-w-4xl leading-normal">
+          Gesetzliche Haftung des Möbelspediteurs gem. <strong>§ 451e ff. HGB</strong> (Regelhöchstbetrag 620,00 € je Kubikmeter benötigtem Laderaum). 
+          Offensichtliche Mängel müssen bei Ablieferung schriftlich auf dem Quittungsbeleg vermerkt werden (§ 451g Abs. 1 HGB). 
+          Nicht äußerlich erkennbare Schäden sind binnen <strong>7 Tagen</strong> nachweisbar schriftlich anzuzeigen (§ 451f HGB). 
+          MöbelSprint Pro versichert alle Transporte subsidiär über die Allianz Transport Police #AZ-994182 bis 250.000 € je Schadensereignis.
+        </p>
+</div>
+</div>
+<div class="flex items-center gap-space-xs shrink-0 self-end md:self-auto">
+<div class="px-3 py-1.5 rounded bg-surface-container-lowest/10 text-on-primary font-label-sm text-label-sm flex items-center gap-1.5 backdrop-blur-sm">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[16px]">verified</span>
+<span>TÜV Saarland Zertifiziert</span>
+</div>
+</div>
+</div>
+</div></main></div></body></html>

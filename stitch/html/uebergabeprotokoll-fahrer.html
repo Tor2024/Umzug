@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+
+<html lang="de"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><title>MöbelSprint DE — Dispo Leitstand</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"tertiary-container":"#002113","outline-variant":"#c6c6cd","secondary-container":"#fd651e","on-tertiary":"#ffffff","surface":"#f8f9ff","outline":"#76777d","secondary":"#a73a00","inverse-on-surface":"#eaf1ff","primary-fixed-dim":"#bec6e0","on-secondary-container":"#571a00","on-primary":"#ffffff","inverse-surface":"#213145","surface-bright":"#f8f9ff","surface-container-lowest":"#ffffff","surface-container-highest":"#d3e4fe","on-secondary":"#ffffff","on-background":"#0b1c30","on-secondary-fixed":"#370e00","surface-container":"#e5eeff","primary":"#000000","on-surface":"#0b1c30","surface-tint":"#565e74","surface-container-high":"#dce9ff","on-primary-container":"#7c839b","on-tertiary-container":"#009668","primary-container":"#131b2e","tertiary":"#000000","error-container":"#ffdad6","secondary-fixed-dim":"#ffb599","on-surface-variant":"#45464d","on-error-container":"#93000a","secondary-fixed":"#ffdbce","inverse-primary":"#bec6e0","on-primary-fixed":"#131b2e","surface-dim":"#cbdbf5","on-primary-fixed-variant":"#3f465c","on-secondary-fixed-variant":"#7f2b00","primary-fixed":"#dae2fd","tertiary-fixed":"#6ffbbe","surface-container-low":"#eff4ff","background":"#f8f9ff","on-tertiary-fixed-variant":"#005236","on-tertiary-fixed":"#002113","tertiary-fixed-dim":"#4edea3","surface-variant":"#d3e4fe","error":"#ba1a1a","on-error":"#ffffff"},borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},spacing:{"space-xs":"0.25rem","margin":"2rem","margin-mobile":"1rem","gutter":"1.5rem","space-md":"1rem","space-lg":"1.5rem","space-sm":"0.5rem","space-xl":"2.5rem","gutter-mobile":"1rem"},fontFamily:{"body-md":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"tabular-data":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"headline-xl-mobile":["Plus Jakarta Sans"],"body-sm":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"label-lg":["Plus Jakarta Sans"],"body-lg":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"]},fontSize:{"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"headline-sm":["18px",{"lineHeight":"24px","letterSpacing":"-0.005em","fontWeight":"600"}],"tabular-data":["15px",{"lineHeight":"20px","fontWeight":"600"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.015em","fontWeight":"600"}],"headline-xl-mobile":["30px",{"lineHeight":"38px","letterSpacing":"-0.015em","fontWeight":"700"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-md":["22px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"700"}],"label-lg":["14px",{"lineHeight":"20px","letterSpacing":"0.01em","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"headline-xl":["44px",{"lineHeight":"52px","letterSpacing":"-0.02em","fontWeight":"700"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}]}}}};</script></head><body class="bg-background font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest z-50 flex flex-col shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-space-lg flex items-center justify-between bg-primary-container text-on-primary"><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded bg-secondary-container text-on-secondary flex items-center justify-center"><span class="material-symbols-outlined text-[20px]">local_shipping</span></div><div><div class="font-headline-sm text-headline-sm text-surface-container-lowest leading-none">MöbelSprint</div><span class="font-label-sm text-label-sm text-surface-container-high">Dispo-Leitstand DE</span></div></div><span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-surface-container-highest text-on-surface">PRO</span></div><div class="px-space-md py-space-sm bg-surface-container-low"><div class="flex items-center justify-between text-label-sm font-label-sm"><span class="text-outline">Status Disposition:</span><span class="flex items-center gap-1 text-on-tertiary-container font-semibold"><span class="w-2 h-2 rounded-full bg-on-tertiary-container"></span>Aktiv (24/7)</span></div></div><nav class="flex-1 p-space-md flex flex-col gap-1 overflow-y-auto" data-active-classes="bg-surface-container-high text-on-surface font-headline-sm"><span class="px-space-sm py-1 font-label-sm text-label-sm uppercase tracking-wider text-outline">Touren &amp; Flotte</span><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="dispo-leitstand" href="#"><span class="material-symbols-outlined text-[20px]">alt_route</span>Touren-Übersicht</a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="dispo-flotte" href="#"><span class="material-symbols-outlined text-[20px]">fire_truck</span>LKW- &amp; Transporter-Flotte</a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="dispo-volumen" href="#"><span class="material-symbols-outlined text-[20px]">deployed_code</span>m³ Laderaum-Rechner</a><span class="px-space-sm pt-space-md py-1 font-label-sm text-label-sm uppercase tracking-wider text-outline">Kunden &amp; Finanzen</span><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="dispo-auftraege" href="#"><span class="material-symbols-outlined text-[20px]">assignment</span>Auftragsabwicklung</a><a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="dispo-rechnungen" href="#"><span class="material-symbols-outlined text-[20px]">receipt</span>§ 14 UStG Rechnungen</a><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-2.5 rounded-lg transition-colors bg-surface-container-high text-on-surface font-headline-sm" data-path="dispo-compliance" href="#"><span class="material-symbols-outlined text-[20px]">gavel</span>Recht &amp; Fahrtenbücher</a></nav><div class="p-space-md bg-surface-container-low"><div class="flex items-center gap-space-sm"><div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex-1 min-w-0"><p class="font-label-md text-label-md text-on-surface truncate font-semibold">Disponent J. Kramer</p><p class="font-label-sm text-label-sm text-outline truncate">Zentrale Berlin Nord</p></div><a class="text-outline hover:text-on-surface p-1" data-path="umzugsrechner" href="#" title="Zur Kundenansicht"><span class="material-symbols-outlined text-[18px]">logout</span></a></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs px-2.5 py-1 rounded bg-surface-container text-on-surface font-label-sm text-label-sm"><span class="material-symbols-outlined text-[16px] text-secondary">shield</span><span>DSGVO Konformität: 100% Audit-geprüft</span></div><span class="hidden lg:inline text-outline text-body-sm font-body-sm">Bundesweite Leitstelle für gewerbliche &amp; private Umzüge</span></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs font-label-sm text-label-sm text-on-surface-variant bg-surface-container-low px-2.5 py-1 rounded"><span class="material-symbols-outlined text-[16px]">support_agent</span><span>Support: 030 8900 120</span></div><a class="font-label-md text-label-md text-secondary hover:text-on-secondary-container transition-colors" data-path="umzugsrechner" href="#">Kundenportal öffnen</a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="relative pt-16 w-full px-space-lg py-space-lg bg-background min-h-screen"><div class="flex flex-col w-full">
+<div class="w-full max-w-7xl mx-auto space-y-space-lg pb-space-xl">
+<!-- Top Action & Language Switcher Bar -->
+<div class="flex flex-wrap items-center justify-between gap-space-md bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+<div class="flex items-center gap-space-sm">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-secondary-container/15 text-secondary font-label-md text-label-md">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+          Vor-Ort Modus: Mobil &amp; Tablet
+        </span>
+<span class="text-outline text-body-sm font-body-sm hidden sm:inline">Rechtssicher nach HGB § 451</span>
+</div>
+<!-- Multilingual Switcher -->
+<div class="flex items-center gap-1 bg-surface-container-low p-1 rounded-lg">
+<button class="lang-btn active px-3 py-1 rounded font-label-sm text-label-sm bg-surface-container-lowest text-on-surface shadow-sm font-bold" data-lang="de" type="button">DE</button>
+<button class="lang-btn px-3 py-1 rounded font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" data-lang="en" type="button">EN</button>
+<button class="lang-btn px-3 py-1 rounded font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" data-lang="ru" type="button">RU</button>
+<button class="lang-btn px-3 py-1 rounded font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" data-lang="ar" type="button">AR</button>
+</div>
+</div>
+<!-- 1. Header: Operational Dossier Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<!-- Driver & Vehicle Pill -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex items-start gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-primary-container text-on-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[26px]">badge</span>
+</div>
+<div class="min-w-0 flex-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline block">Fahrpersonal &amp; KFZ</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface truncate mt-0.5">Jens Schmidt</h2>
+<div class="flex items-center gap-space-xs mt-1.5 text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px] text-secondary">local_shipping</span>
+<span>Sprinter 3.5t</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm tracking-wide">B-MS 104</span>
+</div>
+</div>
+</div>
+<!-- Customer Dossier -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex items-start gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-secondary-container text-on-secondary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[26px]">person</span>
+</div>
+<div class="min-w-0 flex-1">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Auftrags-ID</span>
+<span class="font-label-sm text-label-sm font-bold text-secondary">#MS-8942</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface truncate mt-0.5">Dr. Markus Weber</h2>
+<a class="inline-flex items-center gap-1.5 mt-1.5 font-label-md text-label-md text-secondary hover:text-on-secondary-container transition-colors" href="tel:+49171459821">
+<span class="material-symbols-outlined text-[16px]">call</span>
+            +49 171 459821
+          </a>
+</div>
+</div>
+<!-- Destination Card -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex items-start gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high text-on-surface flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[26px]">pin_drop</span>
+</div>
+<div class="min-w-0 flex-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline block">Zieladresse (München)</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface truncate mt-0.5">Leopoldstraße 88</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">80802 München • 3. OG (Aufzug)</p>
+</div>
+</div>
+</div>
+<!-- 2. One-Click Smart Status Ticker (Timeline) -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm">
+<div class="flex flex-wrap items-center justify-between gap-space-sm mb-space-md">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Echtzeit-Fahrtenbuch</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Fahrer Check-in Timeline</h3>
+</div>
+<div class="flex items-center gap-2 text-on-tertiary-container bg-surface-container-low px-3 py-1.5 rounded-lg font-label-md text-label-md">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+          GPS-Stempel synchronisiert
+        </div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- Milestone 1 -->
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-tabular-data text-tabular-data text-on-surface font-bold">08:30 Uhr</span>
+<span class="w-6 h-6 rounded-full bg-tertiary-container text-on-tertiary flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</span>
+</div>
+<p class="font-headline-sm text-body-lg font-semibold text-on-surface mt-2">Beladung gestartet</p>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Berlin Charlottenburg</p>
+</div>
+<span class="inline-block mt-3 font-label-sm text-label-sm text-outline-variant">Erledigt • Autolog</span>
+</div>
+<!-- Milestone 2 -->
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-tabular-data text-tabular-data text-on-surface font-bold">10:15 Uhr</span>
+<span class="w-6 h-6 rounded-full bg-tertiary-container text-on-tertiary flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</span>
+</div>
+<p class="font-headline-sm text-body-lg font-semibold text-on-surface mt-2">Abfahrt Zentrale</p>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Route A9 Süd freigegeben</p>
+</div>
+<span class="inline-block mt-3 font-label-sm text-label-sm text-outline-variant">Erledigt • Fracht versiegelt</span>
+</div>
+<!-- Milestone 3 -->
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-tabular-data text-tabular-data text-on-surface font-bold">16:20 Uhr</span>
+<span class="w-6 h-6 rounded-full bg-tertiary-container text-on-tertiary flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</span>
+</div>
+<p class="font-headline-sm text-body-lg font-semibold text-on-surface mt-2">Ankunft &amp; Entladung</p>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">München Leopoldstraße</p>
+</div>
+<span class="inline-block mt-3 font-label-sm text-label-sm text-outline-variant">Erledigt • Haltezone aktiv</span>
+</div>
+<!-- Milestone 4 (Active Current) -->
+<div class="p-space-md rounded-lg bg-primary-container text-on-primary flex flex-col justify-between shadow-md relative overflow-hidden">
+<div class="relative z-10">
+<div class="flex items-center justify-between">
+<span class="font-tabular-data text-tabular-data text-surface-container-lowest font-bold">17:15 Uhr</span>
+<span class="px-2 py-0.5 rounded bg-secondary-container text-on-secondary font-label-sm text-label-sm font-bold">AKTIV</span>
+</div>
+<p class="font-headline-sm text-body-lg font-semibold text-on-primary mt-2">Entladung fertig</p>
+<p class="font-body-sm text-body-sm text-on-primary-container mt-0.5">Übergabeprotokoll ausfüllen</p>
+</div>
+<button class="relative z-10 mt-3 w-full py-2 bg-secondary-container text-on-secondary rounded font-label-md text-label-md flex items-center justify-center gap-1.5 hover:bg-secondary transition-colors" id="quick-checkin-btn" type="button">
+<span class="material-symbols-outlined text-[18px]">touch_app</span>
+            Check-in bestätigen
+          </button>
+</div>
+</div>
+</div>
+<!-- Main Asymmetric Workspace (Protocol + Signature + Payment) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- Left Column: 3. Legal Inspection & Inventory Checklist (7 cols) -->
+<div class="lg:col-span-7 space-y-space-md">
+<!-- Checklist Card -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm">
+<div class="flex items-center justify-between pb-space-sm">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Rechtssicher nach HGB § 451</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">3. Digitales Abnahmeprotokoll</h3>
+</div>
+<span class="font-label-md text-label-md px-2.5 py-1 rounded bg-surface-container-low text-on-surface font-semibold">48 / 48 Stk.</span>
+</div>
+<!-- Packstücke Vollzähligkeit -->
+<div class="mt-space-md p-space-md rounded-lg bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div>
+<p class="font-headline-sm text-body-lg text-on-surface font-semibold">Packstücke Entladung</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Vollzähligkeit gemäß digitalem Frachtbrief</p>
+</div>
+<div class="flex items-center gap-2">
+<button class="pack-status-btn active px-3.5 py-2 rounded bg-tertiary-container text-on-tertiary font-label-md text-label-md flex items-center gap-1.5 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+                Ja / Vollzählig (48 Stk.)
+              </button>
+<button class="pack-status-btn px-3 py-2 rounded bg-surface-container text-on-surface-variant font-label-md text-label-md hover:text-on-surface" type="button">
+                Fehlteile
+              </button>
+</div>
+</div>
+<!-- Schadensaufnahme with photo proof integration -->
+<div class="mt-space-md space-y-space-sm">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-outline">photo_camera</span>
+                Schadensaufnahme &amp; Bestandsprüfung
+              </label>
+<span class="text-label-sm font-label-sm text-on-tertiary-container font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+                Keine Neuschäden
+              </span>
+</div>
+<!-- Existing damage report callout -->
+<div class="p-space-md rounded-lg bg-surface-container flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-[20px] text-secondary mt-0.5">info</span>
+<div class="flex-1 text-body-sm font-body-sm text-on-surface">
+<p class="font-semibold">Vorbestehende Beschädigung dokumentiert:</p>
+<p class="text-on-surface-variant mt-0.5">"Keine Neuschäden festgestellt. 1 vorbestehender Kratzer am Tischbein vorab in Berlin dokumentiert."</p>
+<span class="text-outline text-label-sm font-label-sm mt-1 block">Foto-ID: #BLN-IMG-8942-01 • 08:42 Uhr erfasst</span>
+</div>
+</div>
+<!-- Visual Inspection Gallery / Camera Trigger -->
+<div class="grid grid-cols-3 gap-space-sm pt-2">
+<div class="relative h-24 rounded-lg overflow-hidden group">
+<img class="w-full h-full object-cover" data-alt="High detail crisp macro photography of a pre-existing minor surface scratch on a dark oak wooden table leg, clearly documented with natural daylight illumination, clean white warehouse background style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCO2suKUgUetqwhUru4xsv7eAHwT_rUd0AorfuecyZPJmx5oA-0XhFRJ0FPVXTKgrtUJ4mXtl4nooKm4-xokUCag1YBrlPCtpTQ97HXz1daxYuxdKRdilime7HTq2mc7r1GnZamehjlbA4ckx7SaX9Dx5LH8qim7dP98zkfp5Q6ZaY6dYrZFvXVv6vl49CLYBvHVRM1VugVCEjzWaFw7MgELxM8XCGYtGOueliiRvpd"/>
+<span class="absolute bottom-1 left-1 bg-primary/80 text-on-primary text-[10px] px-1.5 py-0.5 rounded font-label-sm">Berlin 08:42</span>
+</div>
+<div class="relative h-24 rounded-lg overflow-hidden group">
+<img class="w-full h-full object-cover" data-alt="Clean neatly packed cardboard moving boxes inside modern bright apartment hallway with parquet flooring, flawless delivery condition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJHQdG3nJ95a-kXIb-rIpwmHSXc5kWzM6-opGSCstaBneUcIhM3cvqCqWup_YMFHOXlUJtPsOEwP86ZoKX7AzLvuZmzx7_Acl0beQFCn_V6fxEw38x4g4MvGb9R0EmitTzJP1SKAPoUFI2bCf9GELWawlez2PUG4_3_pV_7QFbxLOE1YUUIas6CY0hHiG1blJ_2tYW_0_jI6HgLYTKH_iQITA-cOgT2IZHED3i93Gv"/>
+<span class="absolute bottom-1 left-1 bg-primary/80 text-on-primary text-[10px] px-1.5 py-0.5 rounded font-label-sm">München 16:30</span>
+</div>
+<button class="h-24 rounded-lg bg-surface-container flex flex-col items-center justify-center gap-1 text-on-surface hover:bg-surface-container-high transition-colors" type="button">
+<span class="material-symbols-outlined text-[26px] text-secondary">add_a_photo</span>
+<span class="font-label-sm text-label-sm">Foto hinzufügen</span>
+</button>
+</div>
+</div>
+<!-- Zusatzleistungen Quittierung -->
+<div class="mt-space-md pt-space-md bg-surface-container-lowest">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline block mb-space-xs">Zusatzleistungen vor Ort</span>
+<div class="p-space-md rounded-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="w-8 h-8 rounded bg-surface-container-high text-on-surface flex items-center justify-center font-bold">2x</span>
+<div>
+<p class="font-headline-sm text-body-md text-on-surface font-semibold">Möbelmontage Schrank</p>
+<p class="font-body-sm text-body-sm text-outline">PAX 236cm inkl. Schiebetüren justiert</p>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded bg-tertiary-container/10 text-on-tertiary-container font-label-md text-label-md font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">task_alt</span>
+                Durchgeführt
+              </span>
+</div>
+</div>
+</div>
+<!-- 4. Digital Signature Canvas Module -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm">
+<div class="flex items-center justify-between mb-space-sm">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Rechtsgültig &amp; Bindend</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">4. Digitale Kundenunterschrift</h3>
+</div>
+<button class="font-label-md text-label-md text-outline hover:text-error flex items-center gap-1 transition-colors" id="clear-sig" type="button">
+<span class="material-symbols-outlined text-[16px]">ink_eraser</span>
+              Löschen
+            </button>
+</div>
+<div class="p-space-md rounded bg-surface-container-low text-body-sm font-body-sm text-on-surface-variant leading-relaxed">
+            "Hiermit bestätige ich, <strong class="text-on-surface">Dr. Markus Weber</strong>, die ordnungsgemäße Ablieferung und Montage des Umzugsguts gemäß HGB § 451 ohne unberücksichtigte Neuschäden."
+          </div>
+<!-- Interactive Signature Area -->
+<div class="mt-space-md relative rounded-lg bg-surface overflow-hidden shadow-inner">
+<canvas class="w-full h-44 cursor-crosshair touch-none block" height="176" id="signature-pad" width="680"></canvas>
+<div class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-outline" id="sig-placeholder-hint">
+<span class="material-symbols-outlined text-[28px] opacity-40">draw</span>
+<span class="font-label-md text-label-md mt-1 opacity-60">Hier mit Finger oder Stift unterschreiben</span>
+</div>
+<!-- Baseline -->
+<div class="absolute bottom-8 left-8 right-8 h-px bg-outline-variant/50 pointer-events-none"></div>
+<span class="absolute bottom-2 left-8 font-label-sm text-label-sm text-outline pointer-events-none">Unterschrift Auftraggeber / Empfänger</span>
+</div>
+<div class="flex items-center justify-between mt-space-sm text-label-sm font-label-sm text-outline">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+              SHA-256 Zeitstempel-Verschlüsselung
+            </span>
+<span class="text-secondary font-semibold" id="sig-status">Unterschrift ausstehend</span>
+</div>
+</div>
+</div>
+<!-- Right Column: 5. Payment Settlement & Immediate Finalization (5 cols) -->
+<div class="lg:col-span-5 space-y-space-md">
+<!-- Payment Module -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm">
+<div class="flex items-center justify-between pb-space-sm">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Vor-Ort Abrechnung</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">5. Bezahlung Restbetrag</h3>
+</div>
+<span class="material-symbols-outlined text-[24px] text-secondary">payments</span>
+</div>
+<!-- Big Price Hero Box -->
+<div class="my-space-md p-space-lg rounded-xl bg-primary-container text-on-primary">
+<span class="font-label-sm text-label-sm text-surface-container-high uppercase tracking-wider block">Offener Restbetrag (Brutto)</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline-xl text-headline-xl text-on-primary font-bold">1.015,00</span>
+<span class="font-headline-lg text-headline-lg text-surface-container-lowest">€</span>
+</div>
+<div class="flex items-center justify-between pt-space-sm mt-space-sm text-on-primary-container text-body-sm font-body-sm">
+<span>Anzahlung (50%): Vorab bezahlt</span>
+<span class="font-semibold text-surface-container-high">1.015,00 € ✓</span>
+</div>
+</div>
+<!-- Payment Options (Radio Selection) -->
+<div class="space-y-space-sm" id="payment-options">
+<!-- Option 1: Barzahlung -->
+<label class="payment-option relative flex items-start gap-space-sm p-space-md rounded-lg bg-surface-container-low cursor-pointer transition-all">
+<input checked="" class="mt-1 w-4 h-4 text-secondary accent-secondary" name="payment_method" type="radio" value="bar"/>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-body-lg text-on-surface font-semibold">Barzahlung vor Ort</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container-highest text-on-surface">Sofortbeleg</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                  Quittung RE-2024-0894-BAR drucken oder per SMS versenden.
+                </p>
+</div>
+</label>
+<!-- Option 2: Smartphone Link -->
+<label class="payment-option relative flex items-start gap-space-sm p-space-md rounded-lg bg-surface-container-low cursor-pointer transition-all">
+<input class="mt-1 w-4 h-4 text-secondary accent-secondary" name="payment_method" type="radio" value="link"/>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-body-lg text-on-surface font-semibold">Smartphone-Zahlung per Link</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container-highest text-on-surface">Kontaktlos</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                  SMS / QR-Code für PayPal, Klarna oder Sofortüberweisung direkt an Kunde.
+                </p>
+</div>
+</label>
+<!-- Option 3: Rechnung freigeben -->
+<label class="payment-option relative flex items-start gap-space-sm p-space-md rounded-lg bg-surface-container-low cursor-pointer transition-all">
+<input class="mt-1 w-4 h-4 text-secondary accent-secondary" name="payment_method" type="radio" value="rechnung"/>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-body-lg text-on-surface font-semibold">Rechnung freigeben</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container-highest text-on-surface">7 Tage Ziel</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                  Offizielle Überweisung nach Vorabprüfung der Dispo Berlin.
+                </p>
+</div>
+</label>
+</div>
+<!-- Dynamic Pay Details Trigger -->
+<div class="mt-space-md p-space-md rounded-lg bg-surface-container flex items-center justify-between" id="payment-cash-actions">
+<span class="font-label-md text-label-md text-on-surface">Bargeld erhalten (1.015,00 €)</span>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 rounded bg-surface-container-lowest text-on-surface font-label-md text-label-md shadow-sm hover:bg-surface-container-high transition-colors flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[16px]">sms</span>
+                SMS Quittung
+              </button>
+<button class="px-3 py-1.5 rounded bg-surface-container-lowest text-on-surface font-label-md text-label-md shadow-sm hover:bg-surface-container-high transition-colors flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[16px]">print</span>
+                Bondrucker
+              </button>
+</div>
+</div>
+</div>
+<!-- Final Submit CTA Box -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm space-y-space-md">
+<div class="flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-[22px] text-tertiary-container mt-0.5">security_update_good</span>
+<div class="text-body-sm font-body-sm text-on-surface">
+<p class="font-semibold">Automatisierte Distribution</p>
+<p class="text-on-surface-variant mt-0.5">Beim Klick auf Abschließen wird das PDF-Übergabeprotokoll in Echtzeit generiert und verschickt an:</p>
+<ul class="mt-2 space-y-1 text-label-sm font-label-sm text-outline">
+<li class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-on-tertiary-container">done</span>
+                  Kunde: m.weber@tum.de (inkl. Quittung)
+                </li>
+<li class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-on-tertiary-container">done</span>
+                  Dispo-Zentrale Berlin Nord (Fahrtenbuch-Archiv)
+                </li>
+</ul>
+</div>
+</div>
+<button class="w-full py-3.5 px-space-lg bg-secondary text-on-secondary rounded-lg font-headline-sm text-headline-sm flex items-center justify-center gap-2 hover:bg-on-secondary-container transition-all shadow-md" id="finalize-order-btn" type="button">
+<span class="material-symbols-outlined text-[22px]">assignment_turned_in</span>
+            Auftrag abschließen &amp; PDF versenden
+          </button>
+<p class="text-center font-label-sm text-label-sm text-outline">
+            Vorgangs-ID: MS-PROTOKOLL-8942-DE-FINAL • Version 2.4
+          </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Notification Toast Simulation -->
+<div class="fixed bottom-6 right-6 z-50 bg-primary-container text-on-primary px-space-lg py-space-md rounded-xl shadow-xl flex items-center gap-space-sm transition-all transform translate-y-24 opacity-0 pointer-events-none" id="app-toast">
+<span class="material-symbols-outlined text-secondary-container text-[24px]">task_alt</span>
+<div>
+<p class="font-headline-sm text-body-md font-bold" id="toast-title">Status aktualisiert</p>
+<p class="font-body-sm text-body-sm text-on-primary-container" id="toast-desc">Echtzeit-Synchronisierung aktiv.</p>
+</div>
+</div>
+</div>
+<script>
+  // Signature Canvas Handling
+  const canvas = document.getElementById('signature-pad');
+  const ctx = canvas.getContext('2d');
+  const hint = document.getElementById('sig-placeholder-hint');
+  const sigStatus = document.getElementById('sig-status');
+  let isDrawing = false;
+  let hasSigned = false;
+
+  function setCanvasScale() {
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * window.devicePixelRatio;
+    canvas.height = rect.height * window.devicePixelRatio;
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#0F172A';
+  }
+
+  // Adjust on load
+  setTimeout(setCanvasScale, 50);
+  window.addEventListener('resize', () => {
+    if (!hasSigned) setCanvasScale();
+  });
+
+  function startPosition(e) {
+    isDrawing = true;
+    hint.classList.add('opacity-0');
+    draw(e);
+  }
+
+  function endPosition() {
+    isDrawing = false;
+    ctx.beginPath();
+    if (hasSigned) {
+      sigStatus.textContent = "Unterschrift erfasst ✓";
+      sigStatus.classList.remove('text-secondary');
+      sigStatus.classList.add('text-on-tertiary-container');
+    }
+  }
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top
+    };
+  }
+
+  function draw(e) {
+    if (!isDrawing) return;
+    hasSigned = true;
+    const pos = getPos(e);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+  }
+
+  canvas.addEventListener('mousedown', startPosition);
+  canvas.addEventListener('mouseup', endPosition);
+  canvas.addEventListener('mousemove', draw);
+
+  canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startPosition(e); }, { passive: false });
+  canvas.addEventListener('touchend', (e) => { e.preventDefault(); endPosition(); }, { passive: false });
+  canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e); }, { passive: false });
+
+  document.getElementById('clear-sig').addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    hasSigned = false;
+    hint.classList.remove('opacity-0');
+    sigStatus.textContent = "Unterschrift ausstehend";
+    sigStatus.classList.add('text-secondary');
+    sigStatus.classList.remove('text-on-tertiary-container');
+  });
+
+  // Toast Trigger Helper
+  function showToast(title, desc) {
+    const toast = document.getElementById('app-toast');
+    document.getElementById('toast-title').textContent = title;
+    document.getElementById('toast-desc').textContent = desc;
+    toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+    setTimeout(() => {
+      toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+    }, 3800);
+  }
+
+  // Quick Check-in Button
+  document.getElementById('quick-checkin-btn').addEventListener('click', () => {
+    showToast('Check-in 17:15 Uhr bestätigt', 'Status erfolgreich an Dispo Berlin übertragen.');
+  });
+
+  // Finalize Order
+  document.getElementById('finalize-order-btn').addEventListener('click', () => {
+    if (!hasSigned) {
+      showToast('Kundenunterschrift fehlt!', 'Bitte lassen Sie Dr. Weber vor Abschluss digital signieren.');
+      return;
+    }
+    showToast('Auftrag #MS-8942 abgeschlossen!', 'PDF-Übergabeprotokoll an Kunde und Leitstand versendet.');
+  });
+
+  // Language Switcher Visual Feedback
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.lang-btn').forEach(b => {
+        b.classList.remove('bg-surface-container-lowest', 'text-on-surface', 'shadow-sm', 'font-bold');
+        b.classList.add('text-on-surface-variant');
+      });
+      this.classList.add('bg-surface-container-lowest', 'text-on-surface', 'shadow-sm', 'font-bold');
+      this.classList.remove('text-on-surface-variant');
+      const lang = this.getAttribute('data-lang').toUpperCase();
+      showToast('Sprache gewechselt', 'Interface umgeschaltet auf: ' + lang);
+    });
+  });
+
+  // Payment Options Toggle Visuals
+  const paymentInputs = document.querySelectorAll('input[name="payment_method"]');
+  paymentInputs.forEach(input => {
+    input.addEventListener('change', () => {
+      const mode = input.value;
+      const cashBox = document.getElementById('payment-cash-actions');
+      if (mode === 'bar') {
+        cashBox.style.display = 'flex';
+      } else {
+        cashBox.style.display = 'none';
+      }
+    });
+  });
+</script></main></div></body></html>

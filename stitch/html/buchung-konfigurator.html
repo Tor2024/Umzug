@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+
+<html lang="de"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><title>MöbelSprint DE - Online-Buchung &amp; Umzugskonfigurator</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"tertiary-container":"#002113","outline-variant":"#c6c6cd","secondary-container":"#fd651e","on-tertiary":"#ffffff","surface":"#f8f9ff","outline":"#76777d","secondary":"#a73a00","inverse-on-surface":"#eaf1ff","primary-fixed-dim":"#bec6e0","on-secondary-container":"#571a00","on-primary":"#ffffff","inverse-surface":"#213145","surface-bright":"#f8f9ff","surface-container-lowest":"#ffffff","surface-container-highest":"#d3e4fe","on-secondary":"#ffffff","on-background":"#0b1c30","on-secondary-fixed":"#370e00","surface-container":"#e5eeff","primary":"#000000","on-surface":"#0b1c30","surface-tint":"#565e74","surface-container-high":"#dce9ff","on-primary-container":"#7c839b","on-tertiary-container":"#009668","primary-container":"#131b2e","tertiary":"#000000","error-container":"#ffdad6","secondary-fixed-dim":"#ffb599","on-surface-variant":"#45464d","on-error-container":"#93000a","secondary-fixed":"#ffdbce","inverse-primary":"#bec6e0","on-primary-fixed":"#131b2e","surface-dim":"#cbdbf5","on-primary-fixed-variant":"#3f465c","on-secondary-fixed-variant":"#7f2b00","primary-fixed":"#dae2fd","tertiary-fixed":"#6ffbbe","surface-container-low":"#eff4ff","background":"#f8f9ff","on-tertiary-fixed-variant":"#005236","on-tertiary-fixed":"#002113","tertiary-fixed-dim":"#4edea3","surface-variant":"#d3e4fe","error":"#ba1a1a","on-error":"#ffffff"},borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},spacing:{"space-xs":"0.25rem","margin":"2rem","margin-mobile":"1rem","gutter":"1.5rem","space-md":"1rem","space-lg":"1.5rem","space-sm":"0.5rem","space-xl":"2.5rem","gutter-mobile":"1rem"},fontFamily:{"body-md":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"tabular-data":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"headline-xl-mobile":["Plus Jakarta Sans"],"body-sm":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"label-lg":["Plus Jakarta Sans"],"body-lg":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"]},fontSize:{"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"headline-sm":["18px",{"lineHeight":"24px","letterSpacing":"-0.005em","fontWeight":"600"}],"tabular-data":["15px",{"lineHeight":"20px","fontWeight":"600"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.015em","fontWeight":"600"}],"headline-xl-mobile":["30px",{"lineHeight":"38px","letterSpacing":"-0.015em","fontWeight":"700"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-md":["22px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"700"}],"label-lg":["14px",{"lineHeight":"20px","letterSpacing":"0.01em","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"headline-xl":["44px",{"lineHeight":"52px","letterSpacing":"-0.02em","fontWeight":"700"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}]}}}};</script></head><body class="bg-background font-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 w-full z-50 bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="bg-primary-container text-surface-container px-margin-mobile lg:px-margin"><div class="max-w-7xl mx-auto h-9 flex items-center justify-between font-label-sm text-label-sm"><div class="flex items-center gap-space-md"><span class="flex items-center gap-space-xs text-on-tertiary-container font-headline-sm text-label-sm"><span class="material-symbols-outlined text-[14px]">verified</span>§ 14 UStG konform • DSGVO sicher • TÜV Süd • HGB § 451</span><span class="hidden md:inline-block text-outline-variant">•</span><span class="hidden md:flex items-center gap-space-xs text-surface-container-low"><span class="material-symbols-outlined text-[14px]">call</span>Dispo-Leitstelle DE: <strong class="text-surface-container-lowest font-tabular-data text-label-sm">+49 (0) 30 8900 120</strong></span></div><div class="flex items-center gap-space-lg"><div class="relative flex items-center gap-space-xs text-surface-container-lowest cursor-pointer"><span class="material-symbols-outlined text-[16px]">language</span><select aria-label="Sprache auswählen" class="bg-transparent text-surface-container-lowest font-label-sm text-label-sm focus:outline-none cursor-pointer pr-space-xs" id="lang-selector"><option class="text-on-surface bg-surface-container-lowest" selected="" value="de">DE (Deutsch)</option><option class="text-on-surface bg-surface-container-lowest" value="en">EN (English)</option><option class="text-on-surface bg-surface-container-lowest" value="ru">RU (Русский)</option><option class="text-on-surface bg-surface-container-lowest" value="ar">AR (العربية)</option></select></div><div class="hidden sm:flex items-center gap-space-sm pl-space-sm text-surface-container-low"><span class="material-symbols-outlined text-[15px]">shield_with_heart</span><span>TÜV &amp; Carrier Haftung zertifiziert</span></div></div></div></div><div class="max-w-7xl mx-auto px-margin-mobile lg:px-margin"><div class="h-16 flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-sm group" href="#"><div class="w-9 h-9 rounded-lg bg-primary-container text-on-primary flex items-center justify-center"><span class="material-symbols-outlined text-[22px] text-secondary-container">local_shipping</span></div><div class="flex flex-col"><div class="flex items-center gap-space-xs"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight">MöbelSprint</span><span class="bg-surface-container-high text-on-surface px-1.5 py-0.5 rounded text-[10px] font-bold tracking-wider">DE</span></div><span class="font-label-sm text-label-sm text-outline hidden sm:block">Geprüfter Umzugsservice DE</span></div></a><nav class="hidden xl:flex items-center gap-space-md" data-active-classes="text-secondary font-headline-sm"><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1" data-path="umzugsrechner" href="#">Startseite &amp; Umzugsrechner</a><a aria-current="page" class="transition-colors py-1 text-secondary font-headline-sm" data-path="online-buchung" href="#">Online-Buchung</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1" data-path="kundenportal" href="#">Kundenportal</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1" data-path="dispo-leitstand" href="#">Admin / Dispo-Leitstand</a></nav></div><div class="flex items-center gap-space-md"><div class="hidden md:flex flex-col items-end pr-space-sm"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-on-tertiary-container"></span><span class="font-label-md text-label-md text-on-surface">Dr. Markus Weber</span></div><span class="font-label-sm text-label-sm text-outline">Eingeloggt als Kunde</span></div><a class="hidden lg:inline-flex items-center gap-space-xs px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors" data-path="dispo-leitstand" href="#"><span class="material-symbols-outlined text-[16px]">swap_horiz</span>Admin-Portal</a><a class="flex items-center gap-space-xs" data-path="kundenportal" href="#"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></a></div></div></div></header><main class="w-full pt-[100px] bg-background min-h-screen"><div class="flex flex-col w-full">
+<!-- Interactive Form & Live Ledger Container -->
+<div class="max-w-7xl mx-auto px-margin-mobile lg:px-margin py-space-lg w-full">
+<!-- Top System Context & Assurance Banner -->
+<div class="mb-space-lg rounded-xl bg-surface-container-low p-space-md shadow-sm">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center text-secondary-container">
+<span class="material-symbols-outlined text-[24px]">verified_user</span>
+</div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface">Digitaler Umzugsvertrag &amp; Festpreisgarantie</span>
+<span class="bg-surface-container text-on-surface-variant px-2 py-0.5 rounded text-[11px] font-bold">HGB § 451</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Rechtssichere Kalkulation mit OSRM-Echtzeitdistanz, LKW-Mauterfassung, StVO § 45 Halteverbotszonen und garantierter Transportversicherung bis 620 €/m³</p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="bg-surface-container-lowest px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-space-xs font-label-md text-label-md text-on-surface">
+<span class="w-2 h-2 rounded-full bg-on-tertiary-container animate-pulse"></span>
+            Dispo-Server: OSRM Berlin Knoten aktiv
+          </div>
+<div class="bg-surface-container-lowest px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-space-xs font-label-md text-label-md text-secondary">
+<span class="material-symbols-outlined text-[16px]">lock</span>
+            SSL 256-Bit Encrypted
+          </div>
+</div>
+</div>
+</div>
+<!-- Stepper Navigation Rail (4-Schritt-Ablauf) -->
+<div class="w-full mb-space-xl">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-space-sm bg-surface-container-lowest p-space-sm rounded-xl shadow-sm">
+<!-- Step 1 Tab -->
+<button class="step-nav-btn flex items-center gap-space-sm p-space-sm rounded-lg bg-primary-container text-on-primary text-left transition-all" id="step-tab-1" onclick="switchStep(1)">
+<div class="w-7 h-7 rounded-full bg-secondary-container text-on-primary flex items-center justify-center font-label-sm text-label-sm font-bold flex-shrink-0">1</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-surface-variant uppercase tracking-wider">Schritt 1</span>
+<span class="font-headline-sm text-label-lg truncate">Adressen &amp; OSRM</span>
+</div>
+</button>
+<!-- Step 2 Tab -->
+<button class="step-nav-btn flex items-center gap-space-sm p-space-sm rounded-lg hover:bg-surface-container text-on-surface text-left transition-all" id="step-tab-2" onclick="switchStep(2)">
+<div class="w-7 h-7 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center font-label-sm text-label-sm font-bold flex-shrink-0">2</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Schritt 2</span>
+<span class="font-headline-sm text-label-lg truncate">Möbel &amp; m³-Rechner</span>
+</div>
+</button>
+<!-- Step 3 Tab -->
+<button class="step-nav-btn flex items-center gap-space-sm p-space-sm rounded-lg hover:bg-surface-container text-on-surface text-left transition-all" id="step-tab-3" onclick="switchStep(3)">
+<div class="w-7 h-7 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center font-label-sm text-label-sm font-bold flex-shrink-0">3</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Schritt 3</span>
+<span class="font-headline-sm text-label-lg truncate">HVZ &amp; Zusatzleistungen</span>
+</div>
+</button>
+<!-- Step 4 Tab -->
+<button class="step-nav-btn flex items-center gap-space-sm p-space-sm rounded-lg hover:bg-surface-container text-on-surface text-left transition-all" id="step-tab-4" onclick="switchStep(4)">
+<div class="w-7 h-7 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center font-label-sm text-label-sm font-bold flex-shrink-0">4</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Schritt 4</span>
+<span class="font-headline-sm text-label-lg truncate">Rechtliches &amp; Vertrag</span>
+</div>
+</button>
+</div>
+</div>
+<!-- Main Workspace: Split Grid (Inputs & OpenStreetMap / Live Invoice Sidebar) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- Primary Wizard Form Area (Cols 1-7) -->
+<div class="lg:col-span-7 flex flex-col gap-space-lg">
+<!-- ================= STEP 1: ROUTE & ADRESSEN ================= -->
+<section class="step-panel flex flex-col gap-space-lg" id="step-panel-1">
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary-container">trip_origin</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">1. Abholadresse (Start)</h2>
+</div>
+<span class="bg-surface-container px-2 py-0.5 rounded font-label-sm text-label-sm text-on-surface-variant">LKW-Zugangszone A</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<div class="md:col-span-2 flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant" for="start-street">Straße &amp; Hausnummer</label>
+<input class="h-11 px-3 rounded bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none" id="start-street" type="text" value="Alexanderstraße 3"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant" for="start-zip">PLZ &amp; Ort</label>
+<input class="h-11 px-3 rounded bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none" id="start-zip" type="text" value="10178 Berlin"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md pt-space-xs">
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant" for="start-floor">Etage</label>
+<select class="h-11 px-3 rounded bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none" id="start-floor">
+<option value="0">EG (Erdgeschoss)</option>
+<option value="1">1. OG</option>
+<option value="2">2. OG</option>
+<option selected="" value="3">3. OG</option>
+<option value="4">4. OG</option>
+<option value="5">5. OG oder höher</option>
+</select>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant" for="start-elevator">Aufzug vorhanden?</label>
+<select class="h-11 px-3 rounded bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none" id="start-elevator">
+<option selected="" value="yes">Ja, Personenaufzug</option>
+<option value="freight">Ja, Lastenaufzug</option>
+<option value="no">Nein (Treppentransport)</option>
+</select>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant" for="start-distance">Laufweg zum Transporter</label>
+<select class="h-11 px-3 rounded bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none" id="start-distance">
+<option value="10">&lt; 20 m (Direkt vor Tür)</option>
+<option selected="" value="30">20 m – 50 m (Innenhof)</option>
+<option value="70">&gt; 50 m (Halteverbotszone nötig)</option>
+</select>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary-container">pin_drop</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">2. Zieladresse (Einzugsort)</h2>
+</div>
+<span class="bg-surface-container px-2 py-0.5 rounded font-label-sm text-label-sm text-on-surface-variant">LKW-Zugangszone B</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<div class="md:col-span-2 flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant" for="target-street">Straße &amp; Hausnummer</label>
+<input class="h-11 px-3 rounded bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none" id="target-street" type="text" value="Sendlinger Str. 42"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant" for="target-zip">PLZ &amp; Ort</label>
+<input class="h-11 px-3 rounded bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none" id="target-zip" type="text" value="80331 München"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md pt-space-xs">
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant" for="target-floor">Etage</label>
+<select class="h-11 px-3 rounded bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none" id="target-floor">
+<option value="0">EG (Erdgeschoss)</option>
+<option selected="" value="1">1. OG</option>
+<option value="2">2. OG</option>
+<option value="3">3. OG</option>
+<option value="4">4. OG</option>
+<option value="5">5. OG oder höher</option>
+</select>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant" for="target-elevator">Aufzug vorhanden?</label>
+<select class="h-11 px-3 rounded bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none" id="target-elevator">
+<option value="yes">Ja, Personenaufzug</option>
+<option value="freight">Ja, Lastenaufzug</option>
+<option selected="" value="no">Nein (Treppentransport)</option>
+</select>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant" for="target-distance">Laufweg zum Transporter</label>
+<select class="h-11 px-3 rounded bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none" id="target-distance">
+<option selected="" value="10">&lt; 20 m (Direkt vor Haustür)</option>
+<option value="30">20 m – 50 m</option>
+<option value="70">&gt; 50 m</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Open-Source OpenStreetMap & OSRM Engine Card -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div>
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Open-Source Kartennavigation</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">OSRM Bundesfernstraßen Routing</h3>
+</div>
+<span class="px-2.5 py-1 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">public</span> OpenStreetMap Data © ODbL
+              </span>
+</div>
+<!-- Stylized OSRM Map Representation using placeholder with data-location -->
+<div class="relative w-full h-64 rounded-xl overflow-hidden shadow-inner">
+<div class="w-full h-full bg-cover bg-center" data-location="Berlin to Munich Route Germany" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB1CY-YhGI2i7hdKcRmhMnRfyPL4UgSIy7_DEwpW68swGjozfP63vaYivhVZOLLkFSuUbgiP2AVu0-IYdXhW669MqfYHk6bw-63QRTSsEdk8J9Qa4NWN5AJTZgwzIHfsvcsVSfM5CRbR6M004LMxwKYCi0ZL2qsdgDl8wiJRWrHZb98IsLLznnW2-aNmJZxACTZzmcWtXwg_dnIQ3x8K7FhMZ1Cvk3zt8qFBUVPq5Sc')"></div>
+<!-- Route overlay card -->
+<div class="absolute bottom-3 left-3 right-3 bg-surface-container-lowest/90 backdrop-blur-md p-space-sm rounded-lg flex items-center justify-between shadow-md">
+<div class="flex items-center gap-space-md">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Kalkulierte Distanz</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-tabular-data">585 km</span>
+</div>
+<div class="h-6 w-px bg-surface-variant"></div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Fahrzeit (LKW 3.5t/80kmh)</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-tabular-data">ca. 6 Std. 30 Min.</span>
+</div>
+</div>
+<div class="hidden sm:flex items-center gap-1 text-on-tertiary-container font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">alt_route</span> Autobahn A9 Mautfrei
+                </div>
+</div>
+</div>
+<div class="flex justify-end pt-space-sm">
+<button class="px-space-lg py-space-sm bg-secondary-container hover:bg-secondary text-on-primary font-headline-sm text-body-md rounded-lg flex items-center gap-space-xs transition-colors" onclick="switchStep(2)">
+                Weiter zu Schritt 2: Möbelinventar
+                <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+<!-- ================= STEP 2: MÖBELINVENTAR & KUBIKMETER ================= -->
+<section class="step-panel hidden flex flex-col gap-space-lg" id="step-panel-2">
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Raum &amp; Ladegut</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Möbel- &amp; Raumauswahl (m³-Rechner)</h2>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-label-sm text-outline">Aktuelles Ladevolumen</span>
+<div class="font-headline-lg text-headline-md text-secondary font-tabular-data" id="total-cbm-display">12.7 m³</div>
+</div>
+</div>
+<!-- Volume Capacity Progress Bar -->
+<div class="bg-surface-container rounded-lg p-space-sm flex flex-col gap-1.5">
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-on-surface font-semibold" id="truck-status-label">Auslastung Laderaum: Mercedes Sprinter 3.5t Koffer (bis 20 m³)</span>
+<span class="text-on-surface-variant font-tabular-data font-bold" id="cbm-percent">63.5% belegt</span>
+</div>
+<div class="w-full bg-surface-container-high h-2.5 rounded-full overflow-hidden">
+<div class="bg-secondary-container h-full transition-all duration-300" id="cbm-bar" style="width: 63.5%"></div>
+</div>
+</div>
+<!-- Room Category Switcher -->
+<div class="flex flex-wrap gap-space-xs pt-space-xs">
+<button class="room-tab px-3 py-1.5 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md flex items-center gap-1 cursor-pointer transition-all" onclick="filterRoom('all', this)">
+<span class="material-symbols-outlined text-[16px]">view_list</span> Alle Räume
+              </button>
+<button class="room-tab px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center gap-1 cursor-pointer transition-all" onclick="filterRoom('wohnzimmer', this)">
+<span class="material-symbols-outlined text-[16px]">chair</span> Wohnzimmer
+              </button>
+<button class="room-tab px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center gap-1 cursor-pointer transition-all" onclick="filterRoom('schlafzimmer', this)">
+<span class="material-symbols-outlined text-[16px]">bed</span> Schlafzimmer
+              </button>
+<button class="room-tab px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center gap-1 cursor-pointer transition-all" onclick="filterRoom('kueche', this)">
+<span class="material-symbols-outlined text-[16px]">soup_kitchen</span> Küche
+              </button>
+<button class="room-tab px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center gap-1 cursor-pointer transition-all" onclick="filterRoom('buero', this)">
+<span class="material-symbols-outlined text-[16px]">desk</span> Büro / Arbeitszimmer
+              </button>
+<button class="room-tab px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center gap-1 cursor-pointer transition-all" onclick="filterRoom('kartons', this)">
+<span class="material-symbols-outlined text-[16px]">package_2</span> Kartons &amp; Zubehör
+              </button>
+</div>
+<!-- Item Inventory Steppers Table -->
+<div class="flex flex-col gap-space-sm pt-space-sm" id="inventory-list">
+<!-- Item 1 - Wohnzimmer -->
+<div class="inventory-item flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors" data-room="wohnzimmer">
+<div class="flex items-center gap-space-md">
+<div class="w-9 h-9 rounded bg-surface-container-lowest flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[20px]">weekend</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-md text-on-surface">Ecksofa / Wohnlandschaft (L-Form)</span>
+<span class="font-body-sm text-body-sm text-outline">Wohnzimmer • Volumen: 2.50 m³ je Stück</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="flex items-center bg-surface-container-lowest rounded-lg p-0.5 shadow-sm">
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface hover:bg-surface-container font-bold" onclick="adjustItem('sofa', -1, 2.5)">-</button>
+<span class="w-8 text-center font-tabular-data text-body-md text-on-surface" id="qty-sofa">1</span>
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface hover:bg-surface-container font-bold" onclick="adjustItem('sofa', 1, 2.5)">+</button>
+</div>
+</div>
+</div>
+<!-- Item 2 - Schlafzimmer -->
+<div class="inventory-item flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors" data-room="schlafzimmer">
+<div class="flex items-center gap-space-md">
+<div class="w-9 h-9 rounded bg-surface-container-lowest flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[20px]">bed</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-md text-on-surface">Doppelbett (180x200 cm) inkl. Matratzen</span>
+<span class="font-body-sm text-body-sm text-outline">Schlafzimmer • Volumen: 2.20 m³ je Stück</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="flex items-center bg-surface-container-lowest rounded-lg p-0.5 shadow-sm">
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface hover:bg-surface-container font-bold" onclick="adjustItem('bed', -1, 2.2)">-</button>
+<span class="w-8 text-center font-tabular-data text-body-md text-on-surface" id="qty-bed">1</span>
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface hover:bg-surface-container font-bold" onclick="adjustItem('bed', 1, 2.2)">+</button>
+</div>
+</div>
+</div>
+<!-- Item 3 - Kueche -->
+<div class="inventory-item flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors" data-room="kueche">
+<div class="flex items-center gap-space-md">
+<div class="w-9 h-9 rounded bg-surface-container-lowest flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[20px]">table_restaurant</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-md text-on-surface">Esstisch massiv + 4 Stühle</span>
+<span class="font-body-sm text-body-sm text-outline">Küche/Essbereich • Volumen: 1.20 m³ Satz</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="flex items-center bg-surface-container-lowest rounded-lg p-0.5 shadow-sm">
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface hover:bg-surface-container font-bold" onclick="adjustItem('table', -1, 1.2)">-</button>
+<span class="w-8 text-center font-tabular-data text-body-md text-on-surface" id="qty-table">1</span>
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface hover:bg-surface-container font-bold" onclick="adjustItem('table', 1, 1.2)">+</button>
+</div>
+</div>
+</div>
+<!-- Item 4 - Schlafzimmer -->
+<div class="inventory-item flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors" data-room="schlafzimmer">
+<div class="flex items-center gap-space-md">
+<div class="w-9 h-9 rounded bg-surface-container-lowest flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[20px]">door_sliding</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-md text-on-surface">Großer Kleiderschrank (3-türig, zerlegt)</span>
+<span class="font-body-sm text-body-sm text-outline">Schlafzimmer • Volumen: 3.00 m³ je Stück</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="flex items-center bg-surface-container-lowest rounded-lg p-0.5 shadow-sm">
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface hover:bg-surface-container font-bold" onclick="adjustItem('closet', -1, 3.0)">-</button>
+<span class="w-8 text-center font-tabular-data text-body-md text-on-surface" id="qty-closet">1</span>
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface hover:bg-surface-container font-bold" onclick="adjustItem('closet', 1, 3.0)">+</button>
+</div>
+</div>
+</div>
+<!-- Item 5 - Buero -->
+<div class="inventory-item flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors" data-room="buero">
+<div class="flex items-center gap-space-md">
+<div class="w-9 h-9 rounded bg-surface-container-lowest flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[20px]">desk</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-md text-on-surface">Schreibtisch höhenverstellbar &amp; Bürostuhl</span>
+<span class="font-body-sm text-body-sm text-outline">Büro • Volumen: 1.10 m³ Satz</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="flex items-center bg-surface-container-lowest rounded-lg p-0.5 shadow-sm">
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface hover:bg-surface-container font-bold" onclick="adjustItem('desk', -1, 1.1)">-</button>
+<span class="w-8 text-center font-tabular-data text-body-md text-on-surface" id="qty-desk">0</span>
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface hover:bg-surface-container font-bold" onclick="adjustItem('desk', 1, 1.1)">+</button>
+</div>
+</div>
+</div>
+<!-- Item 6 - Kartons -->
+<div class="inventory-item flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors" data-room="kartons">
+<div class="flex items-center gap-space-md">
+<div class="w-9 h-9 rounded bg-surface-container-lowest flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-md text-on-surface">Standard Umzugskartons (2-wellig, 65L)</span>
+<span class="font-body-sm text-body-sm text-outline">Empfehlung: ca. 20–25 Kartons je Person / Zimmer (0.08 m³ je Stück)</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="flex items-center bg-surface-container-lowest rounded-lg p-0.5 shadow-sm">
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface hover:bg-surface-container font-bold" onclick="adjustItem('boxes', -5, 0.4)">-5</button>
+<span class="w-10 text-center font-tabular-data text-body-md text-on-surface" id="qty-boxes">48</span>
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface hover:bg-surface-container font-bold" onclick="adjustItem('boxes', 5, 0.4)">+5</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Dynamic Fleet Vehicle Recommendation Box -->
+<div class="mt-space-sm p-space-md rounded-xl bg-surface-container flex items-center justify-between" id="carrier-recommendation-box">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-lg bg-primary-container text-on-primary flex items-center justify-center" id="truck-icon">
+<span class="material-symbols-outlined text-[28px] text-secondary-container">local_shipping</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Automatische Fahrzeugdisposition</span>
+<span class="font-headline-sm text-headline-sm text-on-surface" id="truck-name">Mercedes Sprinter 3.5t Kofferaufbau</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant" id="truck-desc">Ideal für bis zu 20 m³ Ladung • 2 professionelle Möbelpacker &amp; Zurrgurte</span>
+</div>
+</div>
+<div class="hidden sm:flex flex-col items-end">
+<span class="font-label-sm text-label-sm text-on-tertiary-container font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> Freigabe-Kapazität ok
+                </span>
+<span class="font-body-sm text-body-sm text-outline" id="truck-payload">Max. Nutzlast: 1.150 kg</span>
+</div>
+</div>
+<div class="flex justify-between pt-space-sm">
+<button class="px-space-md py-space-sm bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-sm text-body-md rounded-lg flex items-center gap-space-xs transition-colors" onclick="switchStep(1)">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                Zurück zu Schritt 1
+              </button>
+<button class="px-space-lg py-space-sm bg-secondary-container hover:bg-secondary text-on-primary font-headline-sm text-body-md rounded-lg flex items-center gap-space-xs transition-colors" onclick="switchStep(3)">
+                Weiter zu Schritt 3: HVZ &amp; Zusatzleistungen
+                <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+<!-- ================= STEP 3: HALTEVERBOTSZONE (HVZ) & ZUSATZLEISTUNGEN ================= -->
+<section class="step-panel hidden flex flex-col gap-space-lg" id="step-panel-3">
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-xs border-b border-surface-variant">
+<div>
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Verkehrsrechtliche Anordnung StVO § 45</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Halteverbotszone (HVZ) &amp; Genehmigungsservice</h2>
+</div>
+<span class="bg-surface-container-high text-on-surface px-2.5 py-1 rounded font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">traffic</span> StVO § 45 konform
+              </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Vermeiden Sie Verzögerungen und Bußgelder durch eine behördlich genehmigte Halteverbotszone inklusive vorschriftsmäßiger Schilderaufstellung 72 Stunden vor Umzugsbeginn.</p>
+<!-- HVZ Selection Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md pt-space-xs">
+<!-- HVZ Start -->
+<div class="p-space-md rounded-xl bg-surface-container-low border border-surface-variant flex flex-col justify-between gap-space-sm">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-body-md text-on-surface font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-secondary-container text-[18px]">trip_origin</span> HVZ Berlin (Abholort)
+                  </span>
+<span class="font-tabular-data font-bold text-on-surface">94,90 €</span>
+</div>
+<p class="font-body-sm text-body-sm text-outline mt-1">Alexanderstraße 3, 10178 Berlin • 15 Meter Ladezone vor dem Gebäude</p>
+<div class="mt-2 text-[11px] text-on-surface-variant bg-surface-container p-2 rounded">
+                  Behördengebühr: 45,00 € + Beschilderungsservice: 49,90 €
+                </div>
+</div>
+<label class="flex items-center gap-space-sm cursor-pointer mt-space-xs">
+<input checked="" class="w-4 h-4 rounded text-secondary-container focus:ring-0" id="check-hvz-start" onchange="toggleHvzOption()" type="checkbox"/>
+<span class="font-label-md text-label-md text-on-surface font-medium">Halteverbotszone Startadresse buchen</span>
+</label>
+</div>
+<!-- HVZ Target -->
+<div class="p-space-md rounded-xl bg-surface-container-low border border-surface-variant flex flex-col justify-between gap-space-sm">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-body-md text-on-surface font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-secondary-container text-[18px]">pin_drop</span> HVZ München (Zielort)
+                  </span>
+<span class="font-tabular-data font-bold text-on-surface">94,90 €</span>
+</div>
+<p class="font-body-sm text-body-sm text-outline mt-1">Sendlinger Str. 42, 80331 München • 15 Meter Ladezone vor dem Gebäude</p>
+<div class="mt-2 text-[11px] text-on-surface-variant bg-surface-container p-2 rounded">
+                  Behördengebühr: 45,00 € + Beschilderungsservice: 49,90 €
+                </div>
+</div>
+<label class="flex items-center gap-space-sm cursor-pointer mt-space-xs">
+<input checked="" class="w-4 h-4 rounded text-secondary-container focus:ring-0" id="check-hvz-target" onchange="toggleHvzOption()" type="checkbox"/>
+<span class="font-label-md text-label-md text-on-surface font-medium">Halteverbotszone Zieladresse buchen</span>
+</label>
+</div>
+</div>
+<!-- Additional Services -->
+<div class="pt-space-md">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-space-sm">Optionale Zusatzservices</h3>
+<div class="flex flex-col gap-space-xs">
+<label class="flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container cursor-pointer transition-colors">
+<div class="flex items-center gap-space-sm">
+<input class="w-4 h-4 rounded text-secondary-container focus:ring-0" id="opt-assembly" onchange="toggleServiceOption()" type="checkbox"/>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-md text-on-surface">Fachgerechte Möbel-Demontage &amp; Montage</span>
+<span class="font-body-sm text-body-sm text-outline">Schränke und Betten durch geschulte Tischler demontieren &amp; aufbauen</span>
+</div>
+</div>
+<span class="font-tabular-data font-bold text-on-surface">+180,00 €</span>
+</label>
+<label class="flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container cursor-pointer transition-colors">
+<div class="flex items-center gap-space-sm">
+<input class="w-4 h-4 rounded text-secondary-container focus:ring-0" id="opt-kitchen" onchange="toggleServiceOption()" type="checkbox"/>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-md text-on-surface">Küchenab- und Aufbau inkl. Sanitär-/Herdanschluss</span>
+<span class="font-body-sm text-body-sm text-outline">Zertifizierte Elektro- und Wasseranschlussmontage</span>
+</div>
+</div>
+<span class="font-tabular-data font-bold text-on-surface">+290,00 €</span>
+</label>
+<label class="flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low hover:bg-surface-container cursor-pointer transition-colors">
+<div class="flex items-center gap-space-sm">
+<input class="w-4 h-4 rounded text-secondary-container focus:ring-0" id="opt-paint" onchange="toggleServiceOption()" type="checkbox"/>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-md text-on-surface">Endreinigung &amp; Übergabeservice der alten Wohnung</span>
+<span class="font-body-sm text-body-sm text-outline">Besenreine Übergabe an Vermieter mit Protokoll</span>
+</div>
+</div>
+<span class="font-tabular-data font-bold text-on-surface">+140,00 €</span>
+</label>
+</div>
+</div>
+<div class="flex justify-between pt-space-sm">
+<button class="px-space-md py-space-sm bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-sm text-body-md rounded-lg flex items-center gap-space-xs transition-colors" onclick="switchStep(2)">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                Zurück zu Schritt 2
+              </button>
+<button class="px-space-lg py-space-sm bg-secondary-container hover:bg-secondary text-on-primary font-headline-sm text-body-md rounded-lg flex items-center gap-space-xs transition-colors" onclick="switchStep(4)">
+                Weiter zu Schritt 4: Rechtliches &amp; Vertrag
+                <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+<!-- ================= STEP 4: RECHTLICHES, ZAHLUNG & VERTRAG ================= -->
+<section class="step-panel hidden flex flex-col gap-space-lg" id="step-panel-4">
+<!-- German Law Compliance Checkboxes -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Gesetzliche Vorschriften DE</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Rechtliche Zustimmungen &amp; Widerruf</h2>
+</div>
+<span class="bg-surface-container-high text-on-surface px-2 py-0.5 rounded font-label-sm text-label-sm">BGB &amp; DSGVO konform</span>
+</div>
+<div class="flex flex-col gap-space-sm">
+<!-- Checkbox 1 -->
+<label class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container-low cursor-pointer hover:bg-surface-container transition-colors">
+<input checked="" class="mt-1 w-4 h-4 rounded text-secondary-container focus:ring-0 cursor-pointer" id="legal-agb" type="checkbox"/>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-md text-on-surface">Ich akzeptiere die AGB und die Datenschutzerklärung (DSGVO Art. 13)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Ich willige ein, dass meine Daten gemäß Art. 6 Abs. 1 lit. b DSGVO zur Durchführung des Umzugs- und Transportvertrages verarbeitet werden.</span>
+</div>
+</label>
+<!-- Checkbox 2 -->
+<label class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container-low cursor-pointer hover:bg-surface-container transition-colors">
+<input checked="" class="mt-1 w-4 h-4 rounded text-secondary-container focus:ring-0 cursor-pointer" id="legal-widerruf" type="checkbox"/>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-md text-on-surface">Widerrufsbelehrung für Verbraucher (§ 356 BGB)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Ich habe die Belehrung über mein 14-tägiges gesetzliches Widerrufsrecht zur Kenntnis genommen.</span>
+</div>
+</label>
+<!-- Checkbox 3 (Verzicht auf Widerrufsrecht nach § 356 Abs. 4 BGB) -->
+<label class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container-low cursor-pointer hover:bg-surface-container transition-colors">
+<input checked="" class="mt-1 w-4 h-4 rounded text-secondary-container focus:ring-0 cursor-pointer" id="legal-early" type="checkbox"/>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-md text-on-surface">Verzicht auf Widerrufsrecht nach § 356 Abs. 4 BGB bei sofortiger Ausführung</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Ich verlange ausdrücklich und stimme zu, dass MöbelSprint vor Ende der 14-tägigen Widerrufsfrist mit der Ausführung der Dienstleistung beginnt. Mir ist bekannt, dass mein Widerrufsrecht bei vollständiger Vertragserfüllung erlischt (§ 356 Abs. 4 BGB).</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Payment Methods & Installment -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md">
+<div>
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Zahlungskonditionen</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Zahlungsweise wählen (30% Anzahlung / 70% nach Abnahme)</h3>
+</div>
+<!-- Installment explanation -->
+<div class="grid grid-cols-2 gap-space-md p-space-sm rounded-lg bg-surface-container text-on-surface">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Anzahlung heute zur Disposition (30%)</span>
+<span class="font-headline-sm text-headline-sm font-tabular-data text-secondary" id="payment-box-down">435,18 €</span>
+<span class="font-body-sm text-body-sm text-outline">Termin- &amp; Fahrzeuggarantie gesichert</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">Restbetrag nach Übergabe (70%)</span>
+<span class="font-headline-sm text-headline-sm font-tabular-data text-on-surface" id="payment-box-remain">1.015,43 €</span>
+<span class="font-body-sm text-body-sm text-outline">Erst fällig nach ordnungsgemäßer Entladung</span>
+</div>
+</div>
+<!-- Radio grid of German popular payment methods -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md pt-space-xs">
+<label class="flex items-center gap-space-sm p-space-md rounded-xl bg-surface-container-low cursor-pointer hover:bg-surface-container transition-colors">
+<input checked="" class="w-4 h-4 text-secondary-container" name="pay-method" type="radio" value="sepa"/>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-md text-on-surface flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">account_balance</span> SEPA-Lastschrift &amp; Überweisung
+                  </span>
+<span class="font-body-sm text-body-sm text-outline">Rechnung mit IBAN (DE) &amp; QR-Code</span>
+</div>
+</label>
+<label class="flex items-center gap-space-sm p-space-md rounded-xl bg-surface-container-low cursor-pointer hover:bg-surface-container transition-colors">
+<input class="w-4 h-4 text-secondary-container" name="pay-method" type="radio" value="paypal"/>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-md text-on-surface flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">wallet</span> PayPal Express
+                  </span>
+<span class="font-body-sm text-body-sm text-outline">Mit Käuferschutz direkt online zahlen</span>
+</div>
+</label>
+<label class="flex items-center gap-space-sm p-space-md rounded-xl bg-surface-container-low cursor-pointer hover:bg-surface-container transition-colors">
+<input class="w-4 h-4 text-secondary-container" name="pay-method" type="radio" value="klarna"/>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-md text-on-surface flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">credit_score</span> Klarna Sofort / Rechnung
+                  </span>
+<span class="font-body-sm text-body-sm text-outline">Zahlung in 30 Tagen oder flexibel</span>
+</div>
+</label>
+<label class="flex items-center gap-space-sm p-space-md rounded-xl bg-surface-container-low cursor-pointer hover:bg-surface-container transition-colors">
+<input class="w-4 h-4 text-secondary-container" name="pay-method" type="radio" value="creditcard"/>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-md text-on-surface flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">credit_card</span> Kreditkarte (Visa / Mastercard)
+                  </span>
+<span class="font-body-sm text-body-sm text-outline">3D-Secure 2.0 authentifiziert</span>
+</div>
+</label>
+</div>
+<!-- Client Info Contact Block -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md pt-space-xs">
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant" for="client-name">Vollständiger Name / Firma</label>
+<input class="h-11 px-3 rounded bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none" id="client-name" type="text" value="Dr. Markus Weber"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant" for="client-phone">Mobilnummer für Fahrer-SMS</label>
+<input class="h-11 px-3 rounded bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none" id="client-phone" type="text" value="+49 171 98765432"/>
+</div>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary-container">mark_email_read</span>
+<span class="font-body-sm text-body-sm text-on-surface">Nach Klick auf „Kostenpflichtig buchen“ erhalten Sie sofort die rechtsgültige Buchungsbestätigung mit PDF-Voranschlag nach § 14 UStG per E-Mail.</span>
+</div>
+<!-- Big Action Button (German legally required phrasing 'Zahlungspflichtig bestellen/buchen') -->
+<button class="w-full py-4 bg-secondary-container hover:bg-secondary text-on-primary font-headline-sm text-headline-sm rounded-xl flex items-center justify-center gap-space-sm shadow-md transition-all cursor-pointer" onclick="completeBooking()">
+<span class="material-symbols-outlined text-[24px]">verified</span>
+<span id="btn-submit-text">Kostenpflichtig buchen mit Festpreisgarantie (1.450,61 €)</span>
+</button>
+<div class="flex justify-between items-center text-outline font-body-sm text-body-sm">
+<button class="flex items-center gap-1 hover:text-on-surface cursor-pointer" onclick="switchStep(3)">
+<span class="material-symbols-outlined text-[16px]">arrow_back</span> Zurück zu Zusatzleistungen
+              </button>
+<span>Verschlüsselt via Deutsche Telekom Cloud</span>
+</div>
+</div>
+</section>
+</div>
+<!-- ================= SIDEBAR: LIVE LEDGER & COST TRANSPARENCY (Cols 8-12) ================= -->
+<div class="lg:col-span-5 flex flex-col gap-space-md sticky top-[110px]">
+<!-- German Compliant Live Quotation Breakdown -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-on-surface">receipt_long</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Kostenvoranschlag</h3>
+</div>
+<span class="bg-surface-container-high px-2 py-0.5 rounded font-label-sm text-label-sm text-on-surface">Festpreis-Index DE</span>
+</div>
+<!-- Line items -->
+<div class="flex flex-col gap-space-xs font-body-md text-body-md text-on-surface">
+<div class="flex justify-between items-center py-1">
+<div class="flex flex-col">
+<span>Distanzpauschale (585 km OSRM)</span>
+<span class="text-outline text-body-sm">Inkl. Autobahnmaut &amp; Kraftstoff</span>
+</div>
+<span class="font-tabular-data font-bold">585,00 €</span>
+</div>
+<div class="flex justify-between items-center py-1">
+<div class="flex flex-col">
+<span id="label-carrier-basis">Transporter &amp; 2 Packer (Basis 12.7 m³)</span>
+<span class="text-outline text-body-sm" id="carrier-sublabel">Beladung, Sicherung &amp; Entladung</span>
+</div>
+<span class="font-tabular-data font-bold" id="cost-carrier-basis">420,00 €</span>
+</div>
+<div class="flex justify-between items-center py-1">
+<div class="flex flex-col">
+<span>Etagenzuschlag &amp; Laufwege</span>
+<span class="text-outline text-body-sm">Berlin 3. OG (Lift) / München 1. OG (Treppe)</span>
+</div>
+<span class="font-tabular-data font-bold">145,00 €</span>
+</div>
+<div class="flex justify-between items-center py-1">
+<div class="flex flex-col">
+<span id="label-boxes">48 Standard Umzugskartons (Leihbasis)</span>
+<span class="text-outline text-body-sm">Anlieferung 7 Tage vor Umzug</span>
+</div>
+<span class="font-tabular-data font-bold" id="cost-boxes">68,99 €</span>
+</div>
+<!-- HVZ Service Line Item -->
+<div class="flex justify-between items-center py-1" id="ledger-hvz-row">
+<div class="flex flex-col">
+<span id="label-hvz">Halteverbotszonen (Start &amp; Ziel)</span>
+<span class="text-outline text-body-sm">Inkl. Genehmigung &amp; Schilderaufstellung</span>
+</div>
+<span class="font-tabular-data font-bold" id="cost-hvz">189,80 €</span>
+</div>
+<!-- Optional Services Line Item -->
+<div class="hidden flex justify-between items-center py-1" id="ledger-addons-row">
+<div class="flex flex-col">
+<span>Zusatzleistungen &amp; Montage</span>
+<span class="text-outline text-body-sm" id="label-addons-sub">Spezialisierte Handwerkerleistungen</span>
+</div>
+<span class="font-tabular-data font-bold" id="cost-addons">0,00 €</span>
+</div>
+<!-- Legal Insurance Notice § 451g HGB included -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-start gap-space-xs mt-space-xs">
+<span class="material-symbols-outlined text-on-tertiary-container text-[18px]">verified</span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-sm text-on-surface">Grundhaftung nach § 451g HGB inklusive</span>
+<span class="font-body-sm text-body-sm text-outline" id="insurance-cbm-deck">Transportversicherung bis 620 € je Kubikmeter (Deckung: 7.874,00 €) ist im Bruttopreis enthalten.</span>
+</div>
+</div>
+</div>
+<!-- Total Calculation Ledger conforming strictly to § 14 UStG -->
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-xs">
+<div class="flex justify-between items-center font-body-md text-body-md text-on-surface-variant">
+<span>Nettobetrag (Zwischensumme):</span>
+<span class="font-tabular-data text-on-surface font-semibold" id="price-net">1.218,99 €</span>
+</div>
+<div class="flex justify-between items-center font-body-md text-body-md text-on-surface-variant">
+<span>Umsatzsteuer (19% MwSt. § 14 UStG):</span>
+<span class="font-tabular-data text-on-surface font-semibold" id="price-vat">231,62 €</span>
+</div>
+<div class="h-px bg-surface-variant my-1"></div>
+<div class="flex justify-between items-baseline">
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-sm text-on-surface">Gesamtbetrag (Brutto):</span>
+<span class="font-label-sm text-label-sm text-outline">Endpreis inkl. aller Nebenkosten</span>
+</div>
+<span class="font-headline-xl text-headline-lg font-bold text-secondary-container font-tabular-data" id="price-gross">1.450,61 €</span>
+</div>
+</div>
+<!-- Split Payment breakdown pill -->
+<div class="flex flex-col gap-1 p-space-sm rounded-lg bg-surface-container text-on-surface font-label-md text-label-md">
+<div class="flex items-center justify-between">
+<span>Heute fällige 30% Anzahlung:</span>
+<span class="font-bold font-tabular-data text-secondary" id="price-downpayment">435,18 €</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-normal">
+<span>Restzahlung 70% nach Abnahme:</span>
+<span class="font-bold font-tabular-data text-on-surface" id="price-remaining">1.015,43 €</span>
+</div>
+</div>
+<!-- Guarantee Badge -->
+<div class="flex items-center gap-space-xs justify-center text-outline font-body-sm text-body-sm pt-space-xs">
+<span class="material-symbols-outlined text-[16px]">thumb_up</span>
+            Keine Nachberechnung am Umzugstag bei korrekten Angaben
+          </div>
+</div>
+<!-- Help & Hotline Box -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded bg-surface-container flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[20px]">headset_mic</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-md text-on-surface">Fragen zur Disposition?</span>
+<span class="font-body-sm text-body-sm text-outline">Dispo-Zentrale Berlin: 08:00 – 19:00 Uhr</span>
+</div>
+</div>
+<a class="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors" href="tel:+49308900120">
+            Anrufen
+          </a>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive Micro-interactions & Configurator Script -->
+<script>
+    let currentVolume = 12.7;
+    const baseDistancePrice = 585.00;
+    const baseFloorPrice = 145.00;
+    let boxesCount = 48;
+    let hvzPrice = 189.80; // 2 x 94.90
+    let addonsTotal = 0;
+
+    function switchStep(stepNumber) {
+      // Toggle panels
+      for (let i = 1; i <= 4; i++) {
+        const panel = document.getElementById('step-panel-' + i);
+        const tab = document.getElementById('step-tab-' + i);
+        if (panel && tab) {
+          if (i === stepNumber) {
+            panel.classList.remove('hidden');
+            tab.classList.add('bg-primary-container', 'text-on-primary');
+            tab.classList.remove('text-on-surface');
+            const badge = tab.querySelector('.w-7');
+            if (badge) {
+              badge.classList.add('bg-secondary-container', 'text-on-primary');
+              badge.classList.remove('bg-surface-container-highest', 'text-on-surface');
+            }
+          } else {
+            panel.classList.add('hidden');
+            tab.classList.remove('bg-primary-container', 'text-on-primary');
+            tab.classList.add('text-on-surface');
+            const badge = tab.querySelector('.w-7');
+            if (badge) {
+              badge.classList.remove('bg-secondary-container', 'text-on-primary');
+              badge.classList.add('bg-surface-container-highest', 'text-on-surface');
+            }
+          }
+        }
+      }
+      window.scrollTo({ top: 120, behavior: 'smooth' });
+    }
+
+    function filterRoom(room, btn) {
+      // Highlight button
+      document.querySelectorAll('.room-tab').forEach(b => {
+        b.classList.remove('bg-primary-container', 'text-on-primary');
+        b.classList.add('bg-surface-container', 'text-on-surface');
+      });
+      btn.classList.add('bg-primary-container', 'text-on-primary');
+      btn.classList.remove('bg-surface-container', 'text-on-surface');
+
+      // Filter items
+      const items = document.querySelectorAll('.inventory-item');
+      items.forEach(item => {
+        if (room === 'all' || item.getAttribute('data-room') === room) {
+          item.classList.remove('hidden');
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+    }
+
+    function adjustItem(id, delta, cbmPerUnit) {
+      const qtyElem = document.getElementById('qty-' + id);
+      if (!qtyElem) return;
+      let qty = parseInt(qtyElem.innerText, 10);
+      let newQty = qty + delta;
+      if (newQty < 0) return;
+      qtyElem.innerText = newQty;
+
+      if (id === 'boxes') {
+        boxesCount = newQty;
+        currentVolume = Math.max(2.0, parseFloat((currentVolume + (delta * (0.4 / 5))).toFixed(2)));
+      } else {
+        currentVolume = Math.max(2.0, parseFloat((currentVolume + (delta * cbmPerUnit)).toFixed(2)));
+      }
+      updateLiveSummary();
+    }
+
+    function toggleHvzOption() {
+      const startCheck = document.getElementById('check-hvz-start').checked;
+      const targetCheck = document.getElementById('check-hvz-target').checked;
+      
+      let count = 0;
+      if (startCheck) count++;
+      if (targetCheck) count++;
+
+      hvzPrice = count * 94.90;
+
+      const hvzRow = document.getElementById('ledger-hvz-row');
+      const hvzLabel = document.getElementById('label-hvz');
+      const hvzCostElem = document.getElementById('cost-hvz');
+
+      if (count === 0) {
+        hvzRow.classList.add('hidden');
+      } else {
+        hvzRow.classList.remove('hidden');
+        hvzLabel.innerText = count === 2 ? 'Halteverbotszonen (Start & Ziel)' : (startCheck ? 'Halteverbotszone (Berlin Start)' : 'Halteverbotszone (München Ziel)');
+        hvzCostElem.innerText = hvzPrice.toFixed(2).replace('.', ',') + ' €';
+      }
+      updateLiveSummary();
+    }
+
+    function toggleServiceOption() {
+      const assembly = document.getElementById('opt-assembly').checked;
+      const kitchen = document.getElementById('opt-kitchen').checked;
+      const paint = document.getElementById('opt-paint').checked;
+
+      addonsTotal = 0;
+      if (assembly) addonsTotal += 180.00;
+      if (kitchen) addonsTotal += 290.00;
+      if (paint) addonsTotal += 140.00;
+
+      const row = document.getElementById('ledger-addons-row');
+      const cost = document.getElementById('cost-addons');
+      if (addonsTotal > 0) {
+        row.classList.remove('hidden');
+        cost.innerText = addonsTotal.toFixed(2).replace('.', ',') + ' €';
+      } else {
+        row.classList.add('hidden');
+      }
+      updateLiveSummary();
+    }
+
+    function updateLiveSummary() {
+      // Update Volume Indicator
+      const volDisp = document.getElementById('total-cbm-display');
+      if (volDisp) volDisp.innerText = currentVolume.toFixed(1) + ' m³';
+
+      // Truck recommendation logic (> 20 m3 upgrade to 7.5t LKW)
+      const truckStatusLabel = document.getElementById('truck-status-label');
+      const truckName = document.getElementById('truck-name');
+      const truckDesc = document.getElementById('truck-desc');
+      const truckPayload = document.getElementById('truck-payload');
+      const pctDisp = document.getElementById('cbm-percent');
+      const bar = document.getElementById('cbm-bar');
+
+      let maxCap = 20.0;
+      if (currentVolume > 20.0) {
+        maxCap = 35.0;
+        if (truckStatusLabel) truckStatusLabel.innerText = 'Auslastung Laderaum: MAN TGL 7.5t Möbelkoffer (bis 35 m³)';
+        if (truckName) truckName.innerText = 'MAN TGL 7.5t LKW Kofferaufbau';
+        if (truckDesc) truckDesc.innerText = 'Ausreichend für bis zu 35 m³ Großumzug • 3 professionelle Möbelpacker inkl.';
+        if (truckPayload) truckPayload.innerText = 'Max. Nutzlast: 2.800 kg';
+      } else {
+        if (truckStatusLabel) truckStatusLabel.innerText = 'Auslastung Laderaum: Mercedes Sprinter 3.5t Koffer (bis 20 m³)';
+        if (truckName) truckName.innerText = 'Mercedes Sprinter 3.5t Kofferaufbau';
+        if (truckDesc) truckDesc.innerText = 'Ideal für bis zu 20 m³ Ladung • 2 professionelle Möbelpacker & Zurrgurte';
+        if (truckPayload) truckPayload.innerText = 'Max. Nutzlast: 1.150 kg';
+      }
+
+      const pct = Math.min(100, Math.round((currentVolume / maxCap) * 100));
+      if (pctDisp) pctDisp.innerText = pct + '% belegt (' + maxCap + ' m³ Max)';
+      if (bar) bar.style.width = pct + '%';
+
+      // Boxes Pricing
+      const boxesCost = boxesCount * (68.99 / 48);
+      const boxesCostElem = document.getElementById('cost-boxes');
+      const boxesLabelElem = document.getElementById('label-boxes');
+      if (boxesCostElem) boxesCostElem.innerText = boxesCost.toFixed(2).replace('.', ',') + ' €';
+      if (boxesLabelElem) boxesLabelElem.innerText = boxesCount + ' Standard Umzugskartons (Leihbasis)';
+
+      // Insurance notice calculation
+      const insDeck = (currentVolume * 620).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const insElem = document.getElementById('insurance-cbm-deck');
+      if (insElem) insElem.innerText = 'Transportversicherung bis 620 € je Kubikmeter (Deckung: ' + insDeck + ' €) ist im Bruttopreis enthalten.';
+
+      // Carrier base
+      const carrierBase = currentVolume > 20.0 ? 380 + (currentVolume * 15.5) : 250 + (currentVolume * 13.38);
+      const carrierLabelElem = document.getElementById('label-carrier-basis');
+      const carrierSublabel = document.getElementById('carrier-sublabel');
+      if (carrierLabelElem) carrierLabelElem.innerText = (currentVolume > 20.0 ? 'LKW 7.5t & 3 Packer' : 'Transporter & 2 Packer') + ' (Basis ' + currentVolume.toFixed(1) + ' m³)';
+      if (carrierSublabel) carrierSublabel.innerText = currentVolume > 20.0 ? 'Beladung, Ladebordwand & Entladung' : 'Beladung, Sicherung & Entladung';
+
+      // Pricing ledger
+      const net = baseDistancePrice + carrierBase + baseFloorPrice + boxesCost + hvzPrice + addonsTotal;
+      const vat = net * 0.19;
+      const gross = net + vat;
+      const downpayment = gross * 0.3;
+      const remaining = gross * 0.7;
+
+      const carrierCostElem = document.getElementById('cost-carrier-basis');
+      const netElem = document.getElementById('price-net');
+      const vatElem = document.getElementById('price-vat');
+      const grossElem = document.getElementById('price-gross');
+      const downElem = document.getElementById('price-downpayment');
+      const remainElem = document.getElementById('price-remaining');
+      const payBoxDown = document.getElementById('payment-box-down');
+      const payBoxRemain = document.getElementById('payment-box-remain');
+      const btnSubmit = document.getElementById('btn-submit-text');
+
+      if (carrierCostElem) carrierCostElem.innerText = carrierBase.toFixed(2).replace('.', ',') + ' €';
+      if (netElem) netElem.innerText = net.toFixed(2).replace('.', ',') + ' €';
+      if (vatElem) vatElem.innerText = vat.toFixed(2).replace('.', ',') + ' €';
+      if (grossElem) grossElem.innerText = gross.toFixed(2).replace('.', ',') + ' €';
+      if (downElem) downElem.innerText = downpayment.toFixed(2).replace('.', ',') + ' €';
+      if (remainElem) remainElem.innerText = remaining.toFixed(2).replace('.', ',') + ' €';
+      if (payBoxDown) payBoxDown.innerText = downpayment.toFixed(2).replace('.', ',') + ' €';
+      if (payBoxRemain) payBoxRemain.innerText = remaining.toFixed(2).replace('.', ',') + ' €';
+      if (btnSubmit) btnSubmit.innerText = 'Kostenpflichtig buchen mit Festpreisgarantie (' + gross.toFixed(2).replace('.', ',') + ' €)';
+    }
+
+    function completeBooking() {
+      const agb = document.getElementById('legal-agb').checked;
+      const widerruf = document.getElementById('legal-widerruf').checked;
+      const early = document.getElementById('legal-early').checked;
+      if (!agb || !widerruf || !early) {
+        alert("Bitte bestätigen Sie alle rechtlich vorgeschriebenen Checkboxen (AGB, Widerrufsbelehrung und § 356 BGB Ausführung), um die Buchung abzuschließen.");
+        return;
+      }
+      alert("Buchung erfolgreich verarbeitet gem. HGB § 451. Ihre Buchungsbestätigung und der vorläufige Frachtbrief werden an die hinterlegte E-Mail-Adresse gesendet.");
+    }
+
+    // Initialize initial values
+    window.addEventListener('DOMContentLoaded', () => {
+      toggleHvzOption();
+    });
+  </script>
+</div></main><footer class="w-full bg-surface-container-low text-on-surface pt-space-xl pb-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="max-w-7xl mx-auto px-margin-mobile lg:px-margin"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-space-lg pb-space-xl"><div class="lg:col-span-2 flex flex-col gap-space-sm"><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded bg-primary-container text-on-primary flex items-center justify-center"><span class="material-symbols-outlined text-[18px] text-secondary-container">local_shipping</span></div><span class="font-headline-sm text-headline-sm text-on-surface">MöbelSprint Deutschland GmbH</span></div><p class="font-body-md text-body-md text-on-surface-variant max-w-sm">Bundesweiter Umzugs- und Möbeltransport nach deutschen Transportstandards. Rechtssicher, DSGVO-konform und transparent kalkuliert gemäß HGB § 451 &amp; StVO § 45.</p><div class="flex flex-wrap items-center gap-space-xs pt-space-xs"><span class="px-2 py-1 rounded bg-surface-container-highest text-on-surface font-label-sm text-label-sm">TÜV Süd zertifiziert</span><span class="px-2 py-1 rounded bg-surface-container-highest text-on-surface font-label-sm text-label-sm">HGB Güterkraftverkehr</span><span class="px-2 py-1 rounded bg-surface-container-highest text-on-surface font-label-sm text-label-sm">SSL 256-bit</span></div></div><div class="flex flex-col gap-space-sm"><span class="font-headline-sm text-label-lg text-on-surface uppercase tracking-wider">Rechtliches</span><ul class="flex flex-col gap-space-xs font-body-md text-body-md"><li class="py-0.5"><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="impressum" href="#">Impressum (§ 5 TMG)</a></li><li class="py-0.5"><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="datenschutz" href="#">Datenschutz (DSGVO Art. 13)</a></li><li class="py-0.5"><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="agb" href="#">AGB (Allg. Geschäftsbedingungen)</a></li><li class="py-0.5"><a class="text-on-surface-variant hover:text-on-surface transition-colors" data-path="widerruf" href="#">Widerrufsbelehrung (§ 356 BGB)</a></li></ul></div><div class="flex flex-col gap-space-sm"><span class="font-headline-sm text-label-lg text-on-surface uppercase tracking-wider">Zahlungsarten</span><ul class="flex flex-col gap-space-xs font-body-md text-body-md text-on-surface-variant"><li class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[18px]">account_balance</span>SEPA-Lastschrift &amp; Überweisung</li><li class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[18px]">credit_score</span>Klarna Sofort / Rechnung</li><li class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[18px]">wallet</span>PayPal Express</li><li class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[18px]">credit_card</span>Kreditkarte (Visa &amp; Mastercard)</li></ul></div><div class="flex flex-col gap-space-sm"><span class="font-headline-sm text-label-lg text-on-surface uppercase tracking-wider">Direktkontakt &amp; Notdienst</span><div class="font-body-md text-body-md text-on-surface-variant flex flex-col gap-space-xs"><span>MöbelSprint DE Disposition</span><span class="font-tabular-data text-body-md text-on-surface">Friedrichstraße 176, 10117 Berlin</span><span>Mo–Sa: 07:00 – 20:00 Uhr</span><span class="text-secondary font-tabular-data text-body-md">Tel: +49 (0) 30 8900 120</span></div></div></div><div class="pt-space-lg flex flex-col sm:flex-row items-center justify-between gap-space-md font-body-sm text-body-sm text-outline"><p>© 2025 MöbelSprint Deutschland GmbH. Alle Rechte vorbehalten. Konform mit § 14 UStG &amp; Art. 6 DSGVO.</p><div class="flex items-center gap-space-md"><span class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-on-tertiary-container"></span>Systemstatus: Alle Dispo-Knoten DE online</span></div></div></div></footer></body></html>

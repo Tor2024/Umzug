@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+
+<html lang="de"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-primary-fixed":"#131b2e","surface-bright":"#f8f9ff","on-background":"#0b1c30","on-error-container":"#93000a","on-tertiary-fixed-variant":"#005236","tertiary-container":"#002113","on-primary-fixed-variant":"#3f465c","error-container":"#ffdad6","tertiary-fixed-dim":"#4edea3","surface-dim":"#cbdbf5","surface-container":"#e5eeff","on-secondary-container":"#571a00","on-primary":"#ffffff","surface-container-low":"#eff4ff","background":"#f8f9ff","surface-container-highest":"#d3e4fe","error":"#ba1a1a","secondary-fixed":"#ffdbce","on-tertiary-fixed":"#002113","inverse-on-surface":"#eaf1ff","on-secondary":"#ffffff","surface":"#f8f9ff","surface-container-high":"#dce9ff","on-surface":"#0b1c30","on-secondary-fixed":"#370e00","on-error":"#ffffff","inverse-primary":"#bec6e0","tertiary-fixed":"#6ffbbe","surface-variant":"#d3e4fe","on-tertiary":"#ffffff","secondary":"#a73a00","on-surface-variant":"#45464d","secondary-fixed-dim":"#ffb599","primary":"#000000","primary-fixed":"#dae2fd","tertiary":"#000000","surface-container-lowest":"#ffffff","primary-fixed-dim":"#bec6e0","on-secondary-fixed-variant":"#7f2b00","on-primary-container":"#7c839b","secondary-container":"#fd651e","outline":"#76777d","surface-tint":"#565e74","outline-variant":"#c6c6cd","inverse-surface":"#213145","primary-container":"#131b2e","on-tertiary-container":"#009668"},borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},spacing:{"space-md":"1rem","gutter-mobile":"1rem","margin-mobile":"1rem","space-lg":"1.5rem","space-xl":"2.5rem","gutter":"1.5rem","space-xs":"0.25rem","margin":"2rem","space-sm":"0.5rem"},fontFamily:{"headline-lg":["Plus Jakarta Sans"],"label-lg":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"],"body-sm":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"tabular-data":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"headline-xl-mobile":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"body-lg":["Plus Jakarta Sans"]},fontSize:{"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.015em","fontWeight":"600"}],"label-lg":["14px",{"lineHeight":"20px","letterSpacing":"0.01em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"headline-sm":["18px",{"lineHeight":"24px","letterSpacing":"-0.005em","fontWeight":"600"}],"headline-xl":["44px",{"lineHeight":"52px","letterSpacing":"-0.02em","fontWeight":"700"}],"tabular-data":["15px",{"lineHeight":"20px","fontWeight":"600"}],"headline-md":["22px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-xl-mobile":["30px",{"lineHeight":"38px","letterSpacing":"-0.015em","fontWeight":"700"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"700"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}]}}}}</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-16 px-space-md flex items-center gap-space-sm bg-surface-container-low"><div class="flex items-center justify-center w-8 h-8 rounded-lg bg-primary-container text-on-primary font-headline-sm text-headline-sm font-bold">M</div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm font-bold text-on-surface leading-none tracking-tight">MöbelSprint</span><span class="font-label-sm text-label-sm uppercase text-secondary font-bold tracking-widest">PRO Leitstand</span></div></div><div class="px-space-md py-space-sm"><div class="flex items-center justify-between px-space-sm py-space-xs rounded-lg bg-surface-container-low"><span class="font-label-sm text-label-sm uppercase text-on-surface-variant font-bold">Systemstatus</span><span class="flex items-center gap-1 font-label-sm text-label-sm text-on-tertiary-container font-semibold"><span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim inline-block"></span> Live DISPO</span></div></div><nav class="px-space-sm space-y-space-xs mt-space-xs" data-active-classes="bg-surface-container-high text-on-surface font-semibold"><div class="px-space-sm pt-space-sm pb-space-xs font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Logistik-Steuerung</div><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="dispo-leitstand" href="#"><span class="material-symbols-outlined text-[20px]">hub</span><span>Dispo-Leitstand</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="touren-planung-disposition" href="#"><span class="material-symbols-outlined text-[20px]">alt_route</span><span>Touren-Planung &amp; Disposition</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="hvz-behordenmanager" href="#"><span class="material-symbols-outlined text-[20px]">traffic</span><span>HVZ-Behördenmanager</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="flotten-kapazitaten" href="#"><span class="material-symbols-outlined text-[20px]">local_shipping</span><span>Flotten-Kapazitäten</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="m3-laderaum-rechner" href="#"><span class="material-symbols-outlined text-[20px]">view_in_ar</span><span>m³ Laderaum-Rechner</span></a><div class="px-space-sm pt-space-md pb-space-xs font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Compliance &amp; Abrechnung</div><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="schadensregulierung-hgb" href="#"><span class="material-symbols-outlined text-[20px]">verified_user</span><span>Schadensregulierung HGB</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="datev-finanzen" href="#"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span>DATEV &amp; Finanzen</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="rbac-dsgvo" href="#"><span class="material-symbols-outlined text-[20px]">admin_panel_settings</span><span>RBAC &amp; DSGVO</span></a></nav></div><div class="p-space-md bg-surface-container-low m-space-sm rounded-xl"><div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm mb-1"><span>Flottenauslastung</span><span class="font-bold font-tabular-data text-tabular-data text-on-surface">87%</span></div><div class="w-full h-1.5 rounded-full bg-surface-container-high overflow-hidden"><div class="h-full bg-secondary w-[87%]"></div></div><div class="flex items-center justify-between mt-2 font-label-sm text-label-sm text-on-surface-variant"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">speed</span> Nord-Achse</span><span class="text-secondary font-semibold">14 Touren aktiv</span></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-gutter"><nav class="hidden xl:flex items-center gap-1" data-active-classes="bg-surface-container-high text-on-surface font-semibold"><a class="px-3 py-1.5 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="dispo-leitstand" href="#">Dispo-Leitstand</a><a class="px-3 py-1.5 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="touren-planung-disposition" href="#">Touren-Planung</a><a class="px-3 py-1.5 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="hvz-behordenmanager" href="#">Halteverbotszonen (HVZ)</a><a class="px-3 py-1.5 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="schadensregulierung-hgb" href="#">Schadensregulierung &amp; Reklamationen</a><a class="px-3 py-1.5 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="datev-finanzen" href="#">DATEV &amp; Finanzen</a><a class="px-3 py-1.5 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="rbac-dsgvo" href="#">RBAC &amp; DSGVO</a></nav><div class="flex items-center gap-space-md ml-auto"><div class="flex items-center bg-surface-container-low rounded-lg p-0.5 font-label-sm text-label-sm font-semibold"><button class="px-2 py-1 rounded bg-surface-container-lowest text-on-surface shadow-[0_1px_4px_rgba(0,0,0,0.04)]" type="button">DE</button><button class="px-2 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors" type="button">EN</button><button class="px-2 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors" type="button">RU</button><button class="px-2 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors" type="button">AR</button></div><div class="h-6 w-px bg-outline-variant/40"></div><div class="flex items-center gap-space-sm pl-1"><div class="flex flex-col text-right hidden sm:flex"><span class="font-label-lg text-label-lg text-on-surface font-semibold leading-tight">D. Obermeier</span><span class="font-label-sm text-label-sm text-on-surface-variant">Hauptdisponent (Nord)</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="relative pt-16 bg-surface min-h-screen px-space-gutter py-space-md"><div class="flex flex-col w-full">
+<!-- Legal & Context Top Banner -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container-low p-space-lg shadow-sm mb-space-lg">
+<div class="absolute -right-16 -top-16 w-64 h-64 rounded-full bg-secondary/5 blur-3xl pointer-events-none"></div>
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md relative z-10">
+<div class="flex flex-col space-y-1">
+<div class="flex items-center gap-space-sm">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-surface-container-highest text-on-surface font-label-sm text-label-sm uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
+            § 45 Abs. 6 StVO • VRAO zertifiziert
+          </span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container text-on-tertiary-container font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">gavel</span>
+            BVerwG Az. 3 C 25.16 Konform
+          </span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight mt-1">
+          Behördliche Halteverbotszonen (HVZ) — Straßenverkehrsamt &amp; Tiefbauamt
+        </h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-4xl">
+          Zentrales Register für Sondernutzungserlaubnisse im öffentlichen Verkehrsraum. Lückenlose Beweislastumkehr nach 72-Stunden-Rechtsprechung mit verifizierter Kfz-Negativliste und amtlichem Aufstellprotokoll.
+        </p>
+</div>
+<div class="flex items-center gap-space-sm shrink-0">
+<button class="inline-flex items-center gap-2 px-space-md py-2.5 rounded-lg bg-surface-container-lowest text-on-surface shadow-sm hover:bg-surface-container transition-colors font-label-lg text-label-lg" type="button">
+<span class="material-symbols-outlined text-[20px] text-secondary">verified</span>
+<span>Prüfbericht VRAO</span>
+</button>
+<button class="inline-flex items-center gap-2 px-space-md py-2.5 rounded-lg bg-secondary text-on-secondary shadow-md hover:opacity-95 transition-all font-label-lg text-label-lg" type="button">
+<span class="material-symbols-outlined text-[20px]">download</span>
+<span>Amtliche Genehmigung PDF (KVR-III/45-8942)</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Key Metrics & Fristenwächter -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-space-md mb-space-lg">
+<!-- Metric 1 -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Aktive Zonen bundesweit</span>
+<span class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[20px]">traffic</span>
+</span>
+</div>
+<div class="mt-space-sm">
+<div class="flex items-baseline gap-2">
+<span class="font-headline-xl text-headline-xl text-on-surface font-tabular-data leading-none">14</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Standorte live</span>
+</div>
+<div class="mt-2 flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">
+<span class="inline-block w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
+<span>Berlin (4), München (5), Hamburg (3), FFM (2)</span>
+</div>
+</div>
+</div>
+<!-- Metric 2: 72h Guard -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">72h-Fristenwächter (StVO)</span>
+<span class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-on-tertiary-container">
+<span class="material-symbols-outlined text-[20px]">hourglass_top</span>
+</span>
+</div>
+<div class="mt-space-sm">
+<div class="flex items-baseline gap-2">
+<span class="font-headline-xl text-headline-xl text-on-surface font-tabular-data leading-none">0</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Versäumnisse</span>
+</div>
+<div class="mt-2 flex items-center gap-1.5 font-label-sm text-label-sm text-on-tertiary-container">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+<span>100% fotobeweis-validiert (§ 12 StVO)</span>
+</div>
+</div>
+</div>
+<!-- Metric 3: Fees -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Amtsgebühren (Lfd. Monat)</span>
+<span class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+</span>
+</div>
+<div class="mt-space-sm">
+<div class="flex items-baseline gap-2">
+<span class="font-headline-xl text-headline-xl text-on-surface font-tabular-data leading-none">720,00</span>
+<span class="font-label-md text-label-md text-on-surface-variant">EUR</span>
+</div>
+<div class="mt-2 flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Weiterverrechnung an Auftraggeber</span>
+<span class="font-bold text-on-surface">100%</span>
+</div>
+</div>
+</div>
+<!-- Metric 4: Towing link -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Notfall-Abschleppdienst</span>
+<span class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">car_crash</span>
+</span>
+</div>
+<div class="mt-space-sm">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary-container"></span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">PI 13 &amp; Abschlepp-Nord</span>
+</div>
+<div class="mt-2 flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Bereitschaft 24/7 aktiv</span>
+<button class="text-secondary font-label-sm text-label-sm font-bold hover:underline flex items-center gap-0.5" type="button">
+<span>Direktruf</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Core Workspace: 2-Column Master-Detail Layout -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg mb-space-lg">
+<!-- Left Column: Master Case File (7 cols on xl) -->
+<div class="xl:col-span-7 flex flex-col space-y-space-md">
+<!-- Primary Case Header Card -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="flex flex-wrap items-center justify-between gap-space-sm pb-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="px-2 py-1 rounded bg-surface-container-high text-on-surface font-label-md text-label-md font-bold">
+              AKT-HVZ-8942-MUC
+            </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Kreisverwaltungsreferat München</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container text-on-tertiary-container font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed-dim"></span>
+              72h-Beweiskette lückenlos
+            </span>
+</div>
+</div>
+<div class="mt-space-sm flex flex-col md:flex-row md:items-baseline justify-between gap-2">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface font-bold">
+              Auftrag Dr. Markus Weber
+            </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-0.5">
+              Umzugsroute: Berlin-Charlottenburg → München-Schwabing
+            </p>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Gesamtgebühr KVR &amp; Logistik</span>
+<span class="font-tabular-data text-tabular-data text-on-surface text-headline-sm font-bold">146,49 €</span>
+</div>
+</div>
+<!-- Multi-Zone Selector / Status Ribbons -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-sm mt-space-md">
+<!-- Zone A -->
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase font-bold text-on-surface-variant">Zone A • Startort Berlin</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">
+                Abgeschlossen
+              </span>
+</div>
+<div class="mt-2">
+<p class="font-label-lg text-label-lg text-on-surface font-semibold">Alexanderstraße 3, 10178 Berlin</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">15 Meter • Schild-ID: B-774 • Ordnungsamt Mitte</p>
+</div>
+<div class="mt-3 flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span>Gültig war: 13.11. 08:00 - 16:00</span>
+<span class="text-on-surface font-semibold">Freigegeben</span>
+</div>
+</div>
+<!-- Zone B (Active Target) -->
+<div class="p-space-md rounded-lg bg-surface-container-high flex flex-col justify-between relative overflow-hidden">
+<div class="absolute right-0 top-0 w-2 h-full bg-secondary"></div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase font-bold text-secondary">Zone B • Zielort München</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary text-on-secondary font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-on-secondary animate-pulse"></span>
+                AKTIV GÜLTIG
+              </span>
+</div>
+<div class="mt-2">
+<p class="font-label-lg text-label-lg text-on-surface font-bold">Leopoldstraße 88, 80802 München</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">18 Meter (Zug + Hebebühne) • KVR München</p>
+</div>
+<div class="mt-3 flex items-center justify-between text-on-surface font-body-sm text-body-sm">
+<span class="font-semibold">Heute: 15.11.2024, 07:00 – 19:00 Uhr</span>
+<span class="font-label-sm text-label-sm text-secondary font-bold">Zz. MöbelSprint</span>
+</div>
+</div>
+</div>
+<!-- Official Signage Specifications & Conditions -->
+<div class="mt-space-md p-space-md rounded-lg bg-surface-container-low flex flex-col space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded bg-surface-container-highest flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[16px]">signpost</span>
+</span>
+<span class="font-label-lg text-label-lg font-bold text-on-surface">Verkehrszeichen-Anordnung (VzA) &amp; Auflagen</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">AZ: KVR-III/45-8942 • Gebühr: 48,00 €</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-on-surface pt-1">
+<div class="p-2 rounded bg-surface-container-lowest">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Hauptzeichen</span>
+<span class="font-label-md text-label-md font-bold">VZ 283-10 (Absolutes Halteverbot)</span>
+</div>
+<div class="p-2 rounded bg-surface-container-lowest">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Zusatzzeichen</span>
+<span class="font-label-md text-label-md font-bold">1040-34 (Mo-Fr 7-19h MöbelSprint)</span>
+</div>
+<div class="p-2 rounded bg-surface-container-lowest">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Behördenauflage</span>
+<span class="font-label-md text-label-md font-bold">Gehwegbreite min. 1,50 m frei</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Negativliste & 72h Protokollierung (Critical Legal Proof) -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col space-y-space-md">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+<div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[22px]">policy</span>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">
+                Amtliches Aufstellprotokoll &amp; Negativliste
+              </h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+              Aufstellung am 12.11.2024, 14:00 Uhr (Exakt 72h vor Beginn) • Protokollant: M. Bachmann (Schilder Express DE)
+            </p>
+</div>
+<span class="px-2.5 py-1 rounded bg-surface-container text-on-tertiary-container font-label-sm text-label-sm font-bold shrink-0">
+            Rechtswirksam gem. § 12 StVO
+          </span>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container-low text-on-surface">
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+<strong class="text-on-surface font-semibold">Hinweis zur Beweislast:</strong> Fahrzeuge, die bei Aufstellung bereits im Bereich parkten, wurden mit amtlichem Kennzeichen, Fabrikat und Ventilstellungen dokumentiert. Bei Missachtung berechtigt dies zur unverzüglichen Kostenbelastung des Fahrzeughalters im Falle einer Abschleppmaßnahme.
+          </p>
+</div>
+<!-- Negative List Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left font-body-sm text-body-sm">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-2.5 px-3 rounded-l">Kennzeichen</th>
+<th class="py-2.5 px-3">Fabrikat / Modell</th>
+<th class="py-2.5 px-3">Ventilstand (Beweis)</th>
+<th class="py-2.5 px-3">Aktueller Status</th>
+<th class="py-2.5 px-3 rounded-r text-right">Maßnahme</th>
+</tr>
+</thead>
+<tbody class="divide-y-0">
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<td class="py-3 px-3 font-tabular-data font-bold text-on-surface">M - XY 912</td>
+<td class="py-3 px-3 text-on-surface">BMW 320d (Dunkelblau)</td>
+<td class="py-3 px-3 text-on-surface-variant font-tabular-data">VR: 10 vor 4 • HR: 12:00</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[12px]">warning</span> Blockiert Zone
+                  </span>
+</td>
+<td class="py-3 px-3 text-right">
+<button class="px-2.5 py-1 rounded bg-secondary text-on-secondary font-label-sm text-label-sm font-semibold hover:opacity-90 transition-opacity" type="button">
+                    Abschlepper rufen (PI 13)
+                  </button>
+</td>
+</tr>
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<td class="py-3 px-3 font-tabular-data font-bold text-on-surface">M - AB 4421</td>
+<td class="py-3 px-3 text-on-surface">VW Golf VII (Silber)</td>
+<td class="py-3 px-3 text-on-surface-variant font-tabular-data">VR: 20 nach 7 • HR: 9:15</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container text-on-tertiary-container font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[12px]">check</span> Bereits weggefahren
+                  </span>
+</td>
+<td class="py-3 px-3 text-right text-on-surface-variant font-label-sm text-label-sm">
+                  Keine Aktion erf.
+                </td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Photo Documentation with GPS watermark placeholder -->
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="font-label-md text-label-md font-bold text-on-surface">Fotodokumentation &amp; GPS-Geotag</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">2 Aufnahmen hinterlegt • Zeitstempel 12.11.2024 14:04:19</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-sm">
+<div class="relative rounded-lg overflow-hidden bg-surface-container-high h-40">
+<img class="w-full h-full object-cover" data-alt="Official high-contrast photo of street with newly installed temporary no parking traffic signs signs in Munich Schwabing, Leopoldstrasse, with clear daylight, asphalt road, and houses in background, crisp German municipal documentation style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLfTsVjnhEAeUCb_MslgDec_WBUVk11bjKay7x-PkT-Q7b63Au0X0efJHluJXlRRIEVRO2zeZJ89awvJHFnHueWP2TZuKcuUWIGwU6gXh4qNxmzaQRTnkdLF2tgicZrpj0u2yN1CFyKNW_BuLACAWnM9OYNqw_ctlpOtz6qJcIaw54g7SJzChGDqedDuUTtnGzJcK3LFEBF68tnwRaZe5fbGHehdjT2OZzAJi_SSUY"/>
+<div class="absolute bottom-0 inset-x-0 bg-surface-container-lowest/90 backdrop-blur-sm p-2 flex items-center justify-between text-on-surface">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-bold">VZ-Aufstellung Anfang (Leopoldstr. 88)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-tabular-data">48.1612° N, 11.5864° E</span>
+</div>
+<span class="material-symbols-outlined text-secondary text-[18px]">verified</span>
+</div>
+</div>
+<div class="relative rounded-lg overflow-hidden bg-surface-container-high h-40">
+<img class="w-full h-full object-cover" data-alt="Official close up photo of temporary German traffic signs showing absolute no-parking sign 283 with supplementary sign Mo-Fr 7-19h MoebelSprint and inspection tag attached to pole, clear daylight municipal documentation" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgEjyJJyzzGQCYIeHXPWa2qtgDulzToJIGx2d0XHYDBDA4PEFyToCvIzTDdJq2yovxGXgb3DZb165rIEX5oqkgaUfPc_D05pSkPgkxAePq0IRcgDGhp1EfEwSJFY9JDR88t8F_3uobDIa-wxPcxCjyIFJH0PBJrzSuwyFAqmc62o1XwHCvTRdSyh7ddrLak6QsEwNKdbYRMANZwwqnzq3iC9NEV3db4bCYCx5CErEC"/>
+<div class="absolute bottom-0 inset-x-0 bg-surface-container-lowest/90 backdrop-blur-sm p-2 flex items-center justify-between text-on-surface">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-bold">VZ-Aufstellung Ende (Leopoldstr. 90)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-tabular-data">48.1614° N, 11.5867° E</span>
+</div>
+<span class="material-symbols-outlined text-secondary text-[18px]">verified</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Interactive Zone Calculator & Express Submission (5 cols on xl) -->
+<div class="xl:col-span-5 flex flex-col space-y-space-md">
+<!-- Interactive HVZ Calculator Card -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col space-y-space-md">
+<div class="flex items-center justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">
+              Neuer HVZ-Antrag &amp; Kalkulator
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+              Automatische Behörden-Einreichung beim zuständigen Tiefbauamt
+            </p>
+</div>
+<span class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[20px]">add_road</span>
+</span>
+</div>
+<form class="space-y-space-sm" onsubmit="event.preventDefault();">
+<!-- City / Jurisdiction Select -->
+<div>
+<label class="block font-label-sm text-label-sm uppercase font-bold text-on-surface-variant mb-1">
+              Zuständige Behörde / Stadt
+            </label>
+<div class="relative">
+<select class="w-full h-11 px-3 bg-surface-container-low rounded-lg text-on-surface font-body-md text-body-md appearance-none focus:outline-none focus:bg-surface-container-lowest">
+<option value="muc">München — Kreisverwaltungsreferat (KVR)</option>
+<option value="ber">Berlin — Straßenverkehrsbehörde BA Mitte</option>
+<option value="ham">Hamburg — Bezirksamt Hamburg-Nord</option>
+<option value="fra">Frankfurt a.M. — Straßenverkehrsamt Ordnungsamt</option>
+<option value="cgn">Köln — Amt für Verkehrsmanagement</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3 pointer-events-none text-on-surface-variant text-[18px]">expand_more</span>
+</div>
+</div>
+<!-- Street & Number -->
+<div class="grid grid-cols-3 gap-2">
+<div class="col-span-2">
+<label class="block font-label-sm text-label-sm uppercase font-bold text-on-surface-variant mb-1">
+                Straße &amp; Ortsteil
+              </label>
+<input class="w-full h-11 px-3 bg-surface-container-low rounded-lg text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-lowest" type="text" value="Prinzregentenstraße"/>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm uppercase font-bold text-on-surface-variant mb-1">
+                Haus-Nr.
+              </label>
+<input class="w-full h-11 px-3 bg-surface-container-low rounded-lg text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-lowest" type="text" value="44a"/>
+</div>
+</div>
+<!-- Length Stepper (m³) -->
+<div>
+<div class="flex items-center justify-between mb-1">
+<label class="font-label-sm text-label-sm uppercase font-bold text-on-surface-variant">
+                Benötigte Zonenlänge (Meter)
+              </label>
+<span class="font-label-sm text-label-sm text-secondary font-bold" id="vehicle-match">Empfohlen: 15m (Sprinter + Ladebord)</span>
+</div>
+<div class="flex items-center bg-surface-container-low rounded-lg p-1">
+<button class="w-10 h-10 rounded bg-surface-container-lowest text-on-surface flex items-center justify-center font-bold text-headline-sm hover:bg-surface-container transition-colors" id="btn-dec" type="button">-</button>
+<div class="flex-1 text-center font-headline-sm text-headline-sm font-tabular-data font-bold text-on-surface">
+<span id="zone-length">15</span> <span class="font-body-md text-body-md font-normal text-on-surface-variant">Meter</span>
+</div>
+<button class="w-10 h-10 rounded bg-surface-container-lowest text-on-surface flex items-center justify-center font-bold text-headline-sm hover:bg-surface-container transition-colors" id="btn-inc" type="button">+</button>
+</div>
+</div>
+<!-- Date & Duration -->
+<div class="grid grid-cols-2 gap-2">
+<div>
+<label class="block font-label-sm text-label-sm uppercase font-bold text-on-surface-variant mb-1">
+                Umzugstag
+              </label>
+<input class="w-full h-11 px-3 bg-surface-container-low rounded-lg text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-lowest" type="date" value="2024-11-20"/>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm uppercase font-bold text-on-surface-variant mb-1">
+                Zeitfenster
+              </label>
+<select class="w-full h-11 px-3 bg-surface-container-low rounded-lg text-on-surface font-body-md text-body-md appearance-none focus:outline-none focus:bg-surface-container-lowest">
+<option>07:00 — 18:00 Uhr (Ganztägig)</option>
+<option>07:00 — 13:00 Uhr (Vormittag)</option>
+<option>12:00 — 19:00 Uhr (Nachmittag)</option>
+</select>
+</div>
+</div>
+<!-- Partner Sign Logistics -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">local_shipping</span>
+<div>
+<span class="font-label-md text-label-md font-bold text-on-surface block">Aufstellservice vor Ort</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Schilder Express DE • Depot München-Nord</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm font-semibold">
+              Verfügbar
+            </span>
+</div>
+<!-- Transparent Fee Calculation Box -->
+<div class="p-space-md rounded-lg bg-surface-container-high flex flex-col space-y-2 mt-2">
+<div class="flex items-center justify-between text-on-surface font-body-sm text-body-sm">
+<span>Amtsgebühr Tiefbauamt (Sondernutzung):</span>
+<span class="font-tabular-data font-semibold">45,00 €</span>
+</div>
+<div class="flex items-center justify-between text-on-surface font-body-sm text-body-sm">
+<span>Schilder-Aufstellung, 72h-Protokoll &amp; Abholung:</span>
+<span class="font-tabular-data font-semibold">49,90 €</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span>MwSt. (19% auf Dienstleistung):</span>
+<span class="font-tabular-data">9,48 €</span>
+</div>
+<div class="pt-2 flex items-center justify-between text-on-surface font-headline-sm text-headline-sm font-bold">
+<span>Kunden-Weitergabe:</span>
+<span class="text-secondary font-tabular-data" id="total-calc-price">104,38 €</span>
+</div>
+</div>
+<!-- Action Submission -->
+<div class="pt-2">
+<button class="w-full py-3 px-space-md rounded-lg bg-secondary text-on-secondary font-label-lg text-label-lg font-bold shadow-md hover:opacity-95 transition-all flex items-center justify-center gap-2" type="submit">
+<span class="material-symbols-outlined text-[20px]">send</span>
+<span>Amtlichen Antrag jetzt digital generieren &amp; einreichen</span>
+</button>
+<p class="text-center font-body-sm text-body-sm text-on-surface-variant mt-2">
+              Automatische Vorlage gem. VRAO Formblatt B-2 mit digitaler Signatur
+            </p>
+</div>
+</form>
+</div>
+<!-- Quick Emergency Box & Contacts -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col space-y-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">Zuständige Dienststellen</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Standort München</span>
+</div>
+<div class="space-y-2">
+<div class="p-2.5 rounded-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[18px]">local_police</span>
+</span>
+<div>
+<span class="font-label-md text-label-md font-bold text-on-surface block">Polizeiinspektion 13 München</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Schwabing • Tel: 089 / 3801-0</span>
+</div>
+</div>
+<button class="px-2 py-1 rounded bg-surface-container-lowest text-on-surface font-label-sm text-label-sm font-semibold hover:bg-surface-container" type="button">
+              Anrufen
+            </button>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]">drive_search</span>
+</span>
+<div>
+<span class="font-label-md text-label-md font-bold text-on-surface block">Vertrags-Abschleppdienst Nord</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Priorität 1 • Reaktionszeit ca. 18 Min.</span>
+</div>
+</div>
+<button class="px-2 py-1 rounded bg-secondary text-on-secondary font-label-sm text-label-sm font-semibold hover:opacity-90" type="button">
+              Ordern
+            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Register der laufenden Behördenanträge (Filterable Data Table) -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm mb-space-lg">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm mb-space-md">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface font-bold">
+          Register laufender behördlicher Genehmigungsverfahren
+        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-0.5">
+          Bundesweite Überwachung aller Anträge, Aufstellfristen und Anordnungen
+        </p>
+</div>
+<!-- Filter Chips -->
+<div class="flex flex-wrap items-center gap-1.5">
+<button class="px-3 py-1 rounded-full bg-primary text-on-primary font-label-sm text-label-sm font-semibold shadow-sm" type="button">
+          Alle (18)
+        </button>
+<button class="px-3 py-1 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container font-label-sm text-label-sm font-semibold transition-colors" type="button">
+          In Prüfung (3)
+        </button>
+<button class="px-3 py-1 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container font-label-sm text-label-sm font-semibold transition-colors" type="button">
+          Genehmigt (6)
+        </button>
+<button class="px-3 py-1 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container font-label-sm text-label-sm font-semibold transition-colors" type="button">
+          Schilder aktiv (5)
+        </button>
+<button class="px-3 py-1 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container font-label-sm text-label-sm font-semibold transition-colors" type="button">
+          Abgeschlossen (4)
+        </button>
+</div>
+</div>
+<!-- Table Canvas -->
+<div class="overflow-x-auto">
+<table class="w-full text-left font-body-sm text-body-sm">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-3 px-4 rounded-l">Vorgang / Az.</th>
+<th class="py-3 px-4">Auftraggeber</th>
+<th class="py-3 px-4">Adresse &amp; Zonenlänge</th>
+<th class="py-3 px-4">Gültigkeitstag</th>
+<th class="py-3 px-4">72h-Fristenprüfung</th>
+<th class="py-3 px-4">Behördenstatus</th>
+<th class="py-3 px-4 rounded-r text-right">Aktionen</th>
+</tr>
+</thead>
+<tbody class="divide-y-0">
+<!-- Row 1 -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<td class="py-3 px-4 font-tabular-data font-bold text-on-surface">
+              HVZ-8942-MUC
+              <span class="block font-label-sm text-label-sm text-on-surface-variant font-normal">KVR München</span>
+</td>
+<td class="py-3 px-4">
+<span class="font-label-md text-label-md font-bold text-on-surface">Dr. Markus Weber</span>
+<span class="block font-body-sm text-body-sm text-on-surface-variant">Tour #DE-8831</span>
+</td>
+<td class="py-3 px-4">
+<span class="font-body-md text-body-md text-on-surface">Leopoldstraße 88, München</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">18 Meter (Zugmaschine)</span>
+</td>
+<td class="py-3 px-4 font-tabular-data text-on-surface">
+              15.11.2024
+              <span class="block font-label-sm text-label-sm text-on-surface-variant">07:00 — 19:00</span>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container text-on-tertiary-container font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                Erfüllt (12.11.)
+              </span>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary text-on-secondary font-label-sm text-label-sm font-bold">
+                Schilder AKTIV
+              </span>
+</td>
+<td class="py-3 px-4 text-right">
+<div class="inline-flex items-center gap-1">
+<button class="w-8 h-8 rounded bg-surface-container-low hover:bg-surface-container text-on-surface flex items-center justify-center" title="Amtlichen Bescheid als PDF laden" type="button">
+<span class="material-symbols-outlined text-[18px]">description</span>
+</button>
+<button class="w-8 h-8 rounded bg-surface-container-low hover:bg-surface-container text-secondary flex items-center justify-center" title="Aufstell-Foto einsehen" type="button">
+<span class="material-symbols-outlined text-[18px]">photo_camera</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<td class="py-3 px-4 font-tabular-data font-bold text-on-surface">
+              HVZ-9104-BER
+              <span class="block font-label-sm text-label-sm text-on-surface-variant font-normal">SVB Berlin-Mitte</span>
+</td>
+<td class="py-3 px-4">
+<span class="font-label-md text-label-md font-bold text-on-surface">Kanzlei Lindemann &amp; Partner</span>
+<span class="block font-body-sm text-body-sm text-on-surface-variant">Firmenumzug #BER-102</span>
+</td>
+<td class="py-3 px-4">
+<span class="font-body-md text-body-md text-on-surface">Friedrichstraße 140, Berlin</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">25 Meter (2x Lkw 7.5t)</span>
+</td>
+<td class="py-3 px-4 font-tabular-data text-on-surface">
+              18.11.2024
+              <span class="block font-label-sm text-label-sm text-on-surface-variant">06:00 — 20:00</span>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+                Fällig in 14 Std.
+              </span>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container text-on-tertiary-container font-label-sm text-label-sm font-semibold">
+                Genehmigt
+              </span>
+</td>
+<td class="py-3 px-4 text-right">
+<div class="inline-flex items-center gap-1">
+<button class="w-8 h-8 rounded bg-surface-container-low hover:bg-surface-container text-on-surface flex items-center justify-center" title="Amtlichen Bescheid als PDF laden" type="button">
+<span class="material-symbols-outlined text-[18px]">description</span>
+</button>
+<button class="w-8 h-8 rounded bg-surface-container-low hover:bg-surface-container text-on-surface flex items-center justify-center" title="Logistik anweisen" type="button">
+<span class="material-symbols-outlined text-[18px]">local_shipping</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<td class="py-3 px-4 font-tabular-data font-bold text-on-surface">
+              HVZ-9218-HAM
+              <span class="block font-label-sm text-label-sm text-on-surface-variant font-normal">BA Hamburg-Altona</span>
+</td>
+<td class="py-3 px-4">
+<span class="font-label-md text-label-md font-bold text-on-surface">Sabine von Berg</span>
+<span class="block font-body-sm text-body-sm text-on-surface-variant">Privatumzug #HH-449</span>
+</td>
+<td class="py-3 px-4">
+<span class="font-body-md text-body-md text-on-surface">Max-Brauer-Allee 62, Hamburg</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">12 Meter (Sprinter)</span>
+</td>
+<td class="py-3 px-4 font-tabular-data text-on-surface">
+              22.11.2024
+              <span class="block font-label-sm text-label-sm text-on-surface-variant">08:00 — 16:00</span>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">hourglass_empty</span>
+                Geplant (19.11.)
+              </span>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-semibold">
+                In behördl. Prüfung
+              </span>
+</td>
+<td class="py-3 px-4 text-right">
+<div class="inline-flex items-center gap-1">
+<button class="w-8 h-8 rounded bg-surface-container-low hover:bg-surface-container text-on-surface flex items-center justify-center" title="Antragsentwurf einsehen" type="button">
+<span class="material-symbols-outlined text-[18px]">edit_document</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<td class="py-3 px-4 font-tabular-data font-bold text-on-surface">
+              HVZ-8755-FRA
+              <span class="block font-label-sm text-label-sm text-on-surface-variant font-normal">Ordnungsamt FFM</span>
+</td>
+<td class="py-3 px-4">
+<span class="font-label-md text-label-md font-bold text-on-surface">Architekturbüro Nagel</span>
+<span class="block font-body-sm text-body-sm text-on-surface-variant">Büro relocation #FRA-901</span>
+</td>
+<td class="py-3 px-4">
+<span class="font-body-md text-body-md text-on-surface">Eschersheimer Landstr. 112, FFM</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">20 Meter (Lkw + Außenaufzug)</span>
+</td>
+<td class="py-3 px-4 font-tabular-data text-on-surface">
+              11.11.2024
+              <span class="block font-label-sm text-label-sm text-on-surface-variant">07:00 — 18:00</span>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container text-on-tertiary-container font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                Protokolliert
+              </span>
+</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm">
+                Abgeschlossen
+              </span>
+</td>
+<td class="py-3 px-4 text-right">
+<div class="inline-flex items-center gap-1">
+<button class="w-8 h-8 rounded bg-surface-container-low hover:bg-surface-container text-on-surface flex items-center justify-center" title="Archivakte laden" type="button">
+<span class="material-symbols-outlined text-[18px]">archive</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer / Pagination -->
+<div class="mt-space-md flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm pt-space-sm">
+<span class="font-body-sm text-body-sm text-on-surface-variant">
+        Zeige 4 von 18 Anträgen • Automatische Synchronisation mit Straßenverkehrsamt API alle 15 Minuten
+      </span>
+<div class="flex items-center gap-1 font-label-sm text-label-sm">
+<button class="px-2.5 py-1 rounded bg-surface-container-low text-on-surface-variant hover:text-on-surface" type="button">Zurück</button>
+<button class="px-2.5 py-1 rounded bg-primary text-on-primary font-bold" type="button">1</button>
+<button class="px-2.5 py-1 rounded bg-surface-container-low text-on-surface-variant hover:text-on-surface" type="button">2</button>
+<button class="px-2.5 py-1 rounded bg-surface-container-low text-on-surface-variant hover:text-on-surface" type="button">3</button>
+<button class="px-2.5 py-1 rounded bg-surface-container-low text-on-surface-variant hover:text-on-surface" type="button">Weiter</button>
+</div>
+</div>
+</div>
+<script>
+    // Micro-interaction for Zone-Length Stepper & Dynamic Cost Calculation
+    (function initHVZCalculator() {
+      const zoneLengthEl = document.getElementById('zone-length');
+      const vehicleMatchEl = document.getElementById('vehicle-match');
+      const totalCalcPriceEl = document.getElementById('total-calc-price');
+      const btnDec = document.getElementById('btn-dec');
+      const btnInc = document.getElementById('btn-inc');
+
+      if (!zoneLengthEl || !btnDec || !btnInc) return;
+
+      let currentMeters = 15;
+
+      function updateDisplay() {
+        zoneLengthEl.textContent = currentMeters;
+        
+        // Base: 45 official fee + (3.30 per meter over 10) + sign service (49.90)
+        const variablePart = Math.max(0, currentMeters - 10) * 3.50;
+        const totalNet = 45.00 + 49.90 + variablePart;
+        const totalGross = totalNet * 1.08; // blend tax + fee
+
+        if (totalCalcPriceEl) {
+          totalCalcPriceEl.textContent = totalGross.toFixed(2).replace('.', ',') + ' €';
+        }
+
+        if (vehicleMatchEl) {
+          if (currentMeters <= 12) {
+            vehicleMatchEl.textContent = 'Ideal für: Transporter 3.5t (Sprinter kurz)';
+          } else if (currentMeters <= 18) {
+            vehicleMatchEl.textContent = 'Empfohlen: 15-18m (Sprinter + Ladebordwand)';
+          } else {
+            vehicleMatchEl.textContent = 'Erforderlich für: Lkw 7.5t / Sattelzug + Hebebühne';
+          }
+        }
+      }
+
+      btnDec.addEventListener('click', () => {
+        if (currentMeters > 8) {
+          currentMeters -= 1;
+          updateDisplay();
+        }
+      });
+
+      btnInc.addEventListener('click', () => {
+        if (currentMeters < 35) {
+          currentMeters += 1;
+          updateDisplay();
+        }
+      });
+    })();
+  </script>
+</div></main></div></body></html>

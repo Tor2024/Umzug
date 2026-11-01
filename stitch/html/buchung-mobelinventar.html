@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+
+<html lang="de"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"secondary-fixed-dim":"#ffb599","on-background":"#0b1c30","primary-container":"#131b2e","surface-container":"#e5eeff","on-tertiary-container":"#009668","tertiary-fixed-dim":"#4edea3","inverse-on-surface":"#eaf1ff","on-tertiary-fixed":"#002113","on-secondary-fixed":"#370e00","on-surface-variant":"#45464d","surface-container-low":"#eff4ff","surface-tint":"#565e74","tertiary-container":"#002113","surface-dim":"#cbdbf5","outline":"#76777d","inverse-surface":"#213145","secondary-fixed":"#ffdbce","on-primary":"#ffffff","surface-variant":"#d3e4fe","surface-container-lowest":"#ffffff","background":"#f8f9ff","on-surface":"#0b1c30","tertiary":"#000000","inverse-primary":"#bec6e0","primary":"#000000","primary-fixed":"#dae2fd","on-primary-fixed-variant":"#3f465c","outline-variant":"#c6c6cd","error":"#ba1a1a","on-tertiary-fixed-variant":"#005236","on-primary-container":"#7c839b","on-secondary-container":"#571a00","surface":"#f8f9ff","primary-fixed-dim":"#bec6e0","on-error-container":"#93000a","tertiary-fixed":"#6ffbbe","surface-container-highest":"#d3e4fe","secondary-container":"#fd651e","on-secondary":"#ffffff","on-tertiary":"#ffffff","secondary":"#a73a00","on-primary-fixed":"#131b2e","error-container":"#ffdad6","on-secondary-fixed-variant":"#7f2b00","surface-container-high":"#dce9ff","surface-bright":"#f8f9ff","on-error":"#ffffff"},borderRadius:{DEFAULT:"0.125rem",lg:"0.25rem",xl:"0.5rem",full:"0.75rem"},spacing:{"space-sm":"0.5rem","space-lg":"1.5rem","space-xs":"0.25rem",margin:"2rem",gutter:"1.5rem","space-xl":"2.5rem","margin-mobile":"1rem","gutter-mobile":"1rem","space-md":"1rem"},fontFamily:{"headline-sm":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"label-lg":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"headline-xl-mobile":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"body-lg":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"],"tabular-data":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"body-sm":["Plus Jakarta Sans"]},fontSize:{"headline-sm":["18px",{lineHeight:"24px",letterSpacing:"-0.005em",fontWeight:"600"}],"label-sm":["11px",{lineHeight:"14px",letterSpacing:"0.04em",fontWeight:"700"}],"label-lg":["14px",{lineHeight:"20px",letterSpacing:"0.01em",fontWeight:"600"}],"headline-md":["22px",{lineHeight:"28px",letterSpacing:"-0.01em",fontWeight:"600"}],"headline-xl-mobile":["30px",{lineHeight:"38px",letterSpacing:"-0.015em",fontWeight:"700"}],"headline-xl":["44px",{lineHeight:"52px",letterSpacing:"-0.02em",fontWeight:"700"}],"body-lg":["16px",{lineHeight:"24px",fontWeight:"400"}],"headline-lg":["32px",{lineHeight:"40px",letterSpacing:"-0.015em",fontWeight:"600"}],"label-md":["12px",{lineHeight:"16px",letterSpacing:"0.02em",fontWeight:"600"}],"tabular-data":["15px",{lineHeight:"20px",fontWeight:"600"}],"body-md":["14px",{lineHeight:"20px",fontWeight:"400"}],"headline-lg-mobile":["24px",{lineHeight:"32px",letterSpacing:"-0.01em",fontWeight:"600"}],"body-sm":["12px",{lineHeight:"18px",fontWeight:"400"}]}}}}</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 max-w-[1440px] mx-auto px-margin flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-sm shrink-0" data-path="umzug-buchen" href="#"><img alt="MöbelSprint Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VFbCh3gUUxnDO2cKqe1szGScDgySXnbQo36Li3QI3lOn5zYb_DMt6vgUKrqhwsemzRukn5ULpU8jN_RfndIyUm2boHRUivmgJ2nIaE2DbTIjbiZKEqrObSDlaoAsFk5442K6y-TB7be9I3aps-JzLhg1R-CZvYGrXJ8ku360qPnZMXXTUMuJOEbFsdzDPOkrGn6vNetEmn2Ttj8P6HdJjx-yIDQT_JWAPBvlrM60k6XQ"/><span class="font-headline-sm text-headline-sm text-on-surface font-bold tracking-tight">MöbelSprint</span></a><nav class="hidden xl:flex items-center gap-space-xs" data-active-classes="bg-surface-container text-on-surface font-label-lg font-bold rounded-lg"><a class="px-space-md py-space-sm font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-colors" data-path="umzug-buchen" href="#">Umzug buchen</a><a class="px-space-md py-space-sm font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-colors" data-path="moebeltaxi-express" href="#">Möbeltaxi Express</a><a class="px-space-md py-space-sm font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-colors" data-path="firmenumzug" href="#">Firmenumzug</a><a aria-current="page" class="px-space-md py-space-sm transition-colors bg-surface-container text-on-surface font-label-lg font-bold rounded-lg" data-path="preiskalkulator" href="#">Preiskalkulator</a><a class="ml-space-sm px-space-md py-space-sm font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-colors" data-path="disponenten-portal" href="#">Disponenten-Portal</a></nav></div><div class="flex items-center gap-space-md"><div class="hidden md:flex flex-col text-right leading-tight"><span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold">24/7 Notfall-Hotline</span><a class="font-tabular-data text-tabular-data text-on-surface hover:text-secondary transition-colors" href="tel:+49308900120">+49 (0) 30 8900 120</a></div><div class="h-8 w-px bg-outline-variant hidden sm:block"></div><div class="hidden sm:flex items-center gap-space-xs font-label-md text-label-md text-on-surface-variant"><button class="px-space-xs py-space-xs font-bold text-on-surface">DE</button><span class="text-outline-variant">/</span><button class="px-space-xs py-space-xs hover:text-on-surface">EN</button></div><div class="relative flex items-center shrink-0"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsLZJiYWrkya-jguLqHBWEzGL5ghCW0TsHt85GgbfJrReJwJRgN7ErttlM0FqW6lWA7SQbZIipRfBpDQInkScqDOY5yHV14oS471Z7I8pJBIRJRrCCLoagg5uPwxeKly83CaSHKimQl4V0SKpjUvI6nSqLGWbOqYTnoVq2ND0950TEAuUCKoEOpd3pbkHaSC9_4RNWS-B8kxwFDyfr307MO4ESmCBG4F1wwrdLyRbC"/><span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-tertiary-fixed-dim ring-2 ring-surface-container-lowest"></span></div></div></div></header><main class="w-full pt-20 bg-surface min-h-[calc(100vh-80px)]"><div class="flex flex-col w-full">
+<!-- Progress Stepper Sub-Header (Sticky Bar) -->
+<section class="w-full bg-surface-container-lowest shadow-sm z-30">
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin py-space-sm md:py-space-md">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-space-sm md:gap-space-md items-center">
+<!-- Step 1: Done -->
+<div class="flex items-center gap-space-xs md:gap-space-sm opacity-90">
+<div class="w-7 h-7 rounded-full bg-tertiary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant truncate">Schritt 1</span>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold truncate">Adressen &amp; Etagen</span>
+</div>
+</div>
+<!-- Step 2: Active -->
+<div class="flex items-center gap-space-xs md:gap-space-sm relative">
+<div class="w-7 h-7 rounded-full bg-secondary-container flex items-center justify-center shrink-0 shadow-sm">
+<span class="font-label-sm text-label-sm font-bold text-on-secondary">2</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold truncate">Aktiv</span>
+<span class="font-label-lg text-label-lg text-on-surface font-bold truncate">Inventar &amp; Volumen</span>
+</div>
+<div class="hidden md:block absolute -bottom-3 left-0 right-0 h-0.5 bg-secondary-container"></div>
+</div>
+<!-- Step 3: Pending -->
+<div class="flex items-center gap-space-xs md:gap-space-sm opacity-50">
+<div class="w-7 h-7 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+<span class="font-label-sm text-label-sm font-bold text-on-surface-variant">3</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant truncate">Schritt 3</span>
+<span class="font-label-lg text-label-lg text-on-surface truncate">Zusatzleistungen</span>
+</div>
+</div>
+<!-- Step 4: Pending -->
+<div class="flex items-center gap-space-xs md:gap-space-sm opacity-50">
+<div class="w-7 h-7 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+<span class="font-label-sm text-label-sm font-bold text-on-surface-variant">4</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant truncate">Schritt 4</span>
+<span class="font-label-lg text-label-lg text-on-surface truncate">Übersicht &amp; Buchung</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Main Booking Canvas -->
+<div class="max-w-[1440px] mx-auto px-margin-mobile md:px-margin py-space-lg w-full">
+<!-- Breadcrumb / Status Notification -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm mb-space-lg bg-surface-container-low px-space-md py-space-sm rounded-lg">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[20px] text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">TÜV-Zertifizierter Volumenrechner DIN EN 12504</span>
+<span class="hidden sm:inline font-body-sm text-body-sm text-on-surface-variant">• 100% Festpreis-Garantie ohne Nachforderungen</span>
+</div>
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-secondary font-bold uppercase tracking-wider">
+<span class="inline-block w-2 h-2 rounded-full bg-secondary-container animate-pulse"></span>
+        Live-Preiskalkulation aktiv
+      </div>
+</div>
+<!-- 2-Column Responsive Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+<!-- LEFT COLUMN: Inventory Configurator (approx. 65% / 8 cols) -->
+<section class="lg:col-span-8 flex flex-col gap-space-lg">
+<!-- Vehicle Capacity Progress Bar -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm">
+<div class="flex flex-wrap items-center justify-between gap-space-sm mb-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[24px]">local_shipping</span>
+</div>
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant block">Empfohlene Fahrzeugklasse</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">Transporter L2H2 (3.5t Koffer)</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant block">Gesamtvolumen</span>
+<span class="font-headline-sm text-headline-sm text-secondary font-bold" id="totalVolumeDisplay">18.5 m³</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant"> / max. 28.0 m³</span>
+</div>
+</div>
+<!-- Capacity Bar Graphic -->
+<div class="w-full h-4 bg-surface-container rounded-full overflow-hidden relative">
+<div class="h-full bg-secondary-container rounded-full transition-all duration-300 relative" id="capacityBarFill" style="width: 66%;">
+<div class="absolute inset-0 bg-white/20 animate-[pulse_2s_infinite]"></div>
+</div>
+</div>
+<div class="flex justify-between items-center mt-space-xs font-label-sm text-label-sm text-on-surface-variant">
+<span>0 m³</span>
+<span class="text-on-surface font-semibold">Auslastung: <strong id="capacityPercentText">66%</strong> (Optimal verteilt)</span>
+<span>28.0 m³ (Volllast)</span>
+</div>
+</div>
+<!-- Room Filter Navigation -->
+<div class="flex items-center gap-space-xs overflow-x-auto pb-space-xs no-scrollbar">
+<button class="room-tab-btn px-space-md py-space-sm rounded-lg font-label-lg text-label-lg whitespace-nowrap bg-primary text-on-primary font-bold shadow-sm transition-all" data-room="all">
+            Alle Zimmer (7 Artikel)
+          </button>
+<button class="room-tab-btn px-space-md py-space-sm rounded-lg font-label-lg text-label-lg whitespace-nowrap bg-surface-container-low text-on-surface hover:bg-surface-container transition-all" data-room="living">
+            Wohnzimmer
+          </button>
+<button class="room-tab-btn px-space-md py-space-sm rounded-lg font-label-lg text-label-lg whitespace-nowrap bg-surface-container-low text-on-surface hover:bg-surface-container transition-all" data-room="bedroom">
+            Schlafzimmer
+          </button>
+<button class="room-tab-btn px-space-md py-space-sm rounded-lg font-label-lg text-label-lg whitespace-nowrap bg-surface-container-low text-on-surface hover:bg-surface-container transition-all" data-room="kitchen">
+            Küche &amp; Esszimmer
+          </button>
+<button class="room-tab-btn px-space-md py-space-sm rounded-lg font-label-lg text-label-lg whitespace-nowrap bg-surface-container-low text-on-surface hover:bg-surface-container transition-all" data-room="office">
+            Arbeitszimmer / Flur
+          </button>
+<button class="room-tab-btn px-space-md py-space-sm rounded-lg font-label-lg text-label-lg whitespace-nowrap bg-surface-container-low text-on-surface hover:bg-surface-container transition-all" data-room="boxes">
+            Kartons &amp; Diverses
+          </button>
+</div>
+<!-- Interactive Inventory Items Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md" id="inventoryGrid">
+<!-- Item 1: 3-Sitzer Sofa -->
+<div class="inventory-card bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between" data-category="living" data-vol="2.5">
+<div class="flex items-start justify-between gap-space-sm mb-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center shrink-0 text-on-surface">
+<span class="material-symbols-outlined text-[28px]">weekend</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">3-Sitzer Sofa</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Volumen: ca. 2.50 m³</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm px-space-xs py-0.5 rounded bg-surface-container-low text-on-surface-variant uppercase">Wohnbereich</span>
+</div>
+<div class="flex items-center justify-between pt-space-sm bg-surface-container-lowest">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Anzahl Stück</span>
+<div class="flex items-center bg-surface-container-low rounded-lg p-0.5">
+<button class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-container-lowest text-on-surface hover:bg-surface-container transition-colors shadow-xs" onclick="updateCount('sofa', -1, 2.5)">
+<span class="material-symbols-outlined text-[16px]">remove</span>
+</button>
+<span class="w-10 text-center font-tabular-data text-tabular-data text-on-surface font-bold" id="count-sofa">1</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-container-lowest text-on-surface hover:bg-surface-container transition-colors shadow-xs" onclick="updateCount('sofa', 1, 2.5)">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 2: Esstisch massiv -->
+<div class="inventory-card bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between" data-category="kitchen" data-vol="1.2">
+<div class="flex items-start justify-between gap-space-sm mb-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center shrink-0 text-on-surface">
+<span class="material-symbols-outlined text-[28px]">table_restaurant</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Esstisch massiv</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Volumen: ca. 1.20 m³</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm px-space-xs py-0.5 rounded bg-surface-container-low text-on-surface-variant uppercase">Küche/Essen</span>
+</div>
+<div class="flex items-center justify-between pt-space-sm">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Anzahl Stück</span>
+<div class="flex items-center bg-surface-container-low rounded-lg p-0.5">
+<button class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-container-lowest text-on-surface hover:bg-surface-container transition-colors shadow-xs" onclick="updateCount('table', -1, 1.2)">
+<span class="material-symbols-outlined text-[16px]">remove</span>
+</button>
+<span class="w-10 text-center font-tabular-data text-tabular-data text-on-surface font-bold" id="count-table">1</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-container-lowest text-on-surface hover:bg-surface-container transition-colors shadow-xs" onclick="updateCount('table', 1, 1.2)">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 3: Stühle -->
+<div class="inventory-card bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between" data-category="kitchen" data-vol="0.3">
+<div class="flex items-start justify-between gap-space-sm mb-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center shrink-0 text-on-surface">
+<span class="material-symbols-outlined text-[28px]">chair</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Stühle gepolstert</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Volumen: ca. 0.30 m³ / Stk.</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm px-space-xs py-0.5 rounded bg-surface-container-low text-on-surface-variant uppercase">Küche/Essen</span>
+</div>
+<div class="flex items-center justify-between pt-space-sm">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Anzahl Stück</span>
+<div class="flex items-center bg-surface-container-low rounded-lg p-0.5">
+<button class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-container-lowest text-on-surface hover:bg-surface-container transition-colors shadow-xs" onclick="updateCount('chairs', -1, 0.3)">
+<span class="material-symbols-outlined text-[16px]">remove</span>
+</button>
+<span class="w-10 text-center font-tabular-data text-tabular-data text-on-surface font-bold" id="count-chairs">4</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-container-lowest text-on-surface hover:bg-surface-container transition-colors shadow-xs" onclick="updateCount('chairs', 1, 0.3)">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 4: Kleiderschrank 3-türig mit De-Montage Feature -->
+<div class="inventory-card bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between" data-category="bedroom" data-vol="3.0">
+<div class="flex items-start justify-between gap-space-sm mb-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center shrink-0 text-on-surface">
+<span class="material-symbols-outlined text-[28px]">door_sliding</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Kleiderschrank (3-türig)</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Volumen: ca. 3.00 m³</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm px-space-xs py-0.5 rounded bg-surface-container-low text-on-surface-variant uppercase">Schlafzimmer</span>
+</div>
+<!-- Demontage Option Inline Checkbox -->
+<label class="flex items-center gap-space-xs p-space-xs rounded bg-surface-container-low cursor-pointer my-space-xs">
+<input checked="" class="rounded text-primary focus:ring-0 w-4 h-4" id="wardrobeDisassembly" onchange="toggleDisassemblyFee(this)" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface">Fachgerechter Abbau &amp; Wiederaufbau inkludiert</span>
+</label>
+<div class="flex items-center justify-between pt-space-sm">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Anzahl Schränke</span>
+<div class="flex items-center bg-surface-container-low rounded-lg p-0.5">
+<button class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-container-lowest text-on-surface hover:bg-surface-container transition-colors shadow-xs" onclick="updateCount('wardrobe', -1, 3.0)">
+<span class="material-symbols-outlined text-[16px]">remove</span>
+</button>
+<span class="w-10 text-center font-tabular-data text-tabular-data text-on-surface font-bold" id="count-wardrobe">1</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-container-lowest text-on-surface hover:bg-surface-container transition-colors shadow-xs" onclick="updateCount('wardrobe', 1, 3.0)">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 5: Doppelbett 180x200 -->
+<div class="inventory-card bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between" data-category="bedroom" data-vol="2.2">
+<div class="flex items-start justify-between gap-space-sm mb-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center shrink-0 text-on-surface">
+<span class="material-symbols-outlined text-[28px]">bed</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Doppelbett 180x200</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Volumen: ca. 2.20 m³</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm px-space-xs py-0.5 rounded bg-surface-container-low text-on-surface-variant uppercase">Schlafzimmer</span>
+</div>
+<div class="flex items-center justify-between pt-space-sm">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Anzahl Betten</span>
+<div class="flex items-center bg-surface-container-low rounded-lg p-0.5">
+<button class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-container-lowest text-on-surface hover:bg-surface-container transition-colors shadow-xs" onclick="updateCount('bed', -1, 2.2)">
+<span class="material-symbols-outlined text-[16px]">remove</span>
+</button>
+<span class="w-10 text-center font-tabular-data text-tabular-data text-on-surface font-bold" id="count-bed">1</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-container-lowest text-on-surface hover:bg-surface-container transition-colors shadow-xs" onclick="updateCount('bed', 1, 2.2)">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 6: Waschmaschine -->
+<div class="inventory-card bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between" data-category="kitchen" data-vol="0.6">
+<div class="flex items-start justify-between gap-space-sm mb-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center shrink-0 text-on-surface">
+<span class="material-symbols-outlined text-[28px]">local_laundry_service</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Waschmaschine</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Volumen: ca. 0.60 m³ (mit Transportsicherung)</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm px-space-xs py-0.5 rounded bg-surface-container-low text-on-surface-variant uppercase">Haushalt</span>
+</div>
+<div class="flex items-center justify-between pt-space-sm">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Anzahl Geräte</span>
+<div class="flex items-center bg-surface-container-low rounded-lg p-0.5">
+<button class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-container-lowest text-on-surface hover:bg-surface-container transition-colors shadow-xs" onclick="updateCount('washer', -1, 0.6)">
+<span class="material-symbols-outlined text-[16px]">remove</span>
+</button>
+<span class="w-10 text-center font-tabular-data text-tabular-data text-on-surface font-bold" id="count-washer">1</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-container-lowest text-on-surface hover:bg-surface-container transition-colors shadow-xs" onclick="updateCount('washer', 1, 0.6)">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 7: Umzugskartons Standard (Wide Card) -->
+<div class="inventory-card sm:col-span-2 bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow flex flex-col sm:flex-row items-center justify-between gap-space-md" data-category="boxes" data-vol="0.1">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center shrink-0 text-on-surface">
+<span class="material-symbols-outlined text-[28px]">inventory_2</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Umzugskartons Standard (Zweiwellig)</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Maße: 60x40x35cm • Je ca. 0.08 m³ Volumen</span>
+</div>
+</div>
+<div class="flex items-center gap-space-lg w-full sm:w-auto justify-between sm:justify-end">
+<div class="text-right hidden md:block">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant block">Teilvolumen</span>
+<span class="font-tabular-data text-tabular-data font-bold text-on-surface" id="boxesVolDisplay">2.00 m³</span>
+</div>
+<div class="flex items-center bg-surface-container-low rounded-lg p-0.5">
+<button class="w-9 h-9 flex items-center justify-center rounded-md bg-surface-container-lowest text-on-surface hover:bg-surface-container transition-colors shadow-xs font-bold" onclick="updateCount('boxes', -5, 0.08)">
+                  -5
+                </button>
+<span class="w-12 text-center font-tabular-data text-tabular-data text-on-surface font-bold text-headline-sm" id="count-boxes">25</span>
+<button class="w-9 h-9 flex items-center justify-center rounded-md bg-surface-container-lowest text-on-surface hover:bg-surface-container transition-colors shadow-xs font-bold" onclick="updateCount('boxes', 5, 0.08)">
+                  +5
+                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Additional Services Toggles Section -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm">
+<div class="flex items-center justify-between mb-space-md">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold">Leistungs-Upgrades</span>
+<h2 class="font-headline-md text-headline-md text-on-surface font-bold">Zusätzliche Umzugsleistungen</h2>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">tune</span>
+</div>
+<div class="flex flex-col gap-space-sm">
+<!-- Service 1: Halteverbotszone -->
+<label class="flex items-start justify-between p-space-md rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer">
+<div class="flex items-start gap-space-sm">
+<input checked="" class="mt-1 w-5 h-5 rounded text-secondary-container focus:ring-0" id="checkHvz" onchange="toggleService('hvz', 149.00, this)" type="checkbox"/>
+<div>
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold block">Halteverbotszone einrichten (Berlin Start &amp; München Ziel)</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Inklusive behördlicher Genehmigung, Aufstellung der Schilder 72 Std. vorab &amp; Protokollierung.</p>
+</div>
+</div>
+<span class="font-tabular-data text-tabular-data text-on-surface font-bold whitespace-nowrap ml-space-sm">+ 149,00 €</span>
+</label>
+<!-- Service 2: Möbelabbau & Aufbau -->
+<label class="flex items-start justify-between p-space-md rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer">
+<div class="flex items-start gap-space-sm">
+<input checked="" class="mt-1 w-5 h-5 rounded text-secondary-container focus:ring-0" id="checkAssembly" onchange="toggleService('assembly', 180.00, this)" type="checkbox"/>
+<div>
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold block">Professioneller Möbelabbau &amp; Aufbau (Fachhandwerker)</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Schonende Demontage großer Schränke &amp; Betten inklusive Dübel- und Wandbefestigung am Zielort.</p>
+</div>
+</div>
+<span class="font-tabular-data text-tabular-data text-on-surface font-bold whitespace-nowrap ml-space-sm">+ 180,00 €</span>
+</label>
+<!-- Service 3: Packdecken & Folien (Kostenlos) -->
+<div class="flex items-start justify-between p-space-md rounded-lg bg-surface-container-low opacity-95">
+<div class="flex items-start gap-space-sm">
+<div class="mt-1 w-5 h-5 rounded-full bg-tertiary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[14px] text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div>
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold block">Schonende Packdecken &amp; Stretchfolien-Service</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Hochwertiger Kantenschutz, Polstervliese und strapazierfähige Möbelschutzhüllen für alle Großmöbel.</p>
+</div>
+</div>
+<span class="font-label-md text-label-md px-space-xs py-0.5 rounded bg-tertiary-container text-tertiary-fixed-dim font-bold whitespace-nowrap ml-space-sm">Kostenlos Inklusive</span>
+</div>
+</div>
+</div>
+<!-- Packing Tips Banner -->
+<div class="bg-surface-container rounded-xl p-space-md flex items-center gap-space-md">
+<span class="material-symbols-outlined text-[32px] text-on-surface-variant shrink-0">help_outline</span>
+<div class="min-w-0">
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Unsicher beim Schätzen des Volumens?</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Unsere Disponenten prüfen alle Angaben vor der Ausführung. Sollte das Volumen vor Ort leicht abweichen, steht Ihnen unser L2H2 Pufferraum ohne Strafgebühren zur Verfügung.</p>
+</div>
+</div>
+</section>
+<!-- RIGHT COLUMN: Sticky Order Summary & Price Breakdown (approx. 35% / 4 cols) -->
+<aside class="lg:col-span-4 sticky top-24 flex flex-col gap-space-md">
+<!-- Route & Logistic Specs Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm">
+<div class="flex items-center justify-between pb-space-sm mb-space-sm bg-surface-container-low px-space-sm py-space-xs rounded-lg">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-secondary">alt_route</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-bold text-on-surface">Auftrags-Route</span>
+</div>
+<a class="font-label-sm text-label-sm text-secondary hover:underline font-semibold" href="#">Bearbeiten</a>
+</div>
+<!-- Origin & Destination -->
+<div class="relative pl-6 space-y-4">
+<div class="absolute left-2 top-2 bottom-2 w-0.5 bg-surface-container-high"></div>
+<!-- Origin -->
+<div class="relative">
+<div class="absolute -left-6 top-1 w-3.5 h-3.5 rounded-full bg-on-surface ring-4 ring-surface-container-lowest"></div>
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant block">Startadresse (Beladung)</span>
+<span class="font-label-lg text-label-lg font-bold text-on-surface block">Berlin-Mitte (10115)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">3. Obergeschoss • Kein Aufzug (+60 €)</span>
+</div>
+</div>
+<!-- Destination -->
+<div class="relative">
+<div class="absolute -left-6 top-1 w-3.5 h-3.5 rounded-full bg-secondary-container ring-4 ring-surface-container-lowest"></div>
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant block">Zieladresse (Entladung)</span>
+<span class="font-label-lg text-label-lg font-bold text-on-surface block">München-Schwabing (80802)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">1. Obergeschoss • Mit Personenaufzug</span>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant bg-surface-container-low p-space-xs rounded">
+<span>Distanz: <strong class="text-on-surface">585 km</strong></span>
+<span>•</span>
+<span>Fahrzeit: <strong class="text-on-surface">ca. 6-7 Std.</strong></span>
+<span>•</span>
+<span>Team: <strong class="text-on-surface">2 Fachkräfte</strong></span>
+</div>
+</div>
+<!-- Live Price Calculation Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-space-sm">Verbindliche Preisaufstellung</h3>
+<div class="space-y-space-xs pb-space-sm">
+<div class="flex justify-between items-center font-body-sm text-body-sm">
+<span class="text-on-surface-variant">Basistarif Transport &amp; 2 Möbelträger</span>
+<span class="font-tabular-data text-tabular-data text-on-surface">540,00 €</span>
+</div>
+<div class="flex justify-between items-center font-body-sm text-body-sm">
+<span class="text-on-surface-variant">Distanzpauschale (585 km Fernumzug)</span>
+<span class="font-tabular-data text-tabular-data text-on-surface">290,00 €</span>
+</div>
+<div class="flex justify-between items-center font-body-sm text-body-sm" id="rowHvz">
+<span class="text-on-surface-variant">Halteverbotszonen (2x Stadtgenehmigung)</span>
+<span class="font-tabular-data text-tabular-data text-on-surface" id="priceHvz">149,00 €</span>
+</div>
+<div class="flex justify-between items-center font-body-sm text-body-sm" id="rowAssembly">
+<span class="text-on-surface-variant">Montage- &amp; Schrankbauservice</span>
+<span class="font-tabular-data text-tabular-data text-on-surface" id="priceAssembly">180,00 €</span>
+</div>
+<div class="flex justify-between items-center font-body-sm text-body-sm">
+<span class="text-on-surface-variant">Etagenzuschlag (3. OG ohne Aufzug)</span>
+<span class="font-tabular-data text-tabular-data text-on-surface">60,00 €</span>
+</div>
+<div class="flex justify-between items-center font-body-sm text-body-sm">
+<span class="text-on-surface-variant">Möbelschutzfolie &amp; Gurte</span>
+<span class="font-label-sm text-label-sm text-on-tertiary-container font-bold uppercase">0,00 € Inkl.</span>
+</div>
+</div>
+<!-- Taxes and Total -->
+<div class="pt-space-sm bg-surface-container-low p-space-sm rounded-lg mb-space-md">
+<div class="flex justify-between items-center font-body-sm text-body-sm text-on-surface-variant mb-1">
+<span>Darin enthaltene MwSt. (19%)</span>
+<span class="font-tabular-data text-tabular-data" id="taxDisplay">193,61 €</span>
+</div>
+<div class="flex justify-between items-baseline pt-1">
+<div>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface block">Gesamtbetrag</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Verbindlicher garantierter Festpreis</span>
+</div>
+<span class="font-headline-md text-headline-md font-bold text-secondary-container" id="totalPriceDisplay">1.212,61 €</span>
+</div>
+</div>
+<!-- Checkout Primary Actions -->
+<div class="flex flex-col gap-space-xs">
+<button class="w-full py-space-sm px-space-md bg-secondary-container hover:bg-secondary text-on-secondary font-headline-sm text-headline-sm rounded-lg font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-space-xs">
+<span>Weiter zu Schritt 3: Terminauswahl</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+<button class="w-full py-space-xs px-space-sm bg-surface-container text-on-surface hover:bg-surface-container-high font-label-lg text-label-lg rounded-lg font-semibold transition-colors flex items-center justify-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+<span>Angebot als PDF per E-Mail speichern</span>
+</button>
+</div>
+<!-- Security & Payment Badges -->
+<div class="mt-space-md pt-space-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant block mb-space-xs text-center">Akzeptierte Zahlungsarten</span>
+<div class="flex flex-wrap items-center justify-center gap-space-sm opacity-80">
+<span class="font-label-sm text-label-sm bg-surface-container-low px-2 py-1 rounded text-on-surface font-bold">Klarna. Rechnung</span>
+<span class="font-label-sm text-label-sm bg-surface-container-low px-2 py-1 rounded text-on-surface font-bold">PayPal</span>
+<span class="font-label-sm text-label-sm bg-surface-container-low px-2 py-1 rounded text-on-surface font-bold">SEPA-Lastschrift</span>
+<span class="font-label-sm text-label-sm bg-surface-container-low px-2 py-1 rounded text-on-surface font-bold">Kreditkarte</span>
+</div>
+<!-- Guarantee Box -->
+<div class="mt-space-sm p-space-xs rounded bg-surface-container-low flex items-center justify-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">security</span>
+<span>Allianz Gütertransportversicherung bis 250.000 € inklusive</span>
+</div>
+</div>
+</div>
+<!-- Help Widget -->
+<div class="bg-surface-container-low rounded-xl p-space-sm flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">support_agent</span>
+</div>
+<div class="min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Fragen zur Zusammenstellung?</span>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface block">+49 (0) 30 8900 120</span>
+</div>
+</div>
+</aside>
+</div>
+</div>
+<!-- Interactive JavaScript Logic -->
+<script>
+    // State management
+    const state = {
+      basePrice: 540.00,
+      distancePrice: 290.00,
+      floorPrice: 60.00,
+      hvzPrice: 149.00,
+      assemblyPrice: 180.00,
+      counts: {
+        sofa: 1,
+        table: 1,
+        chairs: 4,
+        wardrobe: 1,
+        bed: 1,
+        washer: 1,
+        boxes: 25
+      },
+      volumes: {
+        sofa: 2.5,
+        table: 1.2,
+        chairs: 0.3,
+        wardrobe: 3.0,
+        bed: 2.2,
+        washer: 0.6,
+        boxes: 0.08
+      }
+    };
+
+    function recalculateTotal() {
+      // 1. Calculate Volume
+      let totalM3 = 0;
+      for (const item in state.counts) {
+        totalM3 += state.counts[item] * state.volumes[item];
+      }
+      
+      const volRounded = totalM3.toFixed(1);
+      const displayElem = document.getElementById('totalVolumeDisplay');
+      if (displayElem) displayElem.innerText = volRounded + ' m³';
+
+      // Update boxes subvol
+      const boxesVolElem = document.getElementById('boxesVolDisplay');
+      if (boxesVolElem) {
+        boxesVolElem.innerText = (state.counts.boxes * state.volumes.boxes).toFixed(2) + ' m³';
+      }
+
+      // Update visual capacity bar (max 28m³)
+      const capacityPct = Math.min(Math.round((totalM3 / 28.0) * 100), 100);
+      const barFill = document.getElementById('capacityBarFill');
+      const pctText = document.getElementById('capacityPercentText');
+      if (barFill) barFill.style.width = capacityPct + '%';
+      if (pctText) pctText.innerText = capacityPct + '%';
+
+      // 2. Calculate Final Price
+      const netSum = state.basePrice + state.distancePrice + state.floorPrice + state.hvzPrice + state.assemblyPrice;
+      const vat = netSum * 0.19;
+      const grossTotal = netSum + vat;
+
+      const taxElem = document.getElementById('taxDisplay');
+      const totalElem = document.getElementById('totalPriceDisplay');
+      if (taxElem) taxElem.innerText = vat.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+      if (totalElem) totalElem.innerText = grossTotal.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+    }
+
+    function updateCount(item, delta, vol) {
+      if (!state.counts[item]) state.counts[item] = 0;
+      state.counts[item] = Math.max(0, state.counts[item] + delta);
+      
+      const countEl = document.getElementById('count-' + item);
+      if (countEl) countEl.innerText = state.counts[item];
+      
+      recalculateTotal();
+    }
+
+    function toggleService(type, cost, checkbox) {
+      if (type === 'hvz') {
+        state.hvzPrice = checkbox.checked ? cost : 0.00;
+        const row = document.getElementById('rowHvz');
+        if (row) row.style.display = checkbox.checked ? 'flex' : 'none';
+      } else if (type === 'assembly') {
+        state.assemblyPrice = checkbox.checked ? cost : 0.00;
+        const row = document.getElementById('rowAssembly');
+        if (row) row.style.display = checkbox.checked ? 'flex' : 'none';
+      }
+      recalculateTotal();
+    }
+
+    function toggleDisassemblyFee(checkbox) {
+      const assemblyCheck = document.getElementById('checkAssembly');
+      if (assemblyCheck) {
+        assemblyCheck.checked = checkbox.checked;
+        toggleService('assembly', 180.00, assemblyCheck);
+      }
+    }
+
+    // Room tab filter handler
+    document.querySelectorAll('.room-tab-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        // Reset styles
+        document.querySelectorAll('.room-tab-btn').forEach(b => {
+          b.className = 'room-tab-btn px-space-md py-space-sm rounded-lg font-label-lg text-label-lg whitespace-nowrap bg-surface-container-low text-on-surface hover:bg-surface-container transition-all';
+        });
+        this.className = 'room-tab-btn px-space-md py-space-sm rounded-lg font-label-lg text-label-lg whitespace-nowrap bg-primary text-on-primary font-bold shadow-sm transition-all';
+
+        const filter = this.getAttribute('data-room');
+        const cards = document.querySelectorAll('.inventory-card');
+        
+        cards.forEach(card => {
+          if (filter === 'all' || card.getAttribute('data-category') === filter) {
+            card.style.display = card.classList.contains('sm:col-span-2') ? 'flex' : 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Run initial calc
+    recalculateTotal();
+  </script>
+</div></main><footer class="w-full bg-surface-container-low shadow-[0_-1px_4px_rgba(0,0,0,0.02)] mt-space-xl"><div class="max-w-[1440px] mx-auto px-margin py-space-xl"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter pb-space-lg mb-space-lg"><div class="flex flex-col gap-space-xs"><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Sicherheit &amp; Prüfung</span><span class="font-headline-sm text-headline-sm text-on-surface">TÜV Nord zertifiziert</span><p class="font-body-sm text-body-sm text-on-surface-variant">Geprüfte Transportprozesse, geeichte Volumenrechner und akkreditiertes Ladungssicherheitssystem.</p></div><div class="flex flex-col gap-space-xs"><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Schutz &amp; Deckung</span><span class="font-headline-sm text-headline-sm text-on-surface">Allianz Transportversicherung</span><p class="font-body-sm text-body-sm text-on-surface-variant">Vollkasko-Schutz für gewerbliche und private Möbeltransporte bis 250.000 € je Frachtauftrag.</p></div><div class="flex flex-col gap-space-xs"><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Kundenbewertungen</span><span class="font-headline-sm text-headline-sm text-on-surface">Trustpilot 4.9 / 5.0</span><p class="font-body-sm text-body-sm text-on-surface-variant">Hervorragend bewertet von über 12.800 verifizierten Umzugskunden deutschlandweit.</p></div><div class="flex flex-col gap-space-xs"><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Zentraler Support</span><span class="font-headline-sm text-headline-sm text-on-surface">MöbelSprint DE</span><p class="font-body-sm text-body-sm text-on-surface-variant">Kurfürstendamm 182, 10707 Berlin<br/>E-Mail: dispo@moebelsprint.de</p></div></div><div class="pt-space-md flex flex-col md:flex-row items-center justify-between gap-space-md"><div class="flex flex-wrap items-center gap-space-md font-body-sm text-body-sm text-on-surface-variant"><a class="hover:text-on-surface transition-colors" data-path="impressum" href="#">Impressum</a><a class="hover:text-on-surface transition-colors" data-path="datenschutz" href="#">Datenschutz</a><a class="hover:text-on-surface transition-colors" data-path="agb" href="#">AGB</a><a class="hover:text-on-surface transition-colors" data-path="widerrufsbelehrung" href="#">Widerrufsbelehrung</a></div><p class="font-body-sm text-body-sm text-on-surface-variant">© 2024 MöbelSprint Logistik GmbH. Alle Rechte vorbehalten.</p></div></div></footer></body></html>

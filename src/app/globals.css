@@ -1,0 +1,148 @@
+@import "tailwindcss";
+
+@theme {
+  /* Палитра (из Stitch DESIGN.md, проверена на прошлом проекте) */
+  --color-primary: #0f172a;
+  --color-primary-hover: #1e293b;
+  --color-accent: #ea580c;
+  --color-accent-hover: #c2410c;
+  --color-accent-soft: #f59e0b;
+  --color-trust: #10b981;
+  --color-surface: #f8fafc;
+  --color-surface-2: #f1f5f9;
+  --color-line: #e2e8f0;
+  --color-line-strong: #cbd5e1;
+  --color-muted: #475569;
+  --color-ink: #0f172a;
+  --color-page: #f8f9ff;
+  --color-danger: #ba1a1a;
+
+  --radius-base: 4px;
+  --radius-container: 8px;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Общие элементы форм/кнопок (появятся по мере этапов) */
+.input-base {
+  height: 44px;
+  width: 100%;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-base);
+  padding-inline: 0.75rem;
+  background: #fff;
+  outline: none;
+}
+.input-base:focus {
+  border-color: var(--color-accent-soft);
+  box-shadow: 0 0 0 2px rgb(245 158 11 / 0.25);
+}
+.input-base:focus-visible {
+  outline: 2px solid var(--color-accent-soft);
+  outline-offset: 2px;
+}
+
+.btn {
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding-inline: 1.25rem;
+  border-radius: var(--radius-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 180ms cubic-bezier(0.22, 1, 0.36, 1), border-color 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.btn:focus-visible {
+  outline: 2px solid var(--color-accent-soft);
+  outline-offset: 2px;
+}
+.btn:active {
+  transform: scale(0.97);
+}
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+.btn-primary {
+  background: var(--color-accent);
+  color: #fff;
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--color-accent-hover);
+}
+.btn-primary:disabled:hover {
+  background: var(--color-accent);
+}
+.btn-secondary {
+  background: var(--color-primary);
+  color: #fff;
+}
+.btn-secondary:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+.btn-outline {
+  background: #fff;
+  border: 1px solid var(--color-line);
+  color: var(--color-ink);
+  transition: background-color 180ms cubic-bezier(0.22, 1, 0.36, 1), border-color 180ms cubic-bezier(0.22, 1, 0.36, 1), transform 160ms ease-out;
+}
+.btn-outline:hover:not(:disabled) {
+  border-color: var(--color-line-strong);
+  background: var(--color-surface);
+}
+
+.card {
+  background: #fff;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-container);
+  transition: border-color 200ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.card-hover:hover {
+  border-color: var(--color-line-strong);
+  box-shadow: 0 4px 12px -2px rgb(15 23 42 / 0.06);
+}
+
+/* Чипы статусов */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  padding: 0.125rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: opacity 150ms ease;
+}
+.chip:hover {
+  opacity: 0.85;
+}
+
+/* Вход сообщений/панелей (Emil: ничего не появляется из ничего — scale от 0.97 + opacity) */
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes panelIn {
+  from { opacity: 0; transform: translateY(6px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Hover-анимации только для мыши (не touch) */
+@media (hover: hover) and (pointer: fine) {
+  .card-hover:hover {
+    transform: translateY(-1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  /* Оставляем понимание цвета, убираем движение (Emil: reduce ≠ zero) */
+  .btn:active {
+    transform: none;
+  }
+}

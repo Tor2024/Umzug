@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+
+<html lang="de"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "on-secondary": "#ffffff",
+          "surface-dim": "#cbdbf5",
+          "secondary": "#a73a00",
+          "on-surface-variant": "#45464d",
+          "on-tertiary-fixed-variant": "#005236",
+          "on-tertiary": "#ffffff",
+          "tertiary-container": "#002113",
+          "error-container": "#ffdad6",
+          "surface-variant": "#d3e4fe",
+          "secondary-container": "#fd651e",
+          "surface-container": "#e5eeff",
+          "surface": "#f8f9ff",
+          "tertiary-fixed": "#6ffbbe",
+          "tertiary": "#000000",
+          "on-primary-fixed-variant": "#3f465c",
+          "primary": "#000000",
+          "on-tertiary-fixed": "#002113",
+          "surface-container-lowest": "#ffffff",
+          "on-error-container": "#93000a",
+          "secondary-fixed": "#ffdbce",
+          "error": "#ba1a1a",
+          "on-secondary-fixed": "#370e00",
+          "primary-fixed-dim": "#bec6e0",
+          "surface-container-high": "#dce9ff",
+          "inverse-on-surface": "#eaf1ff",
+          "secondary-fixed-dim": "#ffb599",
+          "outline-variant": "#c6c6cd",
+          "on-surface": "#0b1c30",
+          "tertiary-fixed-dim": "#4edea3",
+          "on-secondary-container": "#571a00",
+          "surface-container-highest": "#d3e4fe",
+          "on-primary": "#ffffff",
+          "primary-container": "#131b2e",
+          "outline": "#76777d",
+          "surface-container-low": "#eff4ff",
+          "surface-tint": "#565e74",
+          "primary-fixed": "#dae2fd",
+          "on-primary-container": "#7c839b",
+          "inverse-surface": "#213145",
+          "background": "#f8f9ff",
+          "inverse-primary": "#bec6e0",
+          "surface-bright": "#f8f9ff",
+          "on-secondary-fixed-variant": "#7f2b00",
+          "on-tertiary-container": "#009668",
+          "on-background": "#0b1c30",
+          "on-error": "#ffffff",
+          "on-primary-fixed": "#131b2e"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.125rem",
+          "lg": "0.25rem",
+          "xl": "0.5rem",
+          "full": "0.75rem"
+        },
+        "spacing": {
+          "space-lg": "1.5rem",
+          "space-sm": "0.5rem",
+          "gutter": "1.5rem",
+          "space-xs": "0.25rem",
+          "margin-mobile": "1rem",
+          "margin": "2rem",
+          "space-xl": "2.5rem",
+          "gutter-mobile": "1rem",
+          "space-md": "1rem"
+        },
+        "fontFamily": {
+          "body-md": [
+            "Plus Jakarta Sans"
+          ],
+          "label-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "label-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-lg-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "body-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "body-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "label-md": [
+            "Plus Jakarta Sans"
+          ],
+          "tabular-data": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-xl": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-xl-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-md": [
+            "Plus Jakarta Sans"
+          ]
+        },
+        "fontSize": {
+          "body-md": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "400"
+            }
+          ],
+          "label-sm": [
+            "11px",
+            {
+              "lineHeight": "14px",
+              "letterSpacing": "0.04em",
+              "fontWeight": "700"
+            }
+          ],
+          "headline-lg": [
+            "32px",
+            {
+              "lineHeight": "40px",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "600"
+            }
+          ],
+          "label-lg": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "letterSpacing": "0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-sm": [
+            "18px",
+            {
+              "lineHeight": "24px",
+              "letterSpacing": "-0.005em",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-lg-mobile": [
+            "24px",
+            {
+              "lineHeight": "32px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "body-lg": [
+            "16px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "400"
+            }
+          ],
+          "body-sm": [
+            "12px",
+            {
+              "lineHeight": "18px",
+              "fontWeight": "400"
+            }
+          ],
+          "label-md": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "letterSpacing": "0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "tabular-data": [
+            "15px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-xl": [
+            "44px",
+            {
+              "lineHeight": "52px",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "700"
+            }
+          ],
+          "headline-xl-mobile": [
+            "30px",
+            {
+              "lineHeight": "38px",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "700"
+            }
+          ],
+          "headline-md": [
+            "22px",
+            {
+              "lineHeight": "28px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-16 px-space-md flex items-center justify-between bg-surface-container-low"><div class="flex items-center gap-space-sm"><div class="w-7 h-7 rounded bg-secondary flex items-center justify-center"><span class="material-symbols-outlined text-on-secondary text-[18px]">local_shipping</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm font-bold text-on-surface tracking-tight leading-none">MöbelSprint</span><span class="font-label-sm text-label-sm text-secondary uppercase font-bold tracking-wider leading-none mt-space-xs">Pro Leitstand</span></div></div><div class="flex items-center gap-space-xs px-space-xs py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm"><span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span><span>LIVE</span></div></div><div class="px-space-md pt-space-md pb-space-xs"><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Logistik-Steuerung</span></div><nav class="flex flex-col gap-0.5 px-space-sm" data-active-classes="bg-surface-container text-on-surface font-label-lg rounded"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="dispo-leitstand" href="#"><span class="material-symbols-outlined text-[20px]">hub</span><span>Dispo-Leitstand</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="touren-uebersicht" href="#"><span class="material-symbols-outlined text-[20px]">alt_route</span><span>Touren-Übersicht</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="flotten-management" href="#"><span class="material-symbols-outlined text-[20px]">rv_hookup</span><span>Flotten-Kapazitäten</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="volumen-kalkulation" href="#"><span class="material-symbols-outlined text-[20px]">view_in_ar</span><span>m³ Laderaum-Rechner</span></a></nav><div class="px-space-md pt-space-lg pb-space-xs"><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Compliance &amp; Abrechnung</span></div><nav class="flex flex-col gap-0.5 px-space-sm" data-active-classes="bg-surface-container text-on-surface font-label-lg rounded"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="schadensregulierung-reklamationen" href="#"><span class="material-symbols-outlined text-[20px]">verified_user</span><span>Schadensregulierung</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded font-label-lg text-label-lg text-on-surface-variant hover:bg-space-container-low hover:text-on-surface transition-colors" data-path="datev-finanzen" href="#"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span>DATEV &amp; Finanzen</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" data-path="rbac-dsgvo" href="#"><span class="material-symbols-outlined text-[20px]">admin_panel_settings</span><span>RBAC &amp; DSGVO</span></a></nav></div><div class="p-space-md bg-surface-container-low"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-sm text-label-sm text-on-surface-variant font-bold">TÜV CERT DE-2024</span><span class="font-label-sm text-label-sm text-on-tertiary-container font-bold">Geprüft</span></div><div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden"><div class="bg-secondary h-full w-[82%]"></div></div><div class="flex justify-between items-center mt-space-xs"><span class="font-body-sm text-body-sm text-on-surface-variant">Flottenauslastung</span><span class="font-tabular-data text-tabular-data text-on-surface">82% m³</span></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-gutter"><nav class="hidden lg:flex items-center gap-space-lg" data-active-classes="text-on-surface font-semibold"><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="dispo-leitstand" href="#">Dispo-Leitstand</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="touren-uebersicht" href="#">Touren-Übersicht</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="schadensregulierung-reklamationen" href="#">Schadensregulierung &amp; Reklamationen</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="datev-finanzen" href="#">DATEV &amp; Finanzen</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="rbac-dsgvo" href="#">RBAC &amp; DSGVO</a></nav><div class="flex items-center gap-space-md ml-auto"><div class="flex items-center gap-space-xs px-space-sm py-1 rounded bg-error-container text-on-error-container font-label-sm text-label-sm"><span class="material-symbols-outlined text-[16px]">e911_emergency</span><span class="font-bold tracking-tight">NOTFALL-HOTLINE: +49 800 663235</span></div><div class="flex items-center gap-1 bg-surface-container px-space-xs py-1 rounded"><span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface-container-lowest text-on-surface font-bold cursor-pointer">DE</span><span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded text-on-surface-variant hover:text-on-surface cursor-pointer">EN</span><span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded text-on-surface-variant hover:text-on-surface cursor-pointer">RU</span><span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded text-on-surface-variant hover:text-on-surface cursor-pointer">AR</span></div><div class="flex items-center gap-space-sm pl-space-sm"><div class="flex flex-col text-right"><span class="font-label-md text-label-md text-on-surface leading-none">D. Obermeier</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-none mt-0.5">Hauptdisponent (Nord)</span></div><div class="relative"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-tertiary-fixed-dim ring-2 ring-surface-container-lowest"></span></div></div></div></header><main class="relative pt-16 w-full min-h-screen bg-surface px-gutter py-space-lg"><div class="flex flex-col w-full">
+<!-- Top Meta Banner: Audit & Compliance State -->
+<div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-md mb-space-lg bg-surface-container-lowest p-space-md rounded-lg shadow-sm">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-10 h-10 rounded bg-primary text-on-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[24px]">account_balance</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs flex-wrap">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">Finanz-Zentrale &amp; DATEV-Schnittstelle</span>
+<span class="px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold uppercase tracking-wider">GoBD Konform</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-semibold">§ 14 UStG / § 147 AO</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Mandant MöbelSprint Logistik GmbH &amp; Co. KG • StNr: 30/815/04921 • Finanzamt Hamburg-Mitte</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm shrink-0 self-end lg:self-center">
+<div class="flex items-center gap-space-xs bg-surface-container-low px-space-md py-1.5 rounded">
+<span class="material-symbols-outlined text-[18px] text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">WORM-Archiv: Verriegelt</span>
+</div>
+<button class="flex items-center gap-1 bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md px-space-md py-2 rounded transition-colors" onclick="triggerAuditReport()">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span>Prüfprotokoll laden</span>
+</button>
+</div>
+</div>
+<!-- Row 1: High-Density KPI Deck & Real-time Flow -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-md mb-space-lg">
+<!-- KPI 1: Monatsumsatz -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-bl from-secondary/10 to-transparent rounded-bl-full pointer-events-none"></div>
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Monatsumsatz (Nov 2024)</span>
+<span class="material-symbols-outlined text-[20px] text-secondary">trending_up</span>
+</div>
+<div class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">84.620,00 €</div>
+<div class="flex items-center gap-space-xs mt-0.5">
+<span class="font-label-sm text-label-sm px-1 rounded bg-tertiary-fixed text-on-tertiary-fixed font-bold">+14,2%</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">vs. Vormonat (74.110 €)</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs bg-surface-container-low -mx-space-md -mb-space-md px-space-md pb-space-sm flex justify-between items-center text-on-surface-variant font-body-sm text-body-sm">
+<span>Netto: <strong class="text-on-surface font-semibold font-tabular-data">71.109,24 €</strong></span>
+<span class="text-on-surface-variant">|</span>
+<span>19% MwSt: <strong class="text-on-surface font-semibold font-tabular-data">13.510,76 €</strong></span>
+</div>
+</div>
+<!-- KPI 2: Offene Posten -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm flex flex-col justify-between relative">
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Offene Posten (OPOS)</span>
+<span class="material-symbols-outlined text-[20px] text-error">assignment_late</span>
+</div>
+<div class="font-headline-lg text-headline-lg font-bold text-error tracking-tight">2.450,00 €</div>
+<div class="flex items-center gap-space-xs mt-0.5">
+<span class="px-1.5 py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">2 Rechnungen fällig</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">§ 288 BGB Verzug</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs bg-surface-container-low -mx-space-md -mb-space-md px-space-md pb-space-sm flex justify-between items-center text-on-surface-variant font-body-sm text-body-sm">
+<span>DSO: <strong class="text-on-surface font-semibold font-tabular-data">4,2 Tage</strong></span>
+<span class="text-on-error font-semibold font-label-sm text-label-sm">Mahnstufe 1 aktiv</span>
+</div>
+</div>
+<!-- KPI 3: Fahrer Kassenbestand -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Bargeld-Kassenbestand</span>
+<span class="material-symbols-outlined text-[20px] text-on-surface">point_of_sale</span>
+</div>
+<div class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">3.045,00 €</div>
+<div class="flex items-center gap-space-xs mt-0.5">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Fahrer-Geldkassetten + Safe</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs bg-surface-container-low -mx-space-md -mb-space-md px-space-md pb-space-sm flex justify-between items-center text-on-surface-variant font-body-sm text-body-sm">
+<span>Tresor Status:</span>
+<span class="font-label-sm text-label-sm font-bold text-secondary">Bereit zur Bankeinzahlung</span>
+</div>
+</div>
+<!-- KPI 4: DATEV Status -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">DATEV Buchungsperiode</span>
+<span class="material-symbols-outlined text-[20px] text-tertiary-fixed-dim">sync_saved_locally</span>
+</div>
+<div class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">Nov 2024</div>
+<div class="flex items-center gap-space-xs mt-0.5">
+<span class="px-1.5 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold">Exportbereit</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">SKR03 / SKR04 validiert</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs bg-surface-container-low -mx-space-md -mb-space-md px-space-md pb-space-sm flex justify-between items-center text-on-surface-variant font-body-sm text-body-sm">
+<span>Stapel-Prüfsumme:</span>
+<span class="font-tabular-data text-tabular-data font-bold text-on-surface">d98a...f420</span>
+</div>
+</div>
+</div>
+<!-- Row 2: Driver Cash Reconciliation & Operational Safe Balances -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md mb-space-lg">
+<!-- Left: Driver Ledger (Cash & SumUp) -->
+<div class="lg:col-span-8 bg-surface-container-lowest p-space-md rounded-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-space-sm mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[22px] text-secondary">payments</span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">Fahrer-Kassenprüfung &amp; Vor-Ort-Zahlungsabgleich</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Tagesaktuelle Abstimmung von Vor-Ort-Inkasso (Bar &amp; SumUp EC/Kreditkarten)</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Kassenkonto:</span>
+<span class="font-tabular-data text-tabular-data px-1.5 py-0.5 bg-surface-container rounded font-bold">1000 (SKR03)</span>
+</div>
+</div>
+<!-- Ledger Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase">
+<th class="py-2.5 px-space-sm rounded-l">Fahrer &amp; Kfz</th>
+<th class="py-2.5 px-space-sm">Auftrag &amp; Vorgang</th>
+<th class="py-2.5 px-space-sm text-right">Zahlart / Soll</th>
+<th class="py-2.5 px-space-sm">Abgleich &amp; Nachweis</th>
+<th class="py-2.5 px-space-sm text-right rounded-r">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container font-body-md text-body-md">
+<!-- Item 1: Jens Schmidt Cash in Safe -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-sm">
+<div class="flex items-center gap-space-xs">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center font-bold text-on-surface font-label-sm text-label-sm">JS</div>
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface">Jens Schmidt</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">B-MS 104 (Sprinter 3.5t)</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-sm">
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface font-tabular-data">#MS-8942</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Umzug Berlin → Potsdam</span>
+</div>
+</td>
+<td class="py-3 px-space-sm text-right">
+<div class="flex flex-col items-end">
+<span class="font-bold text-on-surface font-tabular-data">1.015,00 €</span>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">Bargeld Inkasso</span>
+</div>
+</td>
+<td class="py-3 px-space-sm">
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface font-tabular-data text-body-sm">Quittung #BAR-8942</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Safe-Depot Fach #3 bestätigt</span>
+</div>
+</td>
+<td class="py-3 px-space-sm text-right">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[14px]">done_all</span> Verifiziert
+                  </span>
+</td>
+</tr>
+<!-- Item 2: Murat C. SumUp Card Payment -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-sm">
+<div class="flex items-center gap-space-xs">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center font-bold text-on-surface font-label-sm text-label-sm">MC</div>
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface">Murat C.</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">HH-MS 88 (MAN 7.5t)</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-sm">
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface font-tabular-data">#MS-8945</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Möbelmontage Altona</span>
+</div>
+</td>
+<td class="py-3 px-space-sm text-right">
+<div class="flex flex-col items-end">
+<span class="font-bold text-on-surface font-tabular-data">290,00 €</span>
+<span class="font-label-sm text-label-sm text-on-primary-container font-semibold">SumUp EC-Terminal</span>
+</div>
+</td>
+<td class="py-3 px-space-sm">
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface font-tabular-data text-body-sm">TxID 9481A</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Commerzbank Valuta 26.11.</span>
+</div>
+</td>
+<td class="py-3 px-space-sm text-right">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">sync</span> Bankabgleich OK
+                  </span>
+</td>
+</tr>
+<!-- Item 3: Alexei V. Pending En Route -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3 px-space-sm">
+<div class="flex items-center gap-space-xs">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center font-bold text-on-surface font-label-sm text-label-sm">AV</div>
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface">Alexei V.</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">K-MS 8812 (Sprinter 3.5t)</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-sm">
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface font-tabular-data">#MS-8951</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Klaviertransport Deutz</span>
+</div>
+</td>
+<td class="py-3 px-space-sm text-right">
+<div class="flex flex-col items-end">
+<span class="font-bold text-on-surface font-tabular-data">890,00 €</span>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">Bargeld bei Entladung</span>
+</div>
+</td>
+<td class="py-3 px-space-sm">
+<div class="flex flex-col">
+<span class="text-body-sm text-on-surface-variant">GPS: A4 Richtung Köln</span>
+<span class="font-body-sm text-body-sm text-secondary">Fahrzeug aktiv im Einsatz</span>
+</div>
+</td>
+<td class="py-3 px-space-sm text-right">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[14px]">timelapse</span> Tour aktiv
+                  </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Action Footer for Cashier Desk -->
+<div class="mt-space-md pt-space-sm flex flex-col sm:flex-row items-center justify-between gap-space-sm bg-surface-container-low p-space-sm rounded">
+<div class="flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-on-tertiary-container">lock_clock</span>
+<span>Tageskassenbuch Nr. 2024-331 • Prüfsumme entspricht TSE KassenSichV</span>
+</div>
+<button class="w-full sm:w-auto px-space-md py-2 bg-primary hover:bg-on-surface text-on-primary font-label-md text-label-md rounded flex items-center justify-center gap-space-xs transition-colors shadow-sm" onclick="executeCashClosing()">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+<span>Tagesabschluss durchführen &amp; Kassenbuch GoBD-signieren</span>
+</button>
+</div>
+</div>
+<!-- Right: Safe Inventory & Bank Deposit Overview (Visual Balance Card) -->
+<div class="lg:col-span-4 flex flex-col gap-space-md">
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm flex flex-col justify-between h-full">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">Haupttresor &amp; Bar-Status</span>
+<span class="px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold">IN BALANCE</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+            GoBD-konforme Zählung nach Zählprotokoll. Höchstversicherungsgrenze im Bürotresor Klasse EN 1143-1: <strong>10.000,00 €</strong>.
+          </p>
+<!-- Cash denominations breakdown -->
+<div class="space-y-2 mb-space-md">
+<div class="flex justify-between items-center bg-surface-container-low p-2 rounded">
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Geldscheine (200€ / 100€ / 50€)</span>
+<span class="font-tabular-data text-tabular-data font-bold text-on-surface">2.650,00 €</span>
+</div>
+<div class="flex justify-between items-center bg-surface-container-low p-2 rounded">
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Kleingeld &amp; Wechselgeldbestand</span>
+<span class="font-tabular-data text-tabular-data font-bold text-on-surface">395,00 €</span>
+</div>
+<div class="flex justify-between items-center bg-surface-container-high/60 p-2 rounded font-semibold">
+<span class="font-body-sm text-body-sm text-on-surface">Aktueller Kassenistbestand:</span>
+<span class="font-tabular-data text-tabular-data text-secondary font-bold">3.045,00 €</span>
+</div>
+</div>
+<!-- Safe Capacity Visual Meter -->
+<div class="mb-space-sm">
+<div class="flex justify-between font-label-sm text-label-sm mb-1 text-on-surface-variant">
+<span>Tresor-Versicherungsschwelle</span>
+<span class="font-tabular-data">30.45% belegt</span>
+</div>
+<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full" style="width: 30.45%;"></div>
+</div>
+</div>
+</div>
+<div class="pt-space-md">
+<button class="w-full py-2.5 px-space-md bg-secondary hover:bg-secondary-container text-on-secondary font-label-md text-label-md rounded flex items-center justify-center gap-space-xs transition-colors font-bold shadow-sm">
+<span class="material-symbols-outlined text-[18px]">local_atm</span>
+<span>Geldtransport &amp; Bankeinzahlung vorbereiten</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Row 3: DATEV Accounting Engine & Direct Tax Exports -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md mb-space-lg">
+<!-- DATEV Hub -->
+<div class="lg:col-span-8 bg-surface-container-lowest p-space-md rounded-lg shadow-sm">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between pb-space-md mb-space-md gap-space-sm">
+<div class="flex items-center gap-space-xs">
+<div class="w-9 h-9 rounded bg-surface-container flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[22px]">dataset</span>
+</div>
+<div>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">DATEV &amp; Buchhaltungs-Export Center</span>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Stapelverarbeitung nach Standardkontenrahmen SKR03 / SKR04</div>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Exportprofil:</span>
+<span class="px-2 py-1 bg-surface-container rounded font-label-sm text-label-sm font-bold text-on-surface">SKR03 Standard</span>
+</div>
+</div>
+<!-- Export Cards Matrix -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md mb-space-md">
+<!-- Card 1: DATEV CSV Buchungsstapel -->
+<div class="bg-surface-container-low p-space-md rounded flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm text-secondary font-bold uppercase tracking-wider">DATEV Format</span>
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant">table_view</span>
+</div>
+<div class="font-headline-sm text-headline-sm font-bold text-on-surface mb-1">Buchungsstapel CSV</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-sm">
+              Inklusive Beleglinks, Gegenkonto-Zuordnung (8400 Erlöse 19%, 1400 LuL, 1000 Kasse, 1200 Bank).
+            </p>
+</div>
+<div class="space-y-1.5 pt-space-xs">
+<div class="flex justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Datensätze:</span>
+<span class="font-tabular-data font-bold text-on-surface">184 Buchungen</span>
+</div>
+<button class="w-full py-1.5 px-space-sm bg-surface-container-lowest hover:bg-surface-bright text-on-surface font-label-sm text-label-sm rounded flex items-center justify-center gap-1 transition-colors font-semibold" onclick="downloadDatevFile('buchungsstapel')">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+<span>CSV herunterladen</span>
+</button>
+</div>
+</div>
+<!-- Card 2: SEPA XML Engine -->
+<div class="bg-surface-container-low p-space-md rounded flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm text-on-tertiary-container font-bold uppercase tracking-wider">ISO 20022</span>
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant">credit_score</span>
+</div>
+<div class="font-headline-sm text-headline-sm font-bold text-on-surface mb-1">SEPA XML Sammellastschrift</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-sm">
+              Sammellastschriften für Firmenumzüge &amp; Kaution-Rückerstattungen (pain.008.001.02 Format).
+            </p>
+</div>
+<div class="space-y-1.5 pt-space-xs">
+<div class="flex justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Betrag gesamt:</span>
+<span class="font-tabular-data font-bold text-on-surface">18.420,00 €</span>
+</div>
+<button class="w-full py-1.5 px-space-sm bg-surface-container-lowest hover:bg-surface-bright text-on-surface font-label-sm text-label-sm rounded flex items-center justify-center gap-1 transition-colors font-semibold" onclick="downloadDatevFile('sepa')">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+<span>XML Datei erzeugen</span>
+</button>
+</div>
+</div>
+<!-- Card 3: USt-VA Elster -->
+<div class="bg-surface-container-low p-space-md rounded flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider">ELSTER Schnittstelle</span>
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant">policy</span>
+</div>
+<div class="font-headline-sm text-headline-sm font-bold text-on-surface mb-1">USt-Voranmeldung (USt-VA)</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-sm">
+              Kennziffer 81 (Steuerpflichtige Umsätze) &amp; Vorsteuerabzug KZ 66 vorbereitet für Monat 11/2024.
+            </p>
+</div>
+<div class="space-y-1.5 pt-space-xs">
+<div class="flex justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Zahllast:</span>
+<span class="font-tabular-data font-bold text-on-surface">11.840,12 €</span>
+</div>
+<button class="w-full py-1.5 px-space-sm bg-surface-container-lowest hover:bg-surface-bright text-on-surface font-label-sm text-label-sm rounded flex items-center justify-center gap-1 transition-colors font-semibold" onclick="downloadDatevFile('ustva')">
+<span class="material-symbols-outlined text-[16px]">cloud_upload</span>
+<span>Elster Datensatz generieren</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Automated Transmission Banner -->
+<div class="bg-primary-container p-space-md rounded-lg text-on-primary flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded bg-white/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[24px]">send_and_archive</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm font-bold text-white">Direktversand an Kanzlei Dr. Weiß &amp; Partner</div>
+<div class="font-body-sm text-body-sm text-on-primary-container">DATEV Belegbilderservice &amp; Buchungsdaten werden verschlüsselt via DATEV Connect online übertragen.</div>
+</div>
+</div>
+<button class="w-full sm:w-auto px-space-lg py-2.5 bg-secondary-container hover:bg-secondary text-white font-label-md text-label-md rounded font-bold shrink-0 transition-colors shadow-sm flex items-center justify-center gap-1.5" id="btnSendTaxAdvisor" onclick="sendToTaxAdvisor()">
+<span class="material-symbols-outlined text-[18px]">mark_email_read</span>
+<span>Buchungsstapel Nov 2024 übermitteln</span>
+</button>
+</div>
+</div>
+<!-- Kontenrahmen Monitor (SKR03) -->
+<div class="lg:col-span-4 bg-surface-container-lowest p-space-md rounded-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">Sachkonten-Salden (SKR03)</span>
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant">account_tree</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant block mb-space-md">Aktueller Monatsabschluss Nov 2024 zur Gegenprüfung:</span>
+<div class="space-y-2">
+<!-- Kto 8400 -->
+<div class="p-2.5 bg-surface-container-low rounded flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold text-on-surface">Kto 8400</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Erlöse 19% USt (Transporte)</span>
+</div>
+<span class="font-tabular-data text-tabular-data font-bold text-on-surface">71.109,24 € Haben</span>
+</div>
+<!-- Kto 1400 -->
+<div class="p-2.5 bg-surface-container-low rounded flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold text-on-surface">Kto 1400</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Forderungen aus L+L (OPOS)</span>
+</div>
+<span class="font-tabular-data text-tabular-data font-bold text-on-surface">2.450,00 € Soll</span>
+</div>
+<!-- Kto 1000 -->
+<div class="p-2.5 bg-surface-container-low rounded flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold text-on-surface">Kto 1000</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Kasse (Fahrer-Bargeld &amp; Safe)</span>
+</div>
+<span class="font-tabular-data text-tabular-data font-bold text-on-surface">3.045,00 € Soll</span>
+</div>
+<!-- Kto 1200 -->
+<div class="p-2.5 bg-surface-container-low rounded flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold text-on-surface">Kto 1200</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Commerzbank Geschäftskonto</span>
+</div>
+<span class="font-tabular-data text-tabular-data font-bold text-on-surface">94.318,50 € Soll</span>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs text-center">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Summen- &amp; Saldenliste per 26.11.2024 vollständig ausgeglichen.</span>
+</div>
+</div>
+</div>
+<!-- Row 4: Revisionssicheres GoBD Belegarchiv (§ 14 UStG) & Rechnungs-Audit -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm mb-space-lg">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between pb-space-sm mb-space-sm gap-space-sm">
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">Revisionssicheres GoBD-Belegarchiv &amp; Rechnungs-Audit</span>
+<span class="px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold">WORM Storage</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Lückenlose Rechnungsnummern, SHA-256 Prüfsummen und 10 Jahre gesetzliche Aufbewahrungspflicht (§ 147 AO)</p>
+</div>
+<!-- Quick Filter -->
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Filter:</span>
+<button class="px-2.5 py-1 bg-surface-container rounded font-label-sm text-label-sm font-bold text-on-surface">Alle (438)</button>
+<button class="px-2.5 py-1 bg-surface hover:bg-surface-container-low rounded font-label-sm text-label-sm text-on-surface-variant">Mahnstufe (2)</button>
+<button class="px-2.5 py-1 bg-surface hover:bg-surface-container-low rounded font-label-sm text-label-sm text-on-surface-variant">Storniert / Gutschriften (4)</button>
+</div>
+</div>
+<!-- Belege Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase">
+<th class="py-2.5 px-space-sm rounded-l">Rechnungs-Nr.</th>
+<th class="py-2.5 px-space-sm">Kunde &amp; Leistungsdatum</th>
+<th class="py-2.5 px-space-sm">USt-Ausweis &amp; Betrag</th>
+<th class="py-2.5 px-space-sm">GoBD SHA-256 Hash</th>
+<th class="py-2.5 px-space-sm">Zahlungsstatus</th>
+<th class="py-2.5 px-space-sm text-right rounded-r">Aktion</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container font-body-md text-body-md">
+<!-- Invoice 1 -->
+<tr class="hover:bg-surface-container-low/40 transition-colors">
+<td class="py-3.5 px-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-tertiary-fixed-dim">verified</span>
+<span class="font-bold font-tabular-data text-on-surface">RE-2024-0897</span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface">Kanzlei Dr. Brandau Partnerschaft</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Leistungsdatum: 24.11.2024 • Büroumzug 280 m³</span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col">
+<span class="font-bold text-on-surface font-tabular-data">4.462,50 € Brutto</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Netto: 3.750,00 € • MwSt 19%: 712,50 €</span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm font-mono text-body-sm text-on-surface-variant">
+<span class="cursor-pointer" title="SHA-256 Verifiziert">7b2f4a10...9e44c2</span>
+</td>
+<td class="py-3.5 px-space-sm">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[14px]">check</span> Bezahlt (Überweisung)
+              </span>
+</td>
+<td class="py-3.5 px-space-sm text-right">
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface" onclick="previewInvoice('RE-2024-0897')" title="PDF Beleg anzeigen">
+<span class="material-symbols-outlined text-[20px]">picture_as_pdf</span>
+</button>
+</td>
+</tr>
+<!-- Invoice 2 (OPOS Mahnung) -->
+<tr class="hover:bg-surface-container-low/40 transition-colors bg-error-container/10">
+<td class="py-3.5 px-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-error">warning</span>
+<span class="font-bold font-tabular-data text-error">RE-2024-0896</span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface">Vanguard Media Systems UG</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Fällig seit: 12.11.2024 (14 Tage Verzug)</span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col">
+<span class="font-bold text-error font-tabular-data">1.450,00 € Brutto</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Netto: 1.218,49 € • MwSt 19%: 231,51 €</span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm font-mono text-body-sm text-on-surface-variant">
+<span>9f01ab33...d0144c</span>
+</td>
+<td class="py-3.5 px-space-sm">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[14px]">timer</span> Mahnung Stufe 1
+              </span>
+</td>
+<td class="py-3.5 px-space-sm text-right">
+<button class="px-2 py-1 bg-error-container hover:bg-error/20 text-on-error-container font-label-sm text-label-sm rounded font-bold transition-colors" onclick="openDunningModal('RE-2024-0896', 1450)">
+                Mahnlauf
+              </button>
+</td>
+</tr>
+<!-- Invoice 3 (Anzahlung verbucht) -->
+<tr class="hover:bg-surface-container-low/40 transition-colors">
+<td class="py-3.5 px-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-tertiary-fixed-dim">verified</span>
+<span class="font-bold font-tabular-data text-on-surface">RE-2024-0895</span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface">Familie S. Weimann</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Leistungsdatum: 22.11.2024 • Privatumzug 4-Zimmer</span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col">
+<span class="font-bold text-on-surface font-tabular-data">2.142,00 € Brutto</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Restbetrag: 1.071,00 € (50% bezahlt)</span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm font-mono text-body-sm text-on-surface-variant">
+<span>c189e32a...44f091</span>
+</td>
+<td class="py-3.5 px-space-sm">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">pie_chart</span> Anzahlung verbucht
+              </span>
+</td>
+<td class="py-3.5 px-space-sm text-right">
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface" onclick="previewInvoice('RE-2024-0895')">
+<span class="material-symbols-outlined text-[20px]">picture_as_pdf</span>
+</button>
+</td>
+</tr>
+<!-- Invoice 4 (Storniert mit Gutschrift) -->
+<tr class="hover:bg-surface-container-low/40 transition-colors opacity-75">
+<td class="py-3.5 px-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">cancel</span>
+<span class="font-bold font-tabular-data text-on-surface-variant line-through">RE-2024-0894</span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface">T. Becker Küchentechnik</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Korrekturrechnung GS-2024-0012 erteilt</span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface-variant font-tabular-data">0,00 € (Storno)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Urspr. 780,00 € • Reklamation Schaden</span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm font-mono text-body-sm text-on-surface-variant">
+<span>88ba4211...001c9a</span>
+</td>
+<td class="py-3.5 px-space-sm">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-semibold">
+                Storniert gem. UStG
+              </span>
+</td>
+<td class="py-3.5 px-space-sm text-right">
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface" onclick="previewInvoice('GS-2024-0012')" title="Gutschrift anzeigen">
+<span class="material-symbols-outlined text-[20px]">receipt</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Row 5: Mahnwesen & Automatisierter Verzugszinslauf (§ 288 BGB) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md">
+<!-- Automated Dunning & B2B Interest Engine -->
+<div class="lg:col-span-8 bg-surface-container-lowest p-space-md rounded-lg shadow-sm">
+<div class="flex items-center justify-between pb-space-sm mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[22px] text-error">gavel</span>
+<div>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">Mahnwesen &amp; Forderungsmanagement (§ 288 BGB)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant block">Berechnung von 9%-Punkten über Basiszinssatz für Geschäftskunden + 40,00 € Verzugspauschale</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">2 Positionen fällig</span>
+</div>
+<div class="space-y-space-sm">
+<!-- Debtor 1 -->
+<div class="p-space-md bg-surface-container-low rounded flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="font-bold text-on-surface">Vanguard Media Systems UG</span>
+<span class="text-body-sm text-on-surface-variant font-tabular-data">(RE-2024-0896)</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Fällig seit: 12.11.2024 • Hauptforderung: <strong>1.450,00 €</strong></span>
+<div class="flex items-center gap-space-sm mt-1 text-on-surface-variant font-label-sm text-label-sm">
+<span>Verzugszinsen (8,62% p.a.): <strong>+4,82 €</strong></span>
+<span>•</span>
+<span>Mahnpauschale (§ 288 Abs. 5): <strong>+40,00 €</strong></span>
+<span>•</span>
+<span class="text-error font-bold font-tabular-data">Gesamtforderung: 1.494,82 €</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs shrink-0 self-end md:self-center">
+<button class="px-space-md py-2 bg-error hover:bg-on-error-container text-on-error font-label-md text-label-md rounded font-bold transition-colors flex items-center gap-1 shadow-sm" onclick="triggerDunningRun('Vanguard Media', '1494.82')">
+<span class="material-symbols-outlined text-[16px]">outgoing_mail</span>
+<span>Mahnung Stufe 1 versenden</span>
+</button>
+</div>
+</div>
+<!-- Debtor 2 -->
+<div class="p-space-md bg-surface-container-low rounded flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="font-bold text-on-surface">Büroservice Nordwind e.K.</span>
+<span class="text-body-sm text-on-surface-variant font-tabular-data">(RE-2024-0870)</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Fällig seit: 08.11.2024 • Hauptforderung: <strong>1.000,00 €</strong></span>
+<div class="flex items-center gap-space-sm mt-1 text-on-surface-variant font-label-sm text-label-sm">
+<span>Verzugszinsen (8,62% p.a.): <strong>+4,25 €</strong></span>
+<span>•</span>
+<span>Mahnpauschale: <strong>+40,00 €</strong></span>
+<span>•</span>
+<span class="text-error font-bold font-tabular-data">Gesamtforderung: 1.044,25 €</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs shrink-0 self-end md:self-center">
+<button class="px-space-md py-2 bg-error hover:bg-on-error-container text-on-error font-label-md text-label-md rounded font-bold transition-colors flex items-center gap-1 shadow-sm" onclick="triggerDunningRun('Büroservice Nordwind', '1044.25')">
+<span class="material-symbols-outlined text-[16px]">outgoing_mail</span>
+<span>Mahnung Stufe 1 versenden</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Live Compliance Status Card -->
+<div class="lg:col-span-4 bg-surface-container-lowest p-space-md rounded-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">GoBD Verfahrensdokumentation</span>
+<span class="material-symbols-outlined text-[20px] text-tertiary-fixed-dim">shield_with_heart</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+          Das System protokolliert alle Buchungen kryptografisch. Nachträgliche Manipulationen an Belegen, Rechnungen oder Fahrerquittungen sind technisch ausgeschlossen.
+        </p>
+<div class="space-y-2.5">
+<div class="flex items-center justify-between text-body-sm text-body-sm">
+<span class="text-on-surface-variant">Letzter Kassen-Hash:</span>
+<span class="font-mono text-on-surface font-semibold">#e3b0c442...98fc</span>
+</div>
+<div class="flex items-center justify-between text-body-sm text-body-sm">
+<span class="text-on-surface-variant">TSE Signaturmodul:</span>
+<span class="font-bold text-on-tertiary-container">Swissbit Cloud-TSE Aktiv</span>
+</div>
+<div class="flex items-center justify-between text-body-sm text-body-sm">
+<span class="text-on-surface-variant">Nächste Betriebsprüfung:</span>
+<span class="font-medium text-on-surface">Vorbereitet (IDEA Export)</span>
+</div>
+</div>
+</div>
+<div class="pt-space-md">
+<button class="w-full py-2 bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md rounded transition-colors flex items-center justify-center gap-1 font-semibold" onclick="triggerIdeaExport()">
+<span class="material-symbols-outlined text-[18px]">folder_zip</span>
+<span>IDEA-Prüfungsarchiv exportieren</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Interactive Modal / Notification Toast Container (Vanilla JS Powered) -->
+<div class="fixed bottom-6 right-6 max-w-md bg-inverse-surface text-inverse-on-surface p-space-md rounded-lg shadow-xl translate-y-24 opacity-0 transition-all duration-300 pointer-events-none z-50 flex items-start gap-space-sm" id="toastNotification">
+<span class="material-symbols-outlined text-[22px] text-tertiary-fixed shrink-0">check_circle</span>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg font-bold" id="toastTitle">Erfolgreich ausgeführt</span>
+<span class="font-body-sm text-body-sm text-inverse-on-surface/80" id="toastMessage">Die Operation wurde revisionssicher im GoBD-Audit-Log gespeichert.</span>
+</div>
+</div>
+</div>
+<script>
+  function showToast(title, message) {
+    const toast = document.getElementById('toastNotification');
+    const toastTitle = document.getElementById('toastTitle');
+    const toastMessage = document.getElementById('toastMessage');
+    
+    toastTitle.innerText = title;
+    toastMessage.innerText = message;
+    
+    toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+    toast.classList.add('translate-y-0', 'opacity-100');
+    
+    setTimeout(() => {
+      toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+      toast.classList.remove('translate-y-0', 'opacity-100');
+    }, 4000);
+  }
+
+  function executeCashClosing() {
+    showToast(
+      'Tagesabschluss GoBD signiert', 
+      'Kassensaldo von 3.045,00 € wurde mit TSE-Signatur versehen und im Kassenbuch unveränderbar festgeschrieben.'
+    );
+  }
+
+  function downloadDatevFile(type) {
+    if (type === 'buchungsstapel') {
+      showToast('DATEV Buchungsstapel generiert', 'CSV-Datei "EXTF_Buchungsstapel_Nov24.csv" nach SKR03 Standard wurde heruntergeladen.');
+    } else if (type === 'sepa') {
+      showToast('SEPA XML erstellt', 'Sammeldatei "SEPA_pain_008_Nov2024.xml" (18.420,00 €) bereit zum Upload.');
+    } else if (type === 'ustva') {
+      showToast('ELSTER Datensatz erzeugt', 'USt-Voranmeldung für 11/2024 mit Zahllast 11.840,12 € validiert.');
+    }
+  }
+
+  function sendToTaxAdvisor() {
+    const btn = document.getElementById('btnSendTaxAdvisor');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">refresh</span><span>Übertrage an DATEV Cloud...</span>';
+    
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">done_all</span><span>Übermittelt am ' + new Date().toLocaleTimeString('de-DE') + '</span>';
+      showToast(
+        'Übermittlung erfolgreich', 
+        'Buchungsstapel November 2024 und 184 Belegbilder wurden verschlüsselt an Kanzlei Dr. Weiß & Partner übertragen.'
+      );
+    }, 1200);
+  }
+
+  function triggerDunningRun(client, amount) {
+    showToast(
+      'Mahnung Stufe 1 ausgelöst', 
+      'Mahn-PDF inkl. 40,00 € Pauschale & Zinsen nach § 288 BGB (' + amount + ' €) per Einwurf-Einschreiben-Digital an ' + client + ' versendet.'
+    );
+  }
+
+  function triggerAuditReport() {
+    showToast(
+      'GoBD Audit-Log exportiert', 
+      'Vollständiges Transaktionsprotokoll mit SHA-256 Signaturen für Betriebsprüfung heruntergeladen.'
+    );
+  }
+
+  function triggerIdeaExport() {
+    showToast(
+      'IDEA Export bereit', 
+      'GDPdU/GoBD konformer Datenträgerüberlassungs-Ordner generiert.'
+    );
+  }
+
+  function previewInvoice(invoiceNo) {
+    showToast(
+      'Belegansicht geöffnet', 
+      'Revisionssicher archiviertes Beleg-PDF für ' + invoiceNo + ' aus dem WORM-Speicher abgerufen.'
+    );
+  }
+
+  function openDunningModal(invNo, amount) {
+    showToast(
+      'Mahnlauf-Vorbereitung', 
+      'Rechnung ' + invNo + ' (' + amount + ' €) in den aktiven Mahnlauf übernommen.'
+    );
+  }
+</script></main></div></body></html>
