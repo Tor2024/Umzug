@@ -3,6 +3,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
+import { redirect } from "next/navigation";
 import { requireRole } from "@/lib/auth";
 import { getDb, getTariffs, type DB } from "@/lib/db";
 import { calculateQuote, recalculate, type QuoteSnapshot, type VehicleClass } from "@/lib/pricing";
@@ -332,9 +333,9 @@ function CancelForm({ orderId, orderRef }: { orderId: number; orderRef?: string 
 }
 
 /** Результат экшена → редирект с конкретным сообщением (код + ref заказа, чтобы было ясно ЧТО произошло). */
-async function redirectMsg(code: string, ref?: string): Promise<never> {
-  const { redirect } = await import("next/navigation");
-  return redirect(`/dispatch?msg=${code}${ref ? `&ref=${encodeURIComponent(ref)}` : ""}`);
+function redirectMsg(code: string, ref?: string): never {
+  redirect(`/dispatch?msg=${code}${ref ? `&ref=${encodeURIComponent(ref)}` : ""}`);
+  throw new Error("unreachable");
 }
 
 /** Diff-список изменённых полей правки (D10: логист видит, ЧТО именно изменил клиент). */
