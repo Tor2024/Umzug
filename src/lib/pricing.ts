@@ -85,11 +85,10 @@ export interface Quote {
   needsSecondDriver: boolean;   // смена > 10 ч
 }
 
-/** Немецкие праздники (федеральные, общие для всех земель) — данные (D1.10). */
-export const DE_HOLIDAYS_2026: string[] = [
-  "2026-01-01", "2026-04-03", "2026-04-06", "2026-05-01", "2026-05-14",
-  "2026-05-25", "2026-06-04", "2026-10-03", "2026-12-25", "2026-12-26",
-];
+/** Немецкие праздники (федеральные, общие для всех земель) — данные (D1.10). Алгоритмически через @/lib/holidays. */
+import { isHoliday } from "./holidays";
+
+export { isHoliday as isGermanHoliday };
 
 export class ValidationError extends Error {}
 
@@ -107,7 +106,7 @@ export function validateConfig(cfg: MoveConfig): void {
   const d = new Date(cfg.moveDate + "T12:00:00");
   if (Number.isNaN(d.getTime())) throw new ValidationError("Некорректная дата");
   if (d.getDay() === 0) throw new ValidationError("Воскресенье недоступно (§ 9 ArbZG)");
-  if (DE_HOLIDAYS_2026.includes(cfg.moveDate)) throw new ValidationError("Праздничный день недоступен");
+  if (isHoliday(cfg.moveDate)) throw new ValidationError("Праздничный день недоступен");
   const today = new Date(); today.setHours(0, 0, 0, 0);
   if (d < today) throw new ValidationError("Дата в прошлом");
 }
