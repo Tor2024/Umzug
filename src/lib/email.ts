@@ -67,3 +67,25 @@ export async function sendVerifyEmail(to: string, name: string, token: string): 
   const verifyUrl = `${base}/verify?token=${token}`;
   return sendEmail(to, "Подтвердите email — Помощник с переездом", verifyTemplate(name, verifyUrl));
 }
+
+/** Письмо восстановления пароля: ссылка действует 1 час. */
+export async function sendResetEmail(to: string, name: string, token: string): Promise<SendResult> {
+  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://umzug-seven.vercel.app";
+  const resetUrl = `${base}/reset-password?token=${token}`;
+  return sendEmail(to, "Восстановление пароля — Помощник с переездом", resetTemplate(name, resetUrl));
+}
+
+function resetTemplate(name: string, resetUrl: string): string {
+  return `<!doctype html>
+<html lang="ru"><body style="margin:0;padding:24px;background:#f6f7f9;font-family:Arial,Helvetica,sans-serif;color:#1a1d21;">
+  <div style="max-width:480px;margin:0 auto;background:#ffffff;border-radius:12px;padding:32px;border:1px solid #e5e7eb;">
+    <h1 style="margin:0 0 16px;font-size:20px;">Помощник с переездом</h1>
+    <p style="margin:0 0 12px;font-size:15px;line-height:1.5;">Здравствуйте, ${escapeHtml(name)}!</p>
+    <p style="margin:0 0 20px;font-size:15px;line-height:1.5;">Вы запросили восстановление пароля. Нажмите кнопку ниже и задайте новый пароль. Ссылка действует <b>1 час</b>.</p>
+    <a href="${resetUrl}" style="display:inline-block;background:#1a56db;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:8px;font-size:15px;font-weight:bold;">Задать новый пароль</a>
+    <p style="margin:20px 0 0;font-size:13px;color:#6b7280;line-height:1.5;">Если кнопка не работает, скопируйте ссылку в браузер:<br><a href="${resetUrl}" style="color:#1a56db;word-break:break-all;">${resetUrl}</a></p>
+    <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;">
+    <p style="margin:0;font-size:12px;color:#9ca3af;">Если вы не запрашивали сброс пароля — просто проигнорируйте это письмо, пароль останется прежним.</p>
+  </div>
+</body></html>`;
+}

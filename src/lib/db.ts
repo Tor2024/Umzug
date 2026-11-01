@@ -82,8 +82,11 @@ const SCHEMA_SQL = `
     email_verified  INTEGER NOT NULL DEFAULT 0,
     verify_token    TEXT,
     verify_expires  INTEGER,
+    reset_token     TEXT,
+    reset_expires   INTEGER,
     created_at      INTEGER NOT NULL
   );
+  CREATE INDEX IF NOT EXISTS idx_users_reset_token ON users(reset_token);
   CREATE TABLE IF NOT EXISTS sessions (
     token_hash  TEXT PRIMARY KEY,
     user_id     INTEGER NOT NULL REFERENCES users(id),

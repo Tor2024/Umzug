@@ -3,7 +3,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { getDb, createSession, deleteSession, findSession, verifyPassword, audit, sha256, type SessionUser } from "./db";
+import { getDb, createSession, deleteSession, findSession, verifyPassword, audit, sha256, hashPassword, invalidateUserSessions, type SessionUser } from "./db";
 import { randomBytes } from "node:crypto";
 
 export type Role = SessionUser["role"];
@@ -152,4 +152,42 @@ export async function consumeVerifyToken(token: string): Promise<string | null> 
   });
   await audit(db, Number(row.id), "email_verified", "user", Number(row.id));
   return String(row.email);
+}
+
+// --- Восстановление пароля (Э7): отдельные колонки reset_token/reset_expires ---
+
+const RESET_TTL_S = 60 * 60; // 1 час
+
+/** Одноразовый токен сброса пароля: 1ч TTL, ша256-lookup, колонки reset_token/reset_expires. */
+export async function issueResetToken(userId: number): Promise<string> {
+  const db = await getDb();
+  const token = randomBytes(24).toString("hex");
+  await db.execute({
+    sql: "UPDATE users SET reset_token = ?, reset_expires = ? WHERE id = ?",
+    args: [sha256(token), Math.floor(Date.now() / 1000) + RESET_TTL_S, userId],
+  });
+  return token;
+}
+
+/**
+ * Применение сброса: токен одноразовый (сравнение по хешу), истёкший/чужой → false.
+ * Меняет пароль, чистит токен и инвалидирует все сессии пользователя.
+ */
+export async function consumeResetToken(token: string, newPassword: string): Promise<boolean> {
+  if (newPassword.length < 8) return false;
+  const db = await getDb();
+  const res = await db.execute({
+    sql: "SELECT id FROM users WHERE reset_token = ? AND reset_expires > ?",
+    args: [sha256(token), Math.floor(Date.now() / 1000)],
+  });
+  const row = res.rows[0] as unknown as { id: number } | undefined;
+  if (!row) return false;
+  const userId = Number(row.id);
+  await db.execute({
+    sql: "UPDATE users SET password_hash = ?, reset_token = NULL, reset_expires = NULL WHERE id = ?",
+    args: [hashPassword(newPassword), userId],
+  });
+  await invalidateUserSessions(db, userId);
+  await audit(db, userId, "password_reset", "user", userId, "via email link");
+  return true;
 }

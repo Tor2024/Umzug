@@ -4,7 +4,7 @@
 
 import { redirect } from "next/navigation";
 import { getDb, audit, hashPassword } from "./db";
-import { login, setSessionCookie, clearSessionCookie, issueVerifyToken, consumeVerifyToken, COOKIE } from "./auth";
+import { login, setSessionCookie, clearSessionCookie, issueVerifyToken, consumeVerifyToken, issueResetToken, consumeResetToken, COOKIE } from "./auth";
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
@@ -99,6 +99,36 @@ export async function registerAction(formData: FormData): Promise<RegisterResult
 export async function verifyAction(token: string): Promise<{ ok: boolean; email?: string }> {
   const email = await consumeVerifyToken(token);
   return email ? { ok: true, email } : { ok: false };
+}
+
+/** Запрос сброса пароля: письмо со ссылкой (всегда ok — не раскрываем, есть ли email в базе). */
+export async function forgotPasswordAction(formData: FormData): Promise<{ ok: boolean; error?: "invalid" }> {
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  if (!EMAIL_RE.test(email)) return { ok: false, error: "invalid" };
+
+  const db = await getDb();
+  const uRes = await db.execute({
+    sql: "SELECT id, name FROM users WHERE email = ? AND active = 1",
+    args: [email],
+  });
+  const u = uRes.rows[0] as unknown as { id: number; name: string } | undefined;
+  if (u) {
+    const token = await issueResetToken(Number(u.id));
+    await audit(db, Number(u.id), "password_reset_requested", "user", Number(u.id));
+    const { sendResetEmail } = await import("./email");
+    const mail = await sendResetEmail(email, String(u.name), token);
+    if (!mail.sent) console.error("reset email not sent:", mail.reason);
+  } else {
+    await audit(db, null, "password_reset_unknown_email", "user", email);
+  }
+  // Одинаковый ответ для существующего и несуществующего email (anti-enumeration).
+  return { ok: true };
+}
+
+/** Применение нового пароля по токену из письма. */
+export async function resetPasswordAction(token: string, newPassword: string): Promise<{ ok: boolean }> {
+  const ok = await consumeResetToken(token, newPassword);
+  return { ok };
 }
 
 /** Смена пароля (заготовка Э7): инвалидирует сессии. */

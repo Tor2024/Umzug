@@ -14,9 +14,9 @@ const ERRORS: Record<string, string> = {
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; next?: string; email?: string }>;
+  searchParams: Promise<{ error?: string; next?: string; email?: string; reset?: string }>;
 }) {
-  const { error, next, email } = await searchParams;
+  const { error, next, email, reset } = await searchParams;
   const err = error ? ERRORS[error] ?? ERRORS["1"] : null;
 
   return (
@@ -29,6 +29,12 @@ export default async function LoginPage({
           <h1 className="mt-4 text-2xl font-bold tracking-tight">Вход</h1>
           <p className="mt-1 text-sm text-muted">Кабинет клиента и сотрудников</p>
         </div>
+
+        {reset === "1" && (
+          <div role="status" className="mb-4 rounded-base border border-trust/40 bg-emerald-50 px-4 py-3 text-sm text-ink">
+            Пароль изменён. Войдите с новым паролем.
+          </div>
+        )}
 
         {err && (
           <div role="alert" className="mb-4 rounded-base border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger">
@@ -50,6 +56,10 @@ export default async function LoginPage({
           </div>
           <button type="submit" className="btn btn-primary w-full">Войти</button>
         </form>
+
+        <p className="mt-3 text-center text-sm">
+          <Link href="/forgot-password" className="text-muted hover:text-accent">Забыли пароль?</Link>
+        </p>
 
         <p className="mt-4 text-center text-sm text-muted">
           Нет аккаунта?{" "}
