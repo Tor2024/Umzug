@@ -44,7 +44,15 @@ export function getDb(): DB {
 let schemaReady: Promise<void> | null = null;
 export function ensureSchema(db: DB): Promise<void> {
   schemaReady ??= (async () => {
-    await db.execute(SCHEMA_SQL);
+    // libsql HTTP-клиент не принимает несколько стейтментов за один execute —
+    // разбиваем SCHEMA_SQL на отдельные CREATE TABLE по точке с запятой.
+    const stmts = SCHEMA_SQL.split(";")
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0 && !s.startsWith("--"));
+    await db.batch(
+      stmts.map((sql) => ({ sql, args: [] })),
+      "write",
+    );
     await seed(db);
   })();
   return schemaReady;
