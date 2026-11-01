@@ -26,7 +26,7 @@ function fmt(cents: number): string {
 export default async function AccountPage() {
   await connection(); // Route uses DB time (Date.now in findSession) — render at request time
   const user = await requireUser("/account");
-  const db = getDb();
+  const db = await getDb();
   const ordersRes = await db.execute({
     sql: "SELECT ref, status, move_date, from_text, to_text, gross_cents FROM orders WHERE client_id = ? ORDER BY id DESC",
     args: [user.id],

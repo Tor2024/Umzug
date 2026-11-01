@@ -14,7 +14,7 @@ export default async function CalcPage() {
   const user = await getSessionAsync();
   // Черновик клиента должен считаться по ТЕКУЩИМ серверным тарифам (иначе расхождение
   // с серверным расчётом при изменённых тарифах — найдено в Э9 E2E: per_km 80 vs 100).
-  const tariffs = await getTariffs(getDb());
+  const tariffs = await getTariffs(await getDb());
   return (
     <main className="mx-auto max-w-5xl px-4 py-8">
       <h1 className="mb-1 text-2xl font-bold sm:text-3xl">Рассчитать переезд</h1>

@@ -20,7 +20,7 @@ export async function loginAction(formData: FormData): Promise<void> {
     redirect(`/login?error=${err}&next=${encodeURIComponent(next)}&email=${encodeURIComponent(email)}`);
   }
   await setSessionCookie(res.token!, res.expiresAt!);
-  const db = getDb();
+  const db = await getDb();
   const uRes = await db.execute({
     sql: "SELECT id FROM users WHERE email = ?",
     args: [email.trim().toLowerCase()],
@@ -51,7 +51,7 @@ export async function registerAction(formData: FormData): Promise<RegisterResult
     return { ok: false, error: "invalid" };
   }
 
-  const db = getDb();
+  const db = await getDb();
   const existingRes = await db.execute({
     sql: "SELECT id, email_verified FROM users WHERE email = ?",
     args: [email],
@@ -94,7 +94,7 @@ export async function verifyAction(token: string): Promise<{ ok: boolean; email?
 
 /** Смена пароля (заготовка Э7): инвалидирует сессии. */
 export async function changePasswordAction(userId: number, oldPw: string, newPw: string): Promise<boolean> {
-  const db = getDb();
+  const db = await getDb();
   const uRes = await db.execute({
     sql: "SELECT password_hash FROM users WHERE id = ?",
     args: [userId],

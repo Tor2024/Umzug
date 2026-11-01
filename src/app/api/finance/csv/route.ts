@@ -7,11 +7,11 @@ import { COOKIE } from "@/lib/auth";
 export async function GET() {
   const jar = await cookies();
   const token = jar.get(COOKIE)?.value ?? "";
-  const user = token ? await findSession(getDb(), token) : null;
+  const user = token ? await findSession(await getDb(), token) : null;
   if (!user || (user.role !== "finance" && user.role !== "admin")) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
-  const db = getDb();
+  const db = await getDb();
   const invRes = await db.execute(
     `SELECT i.number, o.ref, i.amount_cents, i.status, i.dunning_level, i.due_date, i.paid_at
        FROM invoices i JOIN orders o ON o.id = i.order_id ORDER BY i.number`,

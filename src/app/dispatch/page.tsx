@@ -112,7 +112,7 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
   await connection();
   const user = await requireRole(["logist", "admin"], "/dispatch");
   const { status: statusFilter, msg, ref } = await searchParams;
-  const db = getDb();
+  const db = await getDb();
 
   const rowsRes = await db.execute(
     `SELECT id, ref, status, contact_name, volume_m3, distance_km, move_date, gross_cents, vehicle_class, snapshot, from_text, to_text, pending_snapshot, revision_requested_by

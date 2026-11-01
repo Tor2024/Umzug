@@ -64,7 +64,7 @@ async function claimStatusForm(fd: FormData): Promise<void> {
 export default async function FinancePage() {
   await connection();
   const user = await requireRole(["finance", "admin"], "/finance");
-  const db = getDb();
+  const db = await getDb();
 
   const invoicesRes = await db.execute(
     `SELECT i.number, i.order_id, i.amount_cents, i.status, i.dunning_level, i.due_date, i.paid_at,

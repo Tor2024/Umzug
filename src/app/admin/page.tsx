@@ -84,7 +84,7 @@ function historyDetails(action: string, details: string): string {
 export default async function AdminPage({ searchParams }: { searchParams: Promise<{ msg?: string }> }) {
   await connection();
   await requireRole(["admin"], "/admin");
-  const db = getDb();
+  const db = await getDb();
   const { msg } = await searchParams;
 
   // Локальные server-action-обёртки (FormData → экшены)

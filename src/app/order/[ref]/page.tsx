@@ -39,7 +39,7 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
   await connection(); // Route uses DB time (Date.now in findSession/recalculate) — render at request time
   const { ref } = await params;
   const { msg } = await searchParams;
-  const db = getDb();
+  const db = await getDb();
   const jar = await cookies();
   const user: SessionUser | null = await findSession(db, jar.get("ms_session")?.value ?? "");
   if (!user) {

@@ -37,7 +37,7 @@ export default async function DriverPage({ searchParams }: { searchParams: Promi
   const user = await requireRole(["driver", "admin"], "/driver");
   const { msg } = await searchParams;
 
-  const db = getDb();
+  const db = await getDb();
   const today = new Date();
   const todayIso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
 

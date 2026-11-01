@@ -47,14 +47,14 @@ export interface CreateOrderResult {
 }
 
 async function currentUser() {
-  const db = getDb();
+  const db = await getDb();
   const jar = await cookies();
   const token = jar.get(COOKIE)?.value ?? "";
   return findSession(db, token);
 }
 
 export async function createOrderAction(input: OrderInput): Promise<CreateOrderResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user) return { ok: false, error: "auth", message: "Войдите, чтобы отправить заявку." };
   if (user.role !== "kunde") {
@@ -206,7 +206,7 @@ export async function createOrderAction(input: OrderInput): Promise<CreateOrderR
 export async function logoutAction(): Promise<void> {
   const jar = await cookies();
   const token = jar.get(COOKIE)?.value ?? "";
-  if (token) await deleteSession(getDb(), token);
+  if (token) await deleteSession(await getDb(), token);
   jar.delete(COOKIE);
 }
 
@@ -218,7 +218,7 @@ export interface SimpleResult { ok: boolean; error?: string; message?: string }
 
 /** Логист подтверждает заявку (new→confirmed). Гейт: тариф-дрифт. */
 export async function confirmOrderAction(orderId: number): Promise<SimpleResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user || (user.role !== "logist" && user.role !== "admin")) {
     return { ok: false, message: "Недостаточно прав." };
@@ -247,7 +247,7 @@ export async function confirmOrderAction(orderId: number): Promise<SimpleResult>
 
 /** Пересчёт заявки по текущим тарифам: только для new (после confirmed пересчёт запрещён, D5.7). */
 export async function recalcOrderAction(orderId: number): Promise<SimpleResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user || (user.role !== "logist" && user.role !== "admin")) {
     return { ok: false, message: "Недостаточно прав." };
@@ -293,7 +293,7 @@ export async function recalcOrderAction(orderId: number): Promise<SimpleResult> 
 
 /** Отмена (D5.1/D5.2): kunde — new/confirmed; logist/admin — new/confirmed/assigned. Cleanup assignments+trips. */
 export async function cancelOrderAction(orderId: number): Promise<SimpleResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user) return { ok: false, message: "Войдите в систему." };
   const orderRes = await db.execute({
@@ -319,7 +319,7 @@ export async function cancelOrderAction(orderId: number): Promise<SimpleResult> 
 
 /** Назначение машины и бригады (D5.3–D5.8). */
 export async function assignOrderAction(input: { orderId: number; vehicleId: number; driverId: number; codriverId?: number | null }): Promise<AssignResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user) return { ok: false, error: "auth", message: "Войдите в систему." };
   const result = await assignOrder(db, input, { id: user.id, role: user.role });
@@ -344,7 +344,7 @@ export async function assignOrderAction(input: { orderId: number; vehicleId: num
 
 /** «Выехал» (assigned→enroute, только driver, только в день move_date — D6.3). */
 export async function startRouteAction(orderId: number): Promise<SimpleResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user) return { ok: false, message: "Войдите в систему." };
   if (!canTransition("assigned", "enroute", user.role)) {
@@ -389,7 +389,7 @@ export interface ProtocolResult { ok: boolean; message?: string }
  * глобальная цепочка от GENESIS, существующий протокол = отказ.
  */
 export async function saveProtocolAction(input: ProtocolInput): Promise<ProtocolResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user) return { ok: false, message: "Войдите в систему." };
   if (user.role !== "driver" && user.role !== "admin") {
@@ -444,7 +444,7 @@ export async function saveProtocolAction(input: ProtocolInput): Promise<Protocol
 
 /** Приёмка клиентом (enroute→acceptance, D5.1/D6.7). */
 export async function acceptOrderAction(orderId: number): Promise<SimpleResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user) return { ok: false, message: "Войдите в систему." };
   const orderRes = await db.execute({
@@ -503,7 +503,7 @@ async function paidSum(db: DB, orderId: number): Promise<number> {
  * счёта RE-ГГГГ-0NNN (D7.1/D7.5) и backfill invoice_id у авансового платежа (D7.1).
  */
 export async function closeOrderAction(orderId: number): Promise<SimpleResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user) return { ok: false, message: "Войдите в систему." };
   const orderRes = await db.execute({
@@ -561,7 +561,7 @@ export async function closeOrderAction(orderId: number): Promise<SimpleResult> {
 
 /** Force-close зависшей приёмки (enroute→closed, D7.6): счёт тем же экшеном. */
 export async function forceCloseOrderAction(orderId: number): Promise<SimpleResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user) return { ok: false, message: "Войдите в систему." };
   const orderRes = await db.execute({
@@ -586,7 +586,7 @@ export async function forceCloseOrderAction(orderId: number): Promise<SimpleResu
 
 /** Платёж (D7.1/D7.2): положительный = оплата, отрицательный = возврат (D7.4). */
 export async function recordPaymentAction(input: PaymentInput): Promise<PaymentResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user || (user.role !== "finance" && user.role !== "admin")) {
     return { ok: false, message: "Только бухгалтерия." };
@@ -648,7 +648,7 @@ export async function recordPaymentAction(input: PaymentInput): Promise<PaymentR
 
 /** Отмена счёта (D7.5): номер сохраняется (GoBD), для cancelled-заказа / ошибки. */
 export async function cancelInvoiceAction(invoiceNumber: string): Promise<SimpleResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user || (user.role !== "finance" && user.role !== "admin")) {
     return { ok: false, message: "Только бухгалтерия." };
@@ -668,7 +668,7 @@ export async function cancelInvoiceAction(invoiceNumber: string): Promise<Simple
 
 /** Ленивый дуннинг-рефреш (D7.3): >14д lvl1, >30д lvl2, только для open/overdue и не in_review. */
 export async function dunningRefreshAction(): Promise<SimpleResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user || (user.role !== "finance" && user.role !== "admin")) {
     return { ok: false, message: "Только бухгалтерия." };
@@ -697,7 +697,7 @@ export async function dunningRefreshAction(): Promise<SimpleResult> {
 
 /** Претензия вручную (D7.8): finance/admin, компенсация = отрицательный payment отдельным экшеном. */
 export async function createClaimAction(input: { orderId: number; item: string; amountCents: number }): Promise<SimpleResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user || (user.role !== "finance" && user.role !== "admin")) {
     return { ok: false, message: "Только бухгалтерия." };
@@ -730,7 +730,7 @@ export async function createClaimAction(input: { orderId: number; item: string; 
 
 /** Смена статуса претензии (D7.8). */
 export async function updateClaimStatusAction(claimNumber: string, status: string): Promise<SimpleResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user || (user.role !== "finance" && user.role !== "admin")) {
     return { ok: false, message: "Только бухгалтерия." };
@@ -753,7 +753,7 @@ export interface TariffBatchResult extends SimpleResult {
 
 /** Тарифы батчем (D8.1): validate-all-then-write, одна строка аудита с JSON-diff. */
 export async function updateTariffsAction(values: Record<string, string>): Promise<TariffBatchResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user || user.role !== "admin") return { ok: false, message: "Только админ." };
 
@@ -803,7 +803,7 @@ export async function updateTariffsAction(values: Record<string, string>): Promi
 export async function updateVehicleClassAction(input: {
   cls: string; label: string; capacityM3: number; includedM3: number; baseCents: number; active: boolean;
 }): Promise<SimpleResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user || user.role !== "admin") return { ok: false, message: "Только админ." };
   if (!["A", "B", "C"].includes(input.cls)) return { ok: false, message: "Неизвестный класс." };
@@ -829,7 +829,7 @@ export async function updateVehicleClassAction(input: {
 export async function updateStaffUserAction(input: {
   userId: number; role?: string; active?: boolean; newPassword?: string;
 }): Promise<SimpleResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user || user.role !== "admin") return { ok: false, message: "Только админ." };
   const targetRes = await db.execute({
@@ -903,7 +903,7 @@ function revisionDiff(before: MoveConfig, patch: Partial<MoveConfig>): Record<st
 
 /** Предложить правку (обе стороны): пишет pending_snapshot,history; подтверждает ДРУГАЯ сторона. */
 export async function proposeRevisionAction(input: { orderId: number; patch: Partial<MoveConfig>; reason?: string }): Promise<RevisionResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user) return { ok: false, message: "Войдите в систему." };
   const role = user.role as "kunde" | "logist" | "admin";
@@ -956,7 +956,7 @@ export async function proposeRevisionAction(input: { orderId: number; patch: Par
 
 /** Подтвердить правку: proposer ≠ confirmer; атомарно снять флаг + заменить снимок + версии + история. */
 export async function acceptRevisionAction(orderId: number): Promise<RevisionResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user) return { ok: false, message: "Войдите в систему." };
   const order = await loadOrderForRevision(db, orderId);
@@ -1008,7 +1008,7 @@ export async function acceptRevisionAction(orderId: number): Promise<RevisionRes
 
 /** Отклонить правку: proposer ≠ confirmer; снимок не меняется. */
 export async function rejectRevisionAction(orderId: number): Promise<RevisionResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user) return { ok: false, message: "Войдите в систему." };
   const order = await loadOrderForRevision(db, orderId);
@@ -1035,7 +1035,7 @@ export async function rejectRevisionAction(orderId: number): Promise<RevisionRes
 export async function saveVehicleAction(input: {
   vehicleId?: number; plate: string; cls: string; label: string; active: boolean;
 }): Promise<SimpleResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user || user.role !== "admin") return { ok: false, message: "Только админ." };
   const plate = input.plate.trim().toUpperCase().slice(0, 20);
@@ -1075,7 +1075,7 @@ export async function saveVehicleAction(input: {
 
 /** Удаление машины (D8.6): блок, если есть заказы/рейсы. */
 export async function deleteVehicleAction(vehicleId: number): Promise<SimpleResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user || user.role !== "admin") return { ok: false, message: "Только админ." };
   const referencedRes = await db.execute({
@@ -1093,7 +1093,7 @@ export async function deleteVehicleAction(vehicleId: number): Promise<SimpleResu
 
 /** maps.api_key (D8.5): пустой submit = не менять; аудит без значения. */
 export async function updateApiKeyAction(raw: string): Promise<SimpleResult> {
-  const db = getDb();
+  const db = await getDb();
   const user = await currentUser();
   if (!user || user.role !== "admin") return { ok: false, message: "Только админ." };
   const value = raw.trim().slice(0, 200);

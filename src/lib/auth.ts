@@ -54,7 +54,7 @@ export async function login(email: string, password: string): Promise<LoginResul
   const locked = lockoutRemaining(em);
   if (locked > 0) return { ok: false, lockoutSec: locked };
 
-  const db = getDb();
+  const db = await getDb();
   const res = await db.execute({
     sql: "SELECT id, password_hash, email_verified FROM users WHERE email = ?",
     args: [em],
@@ -87,7 +87,7 @@ export async function clearSessionCookie(): Promise<void> {
   const jar = await cookies();
   const token = jar.get(COOKIE)?.value ?? "";
   if (token) {
-    deleteSession(getDb(), token);
+    deleteSession(await getDb(), token);
     jar.delete(COOKIE);
   }
 }
@@ -96,7 +96,7 @@ export async function getSessionAsync(): Promise<SessionUser | null> {
   const jar = await cookies();
   const token = jar.get(COOKIE)?.value ?? "";
   if (!token) return null;
-  return findSession(getDb(), token);
+  return findSession(await getDb(), token);
 }
 
 // ---------------------------------------------------------------------------
@@ -128,7 +128,7 @@ export async function requireRole(roles: Role[], redirectTo: string): Promise<Se
 const VERIFY_TTL_S = 24 * 3600;
 
 export async function issueVerifyToken(userId: number): Promise<string> {
-  const db = getDb();
+  const db = await getDb();
   const token = randomBytes(24).toString("hex");
   await db.execute({
     sql: "UPDATE users SET verify_token = ?, verify_expires = ? WHERE id = ?",
@@ -139,7 +139,7 @@ export async function issueVerifyToken(userId: number): Promise<string> {
 
 /** Подтверждение: токен одноразовый (сравнение по хешу), истёкший/чужой → null. */
 export async function consumeVerifyToken(token: string): Promise<string | null> {
-  const db = getDb();
+  const db = await getDb();
   const res = await db.execute({
     sql: "SELECT id, email FROM users WHERE verify_token = ? AND verify_expires > ? AND email_verified = 0",
     args: [sha256(token), Math.floor(Date.now() / 1000)],

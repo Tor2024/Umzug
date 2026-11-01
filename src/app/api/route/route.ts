@@ -15,7 +15,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       { status: 200 },
     );
   }
-  const db = getDb();
+  const db = await getDb();
   const apiKeyRes = await db.execute("SELECT value FROM config WHERE key = 'maps.api_key'");
   const apiKeyRow = apiKeyRes.rows[0] as unknown as { value: string } | undefined;
   const apiKey = apiKeyRow?.value || process.env.GOOGLE_MAPS_API_KEY || undefined;
