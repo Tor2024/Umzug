@@ -9,6 +9,7 @@ import { recalculate, type QuoteSnapshot } from "@/lib/pricing";
 import { tariffDrift } from "@/lib/ops";
 import { AcceptanceButton } from "@/components/acceptance-button";
 import RouteMapLazy from "@/components/route-map-lazy";
+import CrewMapLazy from "@/components/crew-map-lazy";
 import { RevisionForm } from "@/components/revision-form";
 import { RevisionDecision } from "@/components/revision-decision";
 import { orderHistory, snapshotVersions } from "@/lib/db";
@@ -154,7 +155,9 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
     | { plate: string; vehicle_label: string; driver_name: string | null; codriver_name: string | null }
     | undefined;
 
-  // №9: живой статус экипажа — последний чек-поинт рейса (виден клиенту)
+  // №9: живой статус экипажа — цепочка чек-поинтов рейса (виден клиенту).
+  // Позиция (lat/lon) показывается на карте только пока рейс в пути (enroute) —
+  // после завершения клиенту достаточно хронологии этапов.
   const CP_LABEL: Record<string, string> = {
     departed: "Экипаж выехал",
     arrived_load: "Прибыл на погрузку",
@@ -162,14 +165,19 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
     arrived_unload: "Прибыл на выгрузку",
     done: "Переезд выполнен",
   };
-  let lastCp: { cp: string; at: number } | null = null;
+  let checkpoints: Array<{ cp: string; at: number; lat: number | null; lon: number | null }> = [];
   {
     const cpRes = await db.execute({
-      sql: "SELECT cp, created_at AS at FROM trip_checkpoints WHERE order_id = ? ORDER BY created_at DESC LIMIT 1",
+      sql: "SELECT cp, created_at AS at, lat, lon FROM trip_checkpoints WHERE order_id = ? ORDER BY created_at",
       args: [order.id],
     });
-    lastCp = (cpRes.rows[0] as unknown as { cp: string; at: number } | undefined) ?? null;
+    checkpoints = cpRes.rows as unknown as Array<{ cp: string; at: number; lat: number | null; lon: number | null }>;
   }
+  const lastCp = checkpoints.length > 0 ? checkpoints[checkpoints.length - 1] : null;
+  // Последний чек-поинт с координатами — для карты позиции экипажа
+  const crewPos = [...checkpoints].reverse().find((c) => c.lat != null && c.lon != null) ?? null;
+  // Дедуп для цепочки: подряд идущие одинаковые cp показываем один раз (первый)
+  const cpChain = checkpoints.filter((c, i) => i === 0 || checkpoints[i - 1].cp !== c.cp);
 
   // UX-feedback: баннер результата действия, переживает router.replace(?msg=...) (D10/UX)
   const ORDER_MSG: Record<string, string> = {
@@ -360,7 +368,7 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
         </div>
       )}
 
-      {/* №9: живой статус экипажа (последний чек-поинт рейса) */}
+      {/* №9: живой статус экипажа — цепочка отметок + карта позиции (enroute) */}
       {lastCp && (
         <div className="mb-6 rounded-base border border-trust/30 bg-emerald-50 p-4 text-sm">
           <p className="font-semibold">Статус экипажа</p>
@@ -369,6 +377,30 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
             {" · "}
             <span className="text-muted">{new Date(lastCp.at * 1000).toLocaleString("de-DE")}</span>
           </p>
+          {/* Хронология этапов рейса — видно на любом статусе после выезда */}
+          {cpChain.length > 1 && (
+            <ol className="mt-2 space-y-0.5 text-xs text-muted">
+              {cpChain.map((c) => (
+                <li key={`${c.cp}-${c.at}`}>
+                  ✓ {CP_LABEL[c.cp] ?? c.cp} — {new Date(c.at * 1000).toLocaleString("de-DE")}
+                </li>
+              ))}
+            </ol>
+          )}
+          {/* Карта позиции экипажа: только пока рейс в пути и есть координаты */}
+          {order.status === "enroute" && crewPos && (
+            <div className="mt-3">
+              <CrewMapLazy
+                geometry={geometry}
+                crew={{ lat: crewPos.lat!, lon: crewPos.lon!, at: crewPos.at, cpLabel: CP_LABEL[crewPos.cp] ?? crewPos.cp }}
+                fromText={order.from_text}
+                toText={order.to_text}
+              />
+              <p className="mt-1 text-xs text-muted">
+                📍 Водитель отмечает этапы рейса со смартфона — место отметки сохраняется автоматически, чтобы вы видели прогресс переезда.
+              </p>
+            </div>
+          )}
         </div>
       )}
 

@@ -10,6 +10,7 @@ import { calculateQuote, recalculate, type QuoteSnapshot, type VehicleClass } fr
 import { tariffDrift } from "@/lib/ops";
 import { confirmOrderAction, recalcOrderAction, cancelOrderAction, assignOrderAction, closeOrderAction, forceCloseOrderAction, assignSubcontractorAction, unassignSubcontractorAction, approveSpecialRequestsAction, rejectSpecialRequestsAction, autoAssignAction } from "@/lib/actions";
 import RouteMapLazy from "@/components/route-map-lazy";
+import CrewMapLazy from "@/components/crew-map-lazy";
 import { SubmitButton } from "@/components/submit-button";
 import { RevisionForm } from "@/components/revision-form";
 import { RevisionDecision } from "@/components/revision-decision";
@@ -173,6 +174,24 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
     );
     for (const r of routeRes.rows as unknown as Array<{ order_id: number; geometry: string | null }>) {
       geometryMap.set(Number(r.order_id), r.geometry ? (JSON.parse(r.geometry) as [number, number][]) : null);
+    }
+  }
+
+  // №9: последние чек-поинты рейсов одним запросом — карточка «Где экипаж» для enroute
+  const CP_LABEL: Record<string, string> = {
+    departed: "Выехал",
+    arrived_load: "На погрузке",
+    loaded: "Груз погружен",
+    arrived_unload: "На выгрузке",
+    done: "Переезд выполнен",
+  };
+  const lastCpMap = new Map<number, { cp: string; at: number; lat: number | null; lon: number | null }>();
+  {
+    const cpRes = await db.execute(
+      "SELECT order_id, cp, created_at AS at, lat, lon FROM trip_checkpoints WHERE order_id IN (SELECT id FROM orders WHERE status = 'enroute') ORDER BY created_at",
+    );
+    for (const r of cpRes.rows as unknown as Array<{ order_id: number; cp: string; at: number; lat: number | null; lon: number | null }>) {
+      lastCpMap.set(Number(r.order_id), { cp: r.cp, at: Number(r.at), lat: r.lat, lon: r.lon });
     }
   }
 
@@ -385,6 +404,36 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
                       <li>{fmtT(approach + load + drive)} — прибытие, выгрузка ({Math.round(unload / 60 * 10) / 10} ч)</li>
                       <li>{fmtT(approach + load + drive + unload)} — готово{retKm > 0 ? ` · возврат на базу ${retKm} км (~${Math.round(retKm / 80 * 10) / 10} ч)` : ""}</li>
                     </ul>
+                  </div>
+                );
+              })()}
+              {/* №9: «Где экипаж» — последний чек-поинт + карта позиции (только enroute) */}
+              {o.status === "enroute" && (() => {
+                const cp = lastCpMap.get(o.id);
+                if (!cp) return null;
+                const cpLabel = CP_LABEL[cp.cp] ?? cp.cp;
+                const hasGeo = cp.lat != null && cp.lon != null;
+                return (
+                  <div className="mt-3 rounded-base border border-trust/30 bg-emerald-50 p-3 text-sm">
+                    <p className="font-semibold">Где экипаж</p>
+                    <p className="mt-1">
+                      <span className="chip chip-trust">{cpLabel}</span>
+                      {" · "}
+                      <span className="text-muted">{new Date(cp.at * 1000).toLocaleString("de-DE")}</span>
+                      {!hasGeo && <span className="ml-1 text-xs text-muted">(отметка без координат)</span>}
+                    </p>
+                    {hasGeo && (
+                      <div className="mt-2">
+                        <CrewMapLazy
+                          geometry={geometryMap.get(o.id) ?? null}
+                          crew={{ lat: cp.lat!, lon: cp.lon!, at: cp.at, cpLabel }}
+                          fromText={o.from_text}
+                          toText={o.to_text}
+                          height={220}
+                        />
+                      </div>
+                    )}
+                    <p className="mt-1 text-xs text-muted">Водитель отмечает этапы со смартфона — координаты сохраняются в момент отметки. Обновите страницу, чтобы увидеть свежую позицию.</p>
                   </div>
                 );
               })()}
