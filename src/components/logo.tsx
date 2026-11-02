@@ -1,0 +1,24 @@
+// Логотип бренда (совпадает с favicon icon.svg): фургон в оранжевом круге #EA7A28.
+// Единый источник для шапки, сайдбара, входа/регистрации.
+
+export function Logo({ size = 32, className = "" }: { size?: number; className?: string }) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 64 64" aria-hidden="true">
+      <circle cx="32" cy="32" r="32" fill="#EA7A28" />
+      <g
+        transform="translate(13.5,17.5)"
+        stroke="#ffffff"
+        fill="none"
+        stroke-width="3.4"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M 3 20 L 3 12 Q 3 4 12 4 L 27 4 Q 32 4 35 9 L 38 14 Q 39 16 39 20 L 37 20" />
+        <path d="M 3 20 L 5 20" />
+        <circle cx="11" cy="22" r="3.4" />
+        <circle cx="29" cy="22" r="3.4" />
+        <path d="M 15 22 L 25 22" />
+      </g>
+    </svg>
+  );
+}

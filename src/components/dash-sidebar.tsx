@@ -8,6 +8,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useTransition } from "react";
 import { logoutAction } from "@/lib/auth-actions";
+import { Logo } from "@/components/logo";
 
 export interface NavItem {
   href: string;
@@ -47,16 +48,7 @@ export function DashSidebar({ userName, role }: { userName: string; role: string
       {/* Десктоп: фиксированный сайдбар */}
       <aside className="dash-nav sticky top-0 hidden h-screen w-56 shrink-0 flex-col border-r border-line bg-primary text-white md:flex">
         <Link href="/" className="flex items-center gap-2 px-4 py-4 font-bold">
-          <svg className="size-7 shrink-0" viewBox="0 0 64 64" aria-hidden="true">
-            <circle cx="32" cy="32" r="32" fill="#EA7A28"/>
-            <g transform="translate(13.5,17.5)" stroke="#ffffff" fill="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M 3 20 L 3 12 Q 3 4 12 4 L 27 4 Q 32 4 35 9 L 38 14 Q 39 16 39 20 L 37 20"/>
-              <path d="M 3 20 L 5 20"/>
-              <circle cx="11" cy="22" r="3.4"/>
-              <circle cx="29" cy="22" r="3.4"/>
-              <path d="M 15 22 L 25 22"/>
-            </g>
-          </svg>
+          <Logo size={28} />
           <span className="text-sm">Umzug Service</span>
         </Link>
         <nav className="flex-1 space-y-0.5 overflow-y-auto px-2 py-2 text-sm" aria-label="Разделы панели">
