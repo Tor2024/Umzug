@@ -17,7 +17,7 @@ export function SiteHeader() {
               <path d="M 15 22 L 25 22"/>
             </g>
           </svg>
-          <span className="hidden sm:inline">Помощник с переездом</span>
+          <span className="hidden sm:inline">Umzug Service</span>
         </Link>
         <nav className="flex items-center gap-1 text-sm sm:gap-4">
           <Link href="/#kak" className="hidden px-2 py-2 hover:text-accent sm:inline">Как работаем</Link>
@@ -36,7 +36,7 @@ export function SiteFooter() {
     <footer className="mt-auto border-t border-line bg-primary text-white">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <div className="font-bold">Помощник с переездом</div>
+          <div className="font-bold">Umzug Service</div>
           <p className="mt-2 text-sm text-slate-300">Переезды по Германии: расчёт за минуту, фиксированная цена, экипаж и машина в одном заказе.</p>
         </div>
         <div className="text-sm">
@@ -67,7 +67,7 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="border-t border-white/10 py-4 text-center text-xs text-slate-400">
-        © 2026 Помощник с переездом GmbH · Демо-среда: расчёты и документы носят ознакомительный характер
+        © 2026 Umzug Service GmbH · Демо-среда: расчёты и документы носят ознакомительный характер
       </div>
     </footer>
   );

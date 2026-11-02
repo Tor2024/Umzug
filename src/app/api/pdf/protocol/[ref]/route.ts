@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { getDb, findSession } from "@/lib/db";
 import { COOKIE } from "@/lib/auth";
-import { renderProtocolPdf } from "@/lib/pdf";
+import { renderProtocolPdf, deLabel } from "@/lib/pdf";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 /** GET /api/pdf/protocol/[ref] — протокол приёмки (клиент-владелец, driver, logist, admin, finance). */
@@ -39,7 +39,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ ref: string
   let factM3 = order.volume_m3;
   try {
     const loaded = JSON.parse(proto.loaded_json) as { items?: string[]; factM3?: number };
-    checklist = loaded.items ?? [];
+    checklist = (loaded.items ?? []).map(deLabel);
     if (typeof loaded.factM3 === "number") factM3 = loaded.factM3;
   } catch {
     /* битый JSON — оставляем дефолт */

@@ -56,7 +56,7 @@ export function fmtDate(iso: string): string {
   return `${d}.${m}.${y}`;
 }
 
-const ACCENT = rgb(0.06, 0.35, 0.62);
+const ACCENT = rgb(0.918, 0.478, 0.157); // #EA7A28 — фирменный оранжевый (логотип)
 const INK = rgb(0.13, 0.13, 0.15);
 const MUTED = rgb(0.45, 0.45, 0.5);
 const LINE = rgb(0.82, 0.82, 0.86);
@@ -284,6 +284,8 @@ export type InvoicePdfInput = {
   routeTo: string;
   moveDate: string;
   lines: Item[];          // позиции из order_lines
+  specLines: Item[];      // полная спецификация услуг (из снимка: класс, этажи, объём...)
+  snapshotVersion: number; // версия снимка цены (ревизии D10)
   netCents: number;
   vatCents: number;
   vatPct: number;
@@ -310,6 +312,7 @@ export function renderInvoicePdf(input: InvoicePdfInput): Promise<Uint8Array> {
       `Auftrag: ${input.orderRef}`,
       `Rechnungsdatum: ${fmtDate(todayIso())}`,
       `Fällig am: ${fmtDate(input.dueDate)}`,
+      `Preisbasis: Version ${input.snapshotVersion}`,
     ],
     customer: [
       input.customerName,
@@ -318,7 +321,7 @@ export function renderInvoicePdf(input: InvoicePdfInput): Promise<Uint8Array> {
       `– ${input.routeTo}`,
       `Umzugsdatum: ${fmtDate(input.moveDate)}`,
     ],
-    items: input.lines,
+    items: [...input.lines, ...input.specLines],
     totals,
     footerNote:
       "Zahlbar bis zum genannten Fälligkeitsdatum ohne Abzug. " +
@@ -415,6 +418,77 @@ export function renderQuotePdf(input: QuotePdfInput): Promise<Uint8Array> {
     footerNote:
       "Dieser Kostenvoranschlag ist unverbindlich. Der verbindliche Preis wird nach Auftragserteilung im Auftrag fixiert und ist für die genannte Gültigkeitsdauer garantiert.",
   });
+}
+
+// ---------------------------------------------------------------------------
+// Спецификация услуг из снимка (полный вид заказа; последняя версия = orders.snapshot)
+// ---------------------------------------------------------------------------
+
+/** Config-снимок — минимальный тип для спецификации. */
+type SpecConfig = {
+  vehicleClass: string;
+  classForced?: boolean;
+  volumeM3: number;
+  distanceKm: number;
+  floorsFrom: number;
+  floorsTo: number;
+  elevatorFrom: boolean;
+  elevatorTo: boolean;
+  boxes?: number;
+  kitchen?: boolean;
+  furnitureItems?: number;
+  packHours?: number;
+  hvzZones?: number;
+  express?: boolean;
+  sharedLoad?: boolean;
+};
+
+/**
+ * Нормализация лейблов позиций из БД: заказы, созданные до денизанизации,
+ * хранят русские подписи ("Экипаж", "Дорога", "LKW 7,5 т" и т.п.) —
+ * маппим их на немецкие, чтобы PDF не содержал русских слов.
+ */
+const LABEL_DE: Array<[RegExp, string]> = [
+  [/^База \((.+)\)$/, "Grundpreis ($1)"],
+  [/^База/, "Grundpreis"],
+  [/^Экипаж/, "Ladepersonal (Einsatzstunden)"],
+  [/^Дорога/, "Fahrtstrecke"],
+  [/^Доп\. объём/, "Zusatzvolumen"],
+  [/^Подъём/, "Tragearbeit Auszug"],
+  [/^Спуск/, "Tragearbeit Einzug"],
+  [/^Картоны/, "Kartons"],
+  [/^Упаковка/, "Verpackungsservice"],
+  [/^Сборка кухни/, "Küchenmontage"],
+  [/^Разбор\/сбор мебели/, "Möbelauf-/abbau"],
+  [/^Лифт$/, "Aufzug"],
+];
+
+export function deLabel(label: string): string {
+  let out = label;
+  for (const [re, sub] of LABEL_DE) {
+    if (re.test(out)) { out = out.replace(re, sub); break; }
+  }
+  // Кириллические литеры в единицах: "LKW 7,5 т" → "LKW 7,5 t", "0 этаж)" → "0 OG)"
+  out = out.replace(/т(?=[)\s]|$)/g, "t");
+  return out;
+}
+
+/** Полная спецификация услуг (немецкие подписи; amount=0 → строка без суммы). */
+export function buildSpecLines(cfg: SpecConfig, classLabel: string): Item[] {  const spec: Item[] = [
+    { label: `Fahrzeugklasse: ${classLabel}${cfg.classForced ? " (handgeschaltet)" : ""}`, amount: 0 },
+    { label: `Umzugsvolumen: ${cfg.volumeM3} m³ · Entfernung: ca. ${cfg.distanceKm} km`, amount: 0 },
+    { label: `Etagen: Auszug ${cfg.floorsFrom}. OG${cfg.elevatorFrom ? " (mit Aufzug)" : ""} – Einzug ${cfg.floorsTo}. OG${cfg.elevatorTo ? " (mit Aufzug)" : ""}`, amount: 0 },
+  ];
+  if (cfg.boxes && cfg.boxes > 0) spec.push({ label: `Kartons: ${cfg.boxes} Stk.`, amount: 0 });
+  if (cfg.packHours && cfg.packHours > 0) spec.push({ label: `Verpackungsservice: ${cfg.packHours} h`, amount: 0 });
+  if (cfg.kitchen) spec.push({ label: "Küchenmontage: ja", amount: 0 });
+  if (cfg.furnitureItems && cfg.furnitureItems > 0) spec.push({ label: `Möbelauf-/abbau: ${cfg.furnitureItems} Stk.`, amount: 0 });
+  if (cfg.hvzZones && cfg.hvzZones > 0) spec.push({ label: `Halteverbotszonen: ${cfg.hvzZones}`, amount: 0 });
+  const opts: string[] = [];
+  if (cfg.express) opts.push("Express");
+  if (cfg.sharedLoad) opts.push("Teilladung (Rabatt)");
+  if (opts.length > 0) spec.push({ label: `Optionen: ${opts.join(", ")}`, amount: 0 });
+  return spec;
 }
 
 // ---------------------------------------------------------------------------

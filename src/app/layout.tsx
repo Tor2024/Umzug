@@ -7,8 +7,8 @@ const inter = Inter({ variable: "--font-inter", subsets: ["latin", "cyrillic"] }
 export const metadata: Metadata = {
   metadataBase: new URL("https://umzug-seven.vercel.app"),
   title: {
-    default: "Помощник с переездом",
-    template: "%s | Помощник с переездом",
+    default: "Umzug Service",
+    template: "%s | Umzug Service",
   },
   description: "Расчёт и организация переезда по Германии: честная цена, экипаж, машина, документы.",
 };

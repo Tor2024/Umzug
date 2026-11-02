@@ -18,7 +18,7 @@ export async function sendEmail(to: string, subject: string, html: string): Prom
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) return { sent: false, reason: "no_api_key" };
 
-  const from = process.env.FROM_EMAIL ?? "Помощник с переездом <onboarding@resend.dev>";
+  const from = process.env.FROM_EMAIL ?? "Umzug Service <onboarding@resend.dev>";
 
   try {
     const res = await fetch(RESEND_API, {
@@ -46,7 +46,7 @@ function verifyTemplate(name: string, verifyUrl: string): string {
   return `<!doctype html>
 <html lang="ru"><body style="margin:0;padding:24px;background:#f6f7f9;font-family:Arial,Helvetica,sans-serif;color:#1a1d21;">
   <div style="max-width:480px;margin:0 auto;background:#ffffff;border-radius:12px;padding:32px;border:1px solid #e5e7eb;">
-    <h1 style="margin:0 0 16px;font-size:20px;">Помощник с переездом</h1>
+    <h1 style="margin:0 0 16px;font-size:20px;">Umzug Service</h1>
     <p style="margin:0 0 12px;font-size:15px;line-height:1.5;">Здравствуйте, ${escapeHtml(name)}!</p>
     <p style="margin:0 0 20px;font-size:15px;line-height:1.5;">Подтвердите ваш email — нажмите кнопку ниже. Ссылка действует 24 часа.</p>
     <a href="${verifyUrl}" style="display:inline-block;background:#1a56db;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:8px;font-size:15px;font-weight:bold;">Подтвердить email</a>
@@ -65,21 +65,21 @@ function escapeHtml(s: string): string {
 export async function sendVerifyEmail(to: string, name: string, token: string): Promise<SendResult> {
   const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://umzug-seven.vercel.app";
   const verifyUrl = `${base}/verify?token=${token}`;
-  return sendEmail(to, "Подтвердите email — Помощник с переездом", verifyTemplate(name, verifyUrl));
+  return sendEmail(to, "Подтвердите email — Umzug Service", verifyTemplate(name, verifyUrl));
 }
 
 /** Письмо восстановления пароля: ссылка действует 1 час. */
 export async function sendResetEmail(to: string, name: string, token: string): Promise<SendResult> {
   const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://umzug-seven.vercel.app";
   const resetUrl = `${base}/reset-password?token=${token}`;
-  return sendEmail(to, "Восстановление пароля — Помощник с переездом", resetTemplate(name, resetUrl));
+  return sendEmail(to, "Восстановление пароля — Umzug Service", resetTemplate(name, resetUrl));
 }
 
 function resetTemplate(name: string, resetUrl: string): string {
   return `<!doctype html>
 <html lang="ru"><body style="margin:0;padding:24px;background:#f6f7f9;font-family:Arial,Helvetica,sans-serif;color:#1a1d21;">
   <div style="max-width:480px;margin:0 auto;background:#ffffff;border-radius:12px;padding:32px;border:1px solid #e5e7eb;">
-    <h1 style="margin:0 0 16px;font-size:20px;">Помощник с переездом</h1>
+    <h1 style="margin:0 0 16px;font-size:20px;">Umzug Service</h1>
     <p style="margin:0 0 12px;font-size:15px;line-height:1.5;">Здравствуйте, ${escapeHtml(name)}!</p>
     <p style="margin:0 0 20px;font-size:15px;line-height:1.5;">Вы запросили восстановление пароля. Нажмите кнопку ниже и задайте новый пароль. Ссылка действует <b>1 час</b>.</p>
     <a href="${resetUrl}" style="display:inline-block;background:#1a56db;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:8px;font-size:15px;font-weight:bold;">Задать новый пароль</a>

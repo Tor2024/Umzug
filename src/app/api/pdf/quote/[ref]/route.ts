@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { getDb, getTariffs, findSession } from "@/lib/db";
 import { COOKIE } from "@/lib/auth";
-import { renderQuotePdf } from "@/lib/pdf";
+import { renderQuotePdf, buildSpecLines, deLabel } from "@/lib/pdf";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 /** GET /api/pdf/quote/[ref] — Kostenvoranschlag по заявке (клиент-владелец или staff). */
@@ -34,10 +34,20 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ ref: string
 
   let vatPct = 19;
   let validUntil = "";
+  let specLines: Array<{ label: string; amount: number }> = [];
   try {
-    const snap = JSON.parse(order.snapshot) as { tariffs?: { vatPct?: number }; quoteValidUntil?: string };
+    const snap = JSON.parse(order.snapshot) as {
+      tariffs?: { vatPct?: number; classes?: Record<string, { label: string }> };
+      quoteValidUntil?: string;
+      config?: Record<string, unknown>;
+    };
     vatPct = snap.tariffs?.vatPct ?? 19;
     validUntil = snap.quoteValidUntil ?? "";
+    if (snap.config) {
+      const cls = String(snap.config.vehicleClass ?? "B");
+      const classLabel = deLabel(snap.tariffs?.classes?.[cls]?.label ?? cls);
+      specLines = buildSpecLines(snap.config as unknown as Parameters<typeof buildSpecLines>[0], classLabel);
+    }
   } catch {
     /* битый снимок */
   }
@@ -47,7 +57,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ ref: string
     args: [order.id],
   });
   const lines = (linesRes.rows as unknown as Array<{ label: string; amount: number }>).map((l) => ({
-    label: l.label,
+    label: deLabel(l.label),
     amount: Number(l.amount),
   }));
 
@@ -59,7 +69,7 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ ref: string
     moveDate: order.move_date,
     volumeM3: order.volume_m3,
     distanceKm: order.distance_km,
-    lines,
+    lines: [...lines, ...specLines],
     netCents: Number(order.net_cents),
     vatCents: Number(order.vat_cents),
     vatPct,

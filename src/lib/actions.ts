@@ -1190,8 +1190,8 @@ export async function sendMessageAction(orderRef: string, body: string): Promise
     // фактически письмо всё равно уйдёт на аккаунт владельца.
     const to = order.contact_email;
     const subject = staff
-      ? `Ответ по заявке ${order.ref} — Помощник с переездом`
-      : `Новое сообщение по заявке ${order.ref} — Помощник с переездом`;
+      ? `Ответ по заявке ${order.ref} — Umzug Service`
+      : `Новое сообщение по заявке ${order.ref} — Umzug Service`;
     const html = `<div style="font-family:sans-serif;max-width:560px">
       <p>${staff ? "Ответ персонала по вашей заявке" : "Новое сообщение по вашей заявке"} <b>${order.ref}</b>:</p>
       <blockquote style="border-left:3px solid #ccc;padding-left:12px;color:#333">${text.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>")}</blockquote>

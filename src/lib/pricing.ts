@@ -1,4 +1,4 @@
-// «Помощник с переездом» — единственный источник расчёта денег.
+// «Umzug Service» — единственный источник расчёта денег.
 // Правила: целые центы; порядок subtotal → скидка → коэффициенты → нетто → НДС → брутто → аванс (D1.1).
 // Тарифы приходят параметром (Tariffs) — движок ничего не читает из БД сам.
 
@@ -143,7 +143,7 @@ export function calculateQuote(cfg: MoveConfig, t: Tariffs): Quote {
   const workHours = hoursLoad + driveHours + hoursUnload;
   const crewAmount = Math.round(workHours * crew * t.crewHourlyCents);
   lines.push({
-    key: "crew", label: "Экипаж", amount: crewAmount,
+    key: "crew", label: "Ladepersonal (Einsatzstunden)", amount: crewAmount,
     meta: { hours: round2(workHours), crew, rateCents: t.crewHourlyCents },
   });
 
@@ -151,7 +151,7 @@ export function calculateQuote(cfg: MoveConfig, t: Tariffs): Quote {
   const billableKm = Math.max(0, cfg.distanceKm - t.freeKm);
   if (billableKm > 0) {
     lines.push({
-      key: "distance", label: "Дорога", amount: Math.round(billableKm * t.perKmCents),
+      key: "distance", label: "Fahrtstrecke", amount: Math.round(billableKm * t.perKmCents),
       meta: { km: round2(billableKm), freeKm: t.freeKm },
     });
   }
@@ -160,7 +160,7 @@ export function calculateQuote(cfg: MoveConfig, t: Tariffs): Quote {
   const extraM3 = cfg.classForced ? Math.max(0, cfg.volumeM3 - cls.includedM3) : 0;
   if (extraM3 > 0) {
     lines.push({
-      key: "extraVolume", label: "Доп. объём", amount: Math.round(extraM3 * t.extraM3Cents),
+      key: "extraVolume", label: "Zusatzvolumen", amount: Math.round(extraM3 * t.extraM3Cents),
       meta: { m3: round2(extraM3) },
     });
   }
@@ -170,27 +170,27 @@ export function calculateQuote(cfg: MoveConfig, t: Tariffs): Quote {
     elevator ? t.elevatorCents : floors * t.floorCents;
   const fromCharge = floorCharge(cfg.floorsFrom, cfg.elevatorFrom);
   const toCharge = floorCharge(cfg.floorsTo, cfg.elevatorTo);
-  if (fromCharge) lines.push({ key: "floorFrom", label: "Подъём (откуда)", amount: fromCharge });
-  if (toCharge) lines.push({ key: "floorTo", label: "Спуск (куда)", amount: toCharge });
+  if (fromCharge) lines.push({ key: "floorFrom", label: "Tragearbeit Auszug", amount: fromCharge });
+  if (toCharge) lines.push({ key: "floorTo", label: "Tragearbeit Einzug", amount: toCharge });
 
   // 6. Картоны
   if (cfg.boxes > 0) {
-    lines.push({ key: "boxes", label: "Картоны", amount: cfg.boxes * t.boxCents, meta: { count: cfg.boxes } });
+    lines.push({ key: "boxes", label: "Kartons", amount: cfg.boxes * t.boxCents, meta: { count: cfg.boxes } });
   }
 
   // 7. Упаковка (часы грузчиков)
   if (cfg.packHours > 0) {
     lines.push({
-      key: "packing", label: "Упаковка", amount: Math.round(cfg.packHours * crew * t.packHourlyCents),
+      key: "packing", label: "Verpackungsservice", amount: Math.round(cfg.packHours * crew * t.packHourlyCents),
       meta: { hours: round2(cfg.packHours), crew },
     });
   }
 
   // 8. Сборка: кухня комплектом, мебель за предмет
-  if (cfg.kitchen) lines.push({ key: "kitchen", label: "Сборка кухни", amount: t.kitchenCents });
+  if (cfg.kitchen) lines.push({ key: "kitchen", label: "Küchenmontage", amount: t.kitchenCents });
   if (cfg.furnitureItems > 0) {
     lines.push({
-      key: "furniture", label: "Разбор/сбор мебели", amount: cfg.furnitureItems * t.furnitureCents,
+      key: "furniture", label: "Möbelauf-/abbau", amount: cfg.furnitureItems * t.furnitureCents,
       meta: { count: cfg.furnitureItems },
     });
   }
@@ -256,9 +256,9 @@ export function recalculate(snap: QuoteSnapshot): Quote {
 /** Демо-тарифы по умолчанию (записываются в config при первом старте; здесь — для тестов). */
 export const DEFAULT_TARIFFS: Tariffs = {
   classes: {
-    A: { label: "Transporter 3,5 т", capacityM3: 15, includedM3: 10, baseCents: 34_000 },
-    B: { label: "LKW 7,5 т", capacityM3: 35, includedM3: 20, baseCents: 54_000 },
-    C: { label: "LKW 12 т", capacityM3: 55, includedM3: 40, baseCents: 89_000 },
+    A: { label: "Transporter 3,5 t", capacityM3: 15, includedM3: 10, baseCents: 34_000 },
+    B: { label: "LKW 7,5 t", capacityM3: 35, includedM3: 20, baseCents: 54_000 },
+    C: { label: "LKW 12 t", capacityM3: 55, includedM3: 40, baseCents: 89_000 },
   },
   crewHourlyCents: 2900, crewCount: 2, hoursPerM3: 0.25, minCrewHours: 2,
   perKmCents: 80, freeKm: 31, avgSpeedKmh: 80,

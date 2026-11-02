@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { getDb, findSession } from "@/lib/db";
 import { COOKIE } from "@/lib/auth";
-import { renderInvoicePdf } from "@/lib/pdf";
+import { renderInvoicePdf, buildSpecLines, deLabel } from "@/lib/pdf";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 /** GET /api/pdf/invoice/[number] — GoBD-счёт (клиент-владелец или staff). */
@@ -45,9 +45,29 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ number: str
     args: [inv.order_id],
   });
   const lines = (linesRes.rows as unknown as Array<{ label: string; amount: number }>).map((l) => ({
-    label: l.label,
+    label: deLabel(l.label),
     amount: Number(l.amount),
   }));
+
+  // Полная спецификация услуг + версия снимка (последняя применённая ревизия — D10)
+  let specLines: Array<{ label: string; amount: number }> = [];
+  let snapshotVersion = 1;
+  let classLabel = "";
+  try {
+    const snap = JSON.parse(inv.snapshot) as {
+      config?: Record<string, unknown>;
+      tariffs?: { classes?: Record<string, { label: string }> };
+      snapshotVersion?: number;
+    };
+    if (snap.config) {
+      const cls = String(snap.config.vehicleClass ?? "B");
+      classLabel = deLabel(snap.tariffs?.classes?.[cls]?.label ?? cls);
+      specLines = buildSpecLines(snap.config as unknown as Parameters<typeof buildSpecLines>[0], classLabel);
+    }
+    if (typeof snap.snapshotVersion === "number") snapshotVersion = snap.snapshotVersion;
+  } catch {
+    /* битый снимок — спецификация опустится */
+  }
 
   // vatPct из снимка (для подписи строки НДС)
   let vatPct = 19;
@@ -67,6 +87,8 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ number: str
     routeTo: inv.to_text,
     moveDate: inv.move_date,
     lines,
+    specLines,
+    snapshotVersion,
     netCents: Number(inv.net_cents),
     vatCents: Number(inv.vat_cents),
     vatPct,

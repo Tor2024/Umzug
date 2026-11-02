@@ -1,4 +1,4 @@
-// «Помощник с переездом» — база данных (@libsql/client → Turso в проде, файл локально).
+// «Umzug Service» — база данных (@libsql/client → Turso в проде, файл локально).
 // Схема по PLAN §5/§5a/§10a и решениям D2/D3 (см. PLAN §13).
 // Деньги — целые центы. Время — UNIX-секунды (INTEGER UTC), никаких TZ-строк в SQL.
 //
@@ -520,7 +520,7 @@ async function seed(db: DB): Promise<void> {
     "pricing.auto_load_pct": String(DEFAULT_TARIFFS.autoLoadPct),
     "pricing.quote_valid_days": String(DEFAULT_TARIFFS.quoteValidDays),
     "finance.due_days": "14",
-    "company.name": "Помощник с переездом GmbH",
+    "company.name": "Umzug Service GmbH",
     "maps.api_key": "",
   };
   const now = Math.floor(Date.now() / 1000);
