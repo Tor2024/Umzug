@@ -3,19 +3,39 @@
 // Предупреждение о куках (TDDDG): только технически необходимые cookie
 // (ms_session, ms_locale) — согласие не требуется (§ 25 (2) TDDDG),
 // но пользователь видит понятное уведомление. Решение хранится в localStorage.
+// Локаль: по pathname (/de/... → немецкий), co-located LABELS без словаря.
 
 import { useEffect, useState } from "react";
 
 const KEY = "cookie_notice_ack";
 
+const LABELS = {
+  ru: {
+    aria: "Уведомление о cookies",
+    text: <>Мы используем только <b>технически необходимые</b> cookies (сессия, язык). Реклама и отслеживание — отсутствуют. Подробнее: </>,
+    more: "Datenschutz",
+    ok: "Понятно",
+    dp: "/datenschutz",
+  },
+  de: {
+    aria: "Cookie-Hinweis",
+    text: <>Wir verwenden nur <b>technisch notwendige</b> Cookies (Sitzung, Sprache). Keine Werbung, kein Tracking. Mehr dazu: </>,
+    more: "Datenschutz",
+    ok: "Verstanden",
+    dp: "/de/datenschutz",
+  },
+} as const;
+
 export function CookieNotice() {
   const [visible, setVisible] = useState(false);
+  const [de, setDe] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     // откладываем чтение localStorage из эффекта — lint no-sync-setState
     const t = setTimeout(() => {
       if (cancelled) return;
+      setDe(window.location.pathname.startsWith("/de"));
       try {
         if (!localStorage.getItem(KEY)) setVisible(true);
       } catch {
@@ -27,6 +47,7 @@ export function CookieNotice() {
   }, []);
 
   if (!visible) return null;
+  const L = LABELS[de ? "de" : "ru"];
 
   const ack = () => {
     try {
@@ -40,17 +61,16 @@ export function CookieNotice() {
   return (
     <div
       role="dialog"
-      aria-label="Уведомление о cookies"
+      aria-label={L.aria}
       className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-surface p-4 shadow-lg"
     >
       <div className="mx-auto flex max-w-3xl flex-col gap-3 sm:flex-row sm:items-center">
         <p className="flex-1 text-sm">
-          Мы используем только <b>технически необходимые</b> cookies (сессия, язык).
-          Реклама и отслеживание — отсутствуют. Подробнее:{" "}
-          <a className="text-accent hover:underline" href="/datenschutz">Datenschutz</a>.
+          {L.text}
+          <a className="text-accent hover:underline" href={L.dp}>{L.more}</a>.
         </p>
         <button className="btn btn-primary shrink-0 px-4 py-1.5 text-sm" type="button" onClick={ack}>
-          Понятно
+          {L.ok}
         </button>
       </div>
     </div>
