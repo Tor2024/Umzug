@@ -1,59 +1,59 @@
 # Umzug Service
 
-Боевой веб-сервис для немецкой мебельной перевозочной компании (демо-данные): клиент рассчитывает и заказывает переезд онлайн, логист управляет машинами и бригадами, водитель отмечает этапы рейса со смартфона, бухгалтерия ведёт счета и претензии. Двуязычный (русский + немецкий).
+A production-grade web service for a German moving company (demo data): customers quote and book their move online, a dispatcher manages vehicles and crews, drivers track trip milestones from their smartphone, and accounting handles invoices and claims. Fully bilingual (German + Russian).
 
-**Прод:** https://umzug-seven.vercel.app
+**Live:** https://umzug-seven.vercel.app
 
-## Что умеет
+## What it does
 
-**Клиент (kunde)**
-- Калькулятор переезда в 3 шага: маршрут (OSRM/OSM-геокодинг, карта Leaflet) → объём и этажи → услуги (упаковка, разборка кухни, HVZ, срочность +25%, догруз −15%)
-- Мгновенный расчёт по тарифам из БД со snapshot-фиксацией цены на 14 дней
-- Страница заявки: статус, бригада, карта маршрута, счёт, PDF (Kostenvoranschlag, Übernahmeprotokoll, Rechnung), история событий с именами исполнителей, чат с компанией
-- Календарь доступности дней, подтверждение приёмки переезда, экспорт своих данных (DSGVO Art. 15), удаление аккаунта (Art. 17)
+**Customer (Kunde)**
+- 3-step move calculator: route (OSRM/OSM geocoding, Leaflet map) → volume & floors → services (packing, kitchen disassembly, parking zones, express +25%, shared load −15%)
+- Instant pricing from DB tariffs with a 14-day price snapshot
+- Order page: status, crew, route map, invoices, PDFs (quote, handover protocol, invoice), event history with named actors, chat with the company
+- Availability calendar, move acceptance confirmation, personal data export (GDPR Art. 15), account deletion (Art. 17)
 
-**Логист (disponent)**
-- Панель заказов с фильтрами, подтверждение цены и спецтребований
-- ⚡ Автоназначение: оптимальная машина + свободный экипаж (холостой пробег, занятость, класс)
-- Ручное назначение с расчётом подачи, дневной план, таймлайн рейса
-- Субподрядчики (передача партнёру, маржа), карта «Где экипаж»
-- Корректировки цены (revision) с согласованием клиентом
+**Dispatcher (Disponent)**
+- Order board with filters, price & special-request confirmation
+- ⚡ Auto-assignment: optimal vehicle + free crew (deadhead distance, availability, class)
+- Manual assignment with drive-time/cost estimates, daily plan, trip timeline
+- Subcontractors (hand-off to partner, margin tracking), "Where is the crew" live map
+- Price revisions with customer approval flow
 
-**Водитель (fahrer)**
-- «Мой день»: рейсы, выезд кнопкой в день переезда (гвард D6.3)
-- 5 чек-поинтов рейса с геолокацией (выехал → на погрузке → погрузил → на выгрузке → завершил) — клиент и логист видят этапы и позицию на карте
-- Чек-лист загрузки + цифровой протокол приёмки (план/факт м³, подпись, SHA-хеш, цепочка протоколов)
+**Driver (Fahrer)**
+- "My day": trips, one-tap departure on moving day (date guard)
+- 5 trip checkpoints with geolocation (departed → at pickup → loaded → at drop-off → done) — customer and dispatcher see each step and the crew position on a map
+- Loading checklist + digital handover protocol (planned/actual m³, signature, SHA hash, verifiable protocol chain)
 
-**Бухгалтерия (buchhaltung)**
-- Счета с автоматической нумерацией RE-JJJJ-0NNN (GoBD), платежи (SEPA/карта/наличные), дуннинг (2 уровня, § 288 BGB), возвраты, претензии, выплаты субподрядчикам, экспорт CSV, аналитика
+**Accounting (Buchhaltung)**
+- Invoices with automatic RE-JJJJ-0NNN numbering (GoBD-compliant), payments (SEPA/card/cash), dunning (2 levels, § 288 BGB), refunds, claims, subcontractor payouts, CSV export, analytics
 
-**Админ**
-- Тарифы, классы машин, парк, привязка водитель-машина, сотрудники, субподрядчики, Google Maps API key, полный аудит-лог
+**Admin**
+- Tariffs, vehicle classes, fleet, driver-vehicle bindings, staff, subcontractors, Google Maps API key, full audit log
 
-**Автоматика (cron)**
-- 06:00 — напоминания клиентам (аванс, счёт)
-- 07:00 — утренние письма водителям (рейс, машина, требования), предупреждения о задержках в пути (пересчёт маршрута), дайджест админу (заказы за сутки, просрочки, загрузка парка)
+**Automation (cron)**
+- 06:00 — customer reminders (down payment, invoice)
+- 07:00 — morning emails to drivers (trip, vehicle, requirements), traffic-delay warnings (route re-check), admin digest (24h orders, overdue invoices, fleet utilization)
 
-## Двуязычность
+## Bilingual architecture
 
-Немецкая версия — полноценное зеркало всех страниц под `/de/*` (лендинг, калькулятор, кабинет, панели ролей, юр-страницы Impressum/Datenschutz/AGB/Widerruf). Русская — без префикса. Переключатель DE | RU в шапке и сайдбаре, первый визит открывает немецкую версию, выбор запоминается в cookie.
+The German version is a complete mirror of every page under `/de/*` (landing, calculator, dashboard, role panels, legal pages). Russian lives without a prefix. A DE | RU switch sits in the header and sidebar; first-time visitors get the German version, and the choice is persisted in a cookie.
 
-Подход: **без центрального i18n-словаря** — тексты co-located в каждом компоненте (`const T = { ru: {...}, de: {...} }` рядом с JSX), один и тот же JSX для обеих локалей (идентичная вёрстка), общие server actions и БД. Русские UI-надписи на DE-страницах исключены (server-side ошибки мапятся по кодам).
+Approach: **no central i18n dictionary** — strings are co-located in each component (`const T = { ru: {...}, de: {...} }` next to the JSX), both locales share the exact same JSX (identical layout) and the same server actions and database. Russian UI strings on DE pages are excluded; server-side errors are mapped to German by error code.
 
-## Юридический контур (DE)
+## Legal framework (DE)
 
-Impressum (§ 5 DDG), Datenschutz (DSGVO, § 25 TDDDG — только технически необходимые cookies), AGB (HGB/BGB: тариф, обязанности, аванс, ответственность 620 €/м³ § 451 i.V.m. § 431 HGB, § 9 ArbZG), Widerrufsrecht (§§ 355/357 BGB).
+Impressum (§ 5 DDG), Datenschutz (GDPR, § 25 TDDDG — strictly necessary cookies only), AGB (HGB/BGB: pricing, obligations, down payment, liability €620/m³ per § 451 i.V.m. § 431 HGB, § 9 ArbZG), Widerrufsrecht (§§ 355/357 BGB).
 
-## Технологии
+## Tech stack
 
 - **Next.js 16** (App Router, Cache Components, Turbopack) + **TypeScript** strict
 - **Tailwind CSS 4**
-- **Turso** (libsql) — прод-БД; server actions для всех мутаций
-- **Resend** — письма; **Vercel** — хостинг + cron
-- **Leaflet / react-leaflet** — карты; OSRM/OSM (+ опционально Google) — маршруты
-- **Playwright** — e2e (RU + DE smoke, 20 тестов против прода); **vitest** — unit (тарифы, праздники, оптимизатор, валидация)
+- **Turso** (libsql) as the production database; server actions for all mutations
+- **Resend** for email; **Vercel** for hosting + cron
+- **Leaflet / react-leaflet** for maps; OSRM/OSM (optional Google) for routing
+- **Playwright** for e2e (RU + DE smoke suites, 20 tests against production); **vitest** for unit tests (pricing, holidays, optimizer, validation)
 
-## Запуск локально
+## Getting started
 
 ```bash
 pnpm install
@@ -61,6 +61,6 @@ pnpm exec vercel env pull .env.local --environment development --yes   # TURSO_*
 pnpm dev
 ```
 
-Проверки: `pnpm exec tsc --noEmit` · `pnpm lint` · `pnpm vitest run` · `pnpm build` · e2e: `pnpm test:e2e` (прод по умолчанию, переопределяется `E2E_BASE_URL`).
+Checks: `pnpm exec tsc --noEmit` · `pnpm lint` · `pnpm vitest run` · `pnpm build` · e2e: `pnpm test:e2e` (production by default, override with `E2E_BASE_URL`).
 
-Демо-доступы (пароль `demo1234`): `klient@` / `logist@` / `voditel@` / `voditel2@` / `buh@` / `admin@example.com`.
+Demo accounts (password `demo1234`): `klient@` / `logist@` / `voditel@` / `voditel2@` / `buh@` / `admin@example.com`.
