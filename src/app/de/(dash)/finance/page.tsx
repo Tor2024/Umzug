@@ -158,7 +158,7 @@ export default async function FinancePage() {
           finActions.push({ key: `inv-${o.ref}`, label: "Abgeschlossen, keine Rechnung erstellt", href: "/de/finance", tag: o.ref, urgent: true });
         }
         return finActions;
-      })()} title="Finanzaufgaben" />
+      })()} title="Finanzaufgaben" locale="de" />
 
       {/* Дашборд */}
       <section className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

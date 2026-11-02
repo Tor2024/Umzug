@@ -83,7 +83,7 @@ export default async function AccountPageDe() {
       <h1 className="mb-1 text-2xl font-bold sm:text-3xl">Kundenkonto</h1>
       <p className="mb-6 text-muted">{user.name} · {user.email}</p>
 
-      <ActionRequired items={actions} />
+      <ActionRequired items={actions} locale="de" />
 
       <div className="mb-8 flex flex-wrap gap-3">
         <Link className="btn btn-primary" href="/de/calc">Umzug berechnen</Link>

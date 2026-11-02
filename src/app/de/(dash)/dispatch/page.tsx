@@ -312,7 +312,7 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
         </div>
       )}
 
-      <ActionRequired items={dispatchActions} title="Anfragen mit Handlungsbedarf" />
+      <ActionRequired items={dispatchActions} title="Anfragen mit Handlungsbedarf" locale="de" />
 
       {/* D11: сводка ближайших 5 дней */}
       <section className="mb-6 card p-4">

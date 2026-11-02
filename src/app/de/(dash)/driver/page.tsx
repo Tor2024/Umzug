@@ -149,7 +149,7 @@ export default async function DriverPage({ searchParams }: { searchParams: Promi
         </div>
       )}
 
-      <ActionRequired items={driverActions} title="Meine Aufgaben heute" />
+      <ActionRequired items={driverActions} title="Meine Aufgaben heute" locale="de" />
 
       {rows.length === 0 && (
         <div className="card p-6 text-sm text-muted">

@@ -13,14 +13,22 @@ export type ActionItem = {
   urgent?: boolean;
 };
 
+const T = {
+  ru: { defaultTitle: "Требует вашего действия", open: "Открыть" },
+  de: { defaultTitle: "Handlungsbedarf", open: "Öffnen" },
+} as const;
+
 /**
  * Ненавязчивый блок «Требует вашего действия» (задача фокуса на незаконченных
  * операциях). Рендерится наверху роли-панели; скрывается, когда дел нет.
  */
-export function ActionRequired({ items, title = "Требует вашего действия" }: {
+export function ActionRequired({ items, title, locale = "ru" }: {
   items: ActionItem[];
   title?: string;
+  locale?: "ru" | "de";
 }) {
+  const t = T[locale];
+  const resolvedTitle = title ?? t.defaultTitle;
   if (items.length === 0) return null;
   const urgent = items.filter((i) => i.urgent);
   const normal = items.filter((i) => !i.urgent);
@@ -28,7 +36,7 @@ export function ActionRequired({ items, title = "Требует вашего д�
   return (
     <div className="mb-8 rounded-container border border-accent-soft bg-orange-50 p-4">
       <h2 className="font-semibold">
-        {title} <span className="ml-1 rounded-full bg-[#EA7A28] px-2 py-0.5 text-xs text-white">{items.length}</span>
+        {resolvedTitle} <span className="ml-1 rounded-full bg-[#EA7A28] px-2 py-0.5 text-xs text-white">{items.length}</span>
       </h2>
       <ul className="mt-3 grid gap-2">
         {sorted.map((i) => (
@@ -38,7 +46,7 @@ export function ActionRequired({ items, title = "Требует вашего д�
               {i.label}
               {i.tag && <span className="ml-2 font-semibold text-accent">{i.tag}</span>}
             </span>
-            <Link className="btn btn-outline px-3 py-1 text-xs" href={i.href}>Открыть</Link>
+            <Link className="btn btn-outline px-3 py-1 text-xs" href={i.href}>{t.open}</Link>
           </li>
         ))}
       </ul>
