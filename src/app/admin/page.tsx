@@ -9,7 +9,10 @@ import {
   createStaffUserAction,
   saveVehicleAction,
   deleteVehicleAction,
+  returnVehicleAction,
   updateApiKeyAction,
+  createSubcontractorAction,
+  toggleSubcontractorAction,
   type TariffBatchResult,
   type SimpleResult,
 } from "@/lib/actions";
@@ -51,7 +54,8 @@ const KEY_LABELS: Record<string, string> = {
 
 type ClassRow = { class: string; label: string; capacity_m3: number; included_m3: number; base_cents: number; active: number };
 type UserRow = { id: number; email: string; name: string; role: string; active: number; email_verified: number };
-type VehicleRow = { id: number; plate: string; class: string; label: string; capacity_m3: number; active: number };
+type VehicleRow = { id: number; plate: string; class: string; label: string; capacity_m3: number; active: number; home_base: string; current_location: string };
+type SubRow = { id: number; name: string; contact: string; phone: string; email: string; class: string; price_mode: string; price_cents: number; notes: string; active: number };
 type AuditRow = { id: number; at: number; user_id: number; action: string; entity: string; entity_id: string; details: string };
 
 const ROLES = ["kunde", "logist", "driver", "finance", "admin"] as const;
@@ -256,9 +260,16 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       cls: String(fd.get("cls") ?? "A"),
       label: String(fd.get("label") ?? ""),
       active: fd.get("active") === "on",
+      homeBase: String(fd.get("homeBase") ?? ""),
     });
     const { redirect } = await import("next/navigation");
     redirect(`/admin?msg=${r.ok ? "vehicle" : "error"}`);
+  }
+  async function vehicleReturnForm(fd: FormData): Promise<void> {
+    "use server";
+    const r = await returnVehicleAction(Number(fd.get("vehicleId")));
+    const { redirect } = await import("next/navigation");
+    redirect(`/admin?msg=${r.ok ? "vehicle" : "vehicleBusy"}&details=${encodeURIComponent(r.message ?? "")}`);
   }
   async function vehicleDeleteForm(fd: FormData): Promise<void> {
     "use server";
@@ -283,6 +294,27 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
     const { redirect } = await import("next/navigation");
     redirect(`/admin?msg=${r.ok ? "apikey" : "error"}`);
   }
+  async function subForm(fd: FormData): Promise<void> {
+    "use server";
+    const r = await createSubcontractorAction({
+      name: String(fd.get("name") ?? ""),
+      contact: String(fd.get("contact") ?? ""),
+      phone: String(fd.get("phone") ?? ""),
+      email: String(fd.get("email") ?? ""),
+      cls: String(fd.get("cls") ?? "B") as "A" | "B" | "C",
+      priceMode: String(fd.get("priceMode") ?? "per_order") as "per_km" | "per_order" | "per_day",
+      priceCents: Math.round(Number(String(fd.get("price") ?? "0").replace(",", ".")) * 100),
+      notes: String(fd.get("notes") ?? ""),
+    });
+    const { redirect } = await import("next/navigation");
+    redirect(`/admin?msg=${r.ok ? "subCreated" : "subError"}&details=${encodeURIComponent(r.message ?? "")}`);
+  }
+  async function subToggleForm(fd: FormData): Promise<void> {
+    "use server";
+    const r = await toggleSubcontractorAction(Number(fd.get("subId")));
+    const { redirect } = await import("next/navigation");
+    redirect(`/admin?msg=${r.ok ? "subToggled" : "error"}`);
+  }
 
   const configRowsRes = await db.execute("SELECT key, value FROM config");
   const configRows = configRowsRes.rows as unknown as { key: string; value: string }[];
@@ -292,8 +324,10 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
   const classes = classesRes.rows as unknown as ClassRow[];
   const usersRes = await db.execute("SELECT id, email, name, role, active, email_verified FROM users ORDER BY role, id");
   const users = usersRes.rows as unknown as UserRow[];
-  const vehiclesRes = await db.execute("SELECT id, plate, class, label, capacity_m3, active FROM vehicles ORDER BY id");
+  const vehiclesRes = await db.execute("SELECT id, plate, class, label, capacity_m3, active, home_base, current_location FROM vehicles ORDER BY id");
   const vehicles = vehiclesRes.rows as unknown as VehicleRow[];
+  const subsRes = await db.execute("SELECT id, name, contact, phone, email, class, price_mode, price_cents, notes, active FROM subcontractors ORDER BY id");
+  const subs = subsRes.rows as unknown as SubRow[];
   const auditRowsRes = await db.execute("SELECT * FROM audit ORDER BY id DESC LIMIT 50");
   const auditRows = auditRowsRes.rows as unknown as AuditRow[];
   const historyRows = await listAllOrderHistory(db, 100);
@@ -310,10 +344,13 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
     apikey: { text: "API-ключ сохранён.", ok: true },
     staffCreated: { text: "Сотрудник создан.", ok: true },
     staffError: { text: "Сотрудник не создан.", ok: false },
+    subCreated: { text: "Партнёр добавлен.", ok: true },
+    subToggled: { text: "Статус партнёра изменён.", ok: true },
+    subError: { text: "Партнёр не сохранён.", ok: false },
     error: { text: "Не сохранилось — проверьте выделенные значения.", ok: false },
   };
   const banner = msg ? MSG[msg] : undefined;
-  const bannerDetails = msg === "staffError" || msg === "staffCreated"
+  const bannerDetails = msg === "staffError" || msg === "staffCreated" || msg === "subError"
     ? (await searchParams).details
     : undefined;
 
@@ -485,6 +522,18 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                 </label>
                 <SubmitButton className="btn btn-secondary">Сохранить</SubmitButton>
               </form>
+              <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted">
+                <span>База: {v.home_base || "—"}</span>
+                <span>·</span>
+                <span>
+                  Сейчас: <b className="text-ink">{v.current_location || v.home_base || "—"}</b>
+                  {v.current_location && v.home_base && v.current_location !== v.home_base && <span className="chip chip-dispatched ml-1">в рейсе/не на базе</span>}
+                </span>
+                <form action={vehicleReturnForm}>
+                  <input type="hidden" name="vehicleId" value={v.id} />
+                  <SubmitButton className="btn btn-outline h-7 px-2 text-xs">Вернул на базу</SubmitButton>
+                </form>
+              </div>
               <form action={vehicleDeleteForm} className="mt-2">
                 <input type="hidden" name="vehicleId" value={v.id} />
                 <button type="submit" className="text-sm text-danger hover:underline">Удалить (если нет рейсов)</button>
@@ -507,8 +556,90 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
               <span className="text-muted">Название</span>
               <input name="label" placeholder="Transporter 3,5 т" className="input-base mt-1" />
             </label>
-            <input type="hidden" name="active" value="on" />
+            <label className="min-w-48 flex-1 text-sm">
+              <span className="text-muted">База (домашняя локация)</span>
+              <input name="homeBase" placeholder="Musterstraße 12, 10115 Berlin" className="input-base mt-1" />
+            </label>
+              <input type="hidden" name="active" value="on" />
             <SubmitButton className="btn btn-primary">Добавить машину</SubmitButton>
+          </form>
+        </div>
+      </section>
+
+      {/* ── Субподрядчики (сторонние перевозчики, расширение D8.6) ── */}
+      <section className="mt-10">
+        <h2 className="text-lg font-semibold">Субподрядчики (партнёры-перевозчики)</h2>
+        <p className="mt-1 text-sm text-muted">
+          Сторонние перевозчики, которым можно передать заявку вместо своей машины. Тариф: за км, за заказ или за день.
+          Маржа считается автоматически: цена клиента − стоимость партнёра (видна логисту в /dispatch и бухгалтеру в /finance).
+        </p>
+        <div className="mt-4 space-y-3">
+          {subs.map((s) => (
+            <div key={s.id} className="card flex flex-wrap items-center gap-3 p-4 text-sm">
+              <div className="min-w-48 flex-1">
+                <div className="font-medium">
+                  {s.name}
+                  <span className={`ml-2 chip ${s.active === 1 ? "chip-trust" : "chip-neutral"}`}>{s.active === 1 ? "активен" : "отключён"}</span>
+                </div>
+                <div className="text-muted">
+                  {s.contact && <>{s.contact} · </>}
+                  {s.phone && <>{s.phone} · </>}
+                  {s.email}
+                </div>
+                {s.notes && <div className="text-xs text-muted">{s.notes}</div>}
+              </div>
+              <span className="chip chip-neutral">класс {s.class}</span>
+              <span className="chip chip-neutral">
+                {s.price_mode === "per_km" ? "за км" : s.price_mode === "per_day" ? "за день" : "за заказ"}: {(s.price_cents / 100).toFixed(2)} €
+              </span>
+              <form action={subToggleForm}>
+                <input type="hidden" name="subId" value={s.id} />
+                <SubmitButton className="btn btn-outline">{s.active === 1 ? "Отключить" : "Включить"}</SubmitButton>
+              </form>
+            </div>
+          ))}
+          {subs.length === 0 && <div className="card p-4 text-sm text-muted">Партнёров пока нет.</div>}
+          {/* Новый партнёр */}
+          <form action={subForm} className="card flex flex-wrap items-end gap-3 border-dashed p-4">
+            <label className="min-w-40 flex-1 text-sm">
+              <span className="text-muted">Название</span>
+              <input name="name" placeholder="Spedition Müller GmbH" className="input-base mt-1" required />
+            </label>
+            <label className="text-sm">
+              <span className="text-muted">Класс машин</span>
+              <select name="cls" defaultValue="B" className="input-base mt-1 w-20">
+                {classes.map((c) => <option key={c.class} value={c.class}>{c.class}</option>)}
+              </select>
+            </label>
+            <label className="text-sm">
+              <span className="text-muted">Тариф</span>
+              <select name="priceMode" defaultValue="per_order" className="input-base mt-1 w-32">
+                <option value="per_order">за заказ</option>
+                <option value="per_km">за км</option>
+                <option value="per_day">за день</option>
+              </select>
+            </label>
+            <label className="text-sm">
+              <span className="text-muted">Цена, €</span>
+              <input name="price" inputMode="decimal" placeholder="300" className="input-base mt-1 w-24" required />
+            </label>
+            <label className="min-w-40 flex-1 text-sm">
+              <span className="text-muted">Контактное лицо</span>
+              <input name="contact" placeholder="Herr Müller" className="input-base mt-1" />
+            </label>
+            <label className="text-sm">
+              <span className="text-muted">Телефон</span>
+              <input name="phone" placeholder="+49 30 123456" className="input-base mt-1 w-40" />
+            </label>
+            <label className="min-w-40 flex-1 text-sm">
+              <span className="text-muted">Email</span>
+              <input name="email" type="email" placeholder="dispo@mueller.de" className="input-base mt-1" />
+            </label>
+            <label className="min-w-40 flex-1 text-sm">
+              <span className="text-muted">Заметки</span>
+              <input name="notes" placeholder="условия, особые пожелания" className="input-base mt-1" />
+            </label>
+            <SubmitButton className="btn btn-primary">Добавить партнёра</SubmitButton>
           </form>
         </div>
       </section>

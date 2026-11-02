@@ -168,7 +168,27 @@ const SCHEMA_SQL = `
     class        TEXT NOT NULL REFERENCES vehicle_classes(class),
     label        TEXT NOT NULL,
     capacity_m3  REAL NOT NULL,
-    active       INTEGER NOT NULL DEFAULT 1
+    active       INTEGER NOT NULL DEFAULT 1,
+    home_base    TEXT NOT NULL DEFAULT '',
+    current_location TEXT NOT NULL DEFAULT ''
+  );
+  CREATE TABLE IF NOT EXISTS subcontractors (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    name        TEXT NOT NULL,
+    contact     TEXT NOT NULL DEFAULT '',
+    phone       TEXT NOT NULL DEFAULT '',
+    email       TEXT NOT NULL DEFAULT '',
+    class       TEXT NOT NULL REFERENCES vehicle_classes(class),
+    price_mode  TEXT NOT NULL CHECK (price_mode IN ('per_km','per_order','per_day')),
+    price_cents INTEGER NOT NULL,
+    notes       TEXT NOT NULL DEFAULT '',
+    active      INTEGER NOT NULL DEFAULT 1
+  );
+  CREATE TABLE IF NOT EXISTS order_subcontractors (
+    order_id     INTEGER PRIMARY KEY REFERENCES orders(id),
+    sub_id       INTEGER NOT NULL REFERENCES subcontractors(id),
+    cost_cents   INTEGER NOT NULL,
+    move_date    TEXT NOT NULL
   );
   CREATE TABLE IF NOT EXISTS trips (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,

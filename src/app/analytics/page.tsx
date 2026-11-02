@@ -76,6 +76,16 @@ export default async function AnalyticsPage() {
   const avgCheck = closed.length > 0 ? Math.round(closedGrossTotal / closed.length) : 0;
   const costPct = closedGrossTotal > 0 ? crewCostTotal / closedGrossTotal : 0;
 
+  // Выплаты партнёрам по закрытым заказам (субподрядчики, @1480@) → реальная маржа
+  const subCostRes = await db.execute(
+    `SELECT COALESCE(SUM(os.cost_cents),0) AS s
+       FROM order_subcontractors os JOIN orders o ON o.id = os.order_id
+      WHERE o.status = 'closed'`,
+  );
+  const subCostTotal = Number((subCostRes.rows[0] as unknown as { s: number }).s);
+  const realMarginTotal = marginTotal - subCostTotal;
+  const realMarginPct = closedGrossTotal > 0 ? realMarginTotal / closedGrossTotal : 0;
+
   // --- 4. Загрузка машин: trips по датам за последние 60 дней + потенциал ---
   const fleetRes = await db.execute("SELECT COUNT(*) AS n FROM vehicles WHERE active = 1");
   const fleetSize = Number((fleetRes.rows[0] as unknown as { n: number }).n);
@@ -188,6 +198,10 @@ export default async function AnalyticsPage() {
         <p className="mt-1 text-xs text-muted">
           Себестоимость экипажей закрытых заказов: {EUR(crewCostTotal)} ({PCT(costPct)} от выручки закрытых) ·
           отработано экипажами: {totalHours.toFixed(1)} ч
+        </p>
+        <p className="mt-1 text-xs text-muted">
+          Выплаты партнёрам (субподрядчики, закрытые): {EUR(subCostTotal)} ·
+          реальная маржа (за вычетом экипажей и партнёров): <b>{EUR(realMarginTotal)} ({PCT(realMarginPct)})</b>
         </p>
       </section>
 

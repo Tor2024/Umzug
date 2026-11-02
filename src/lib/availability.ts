@@ -93,7 +93,7 @@ export function minClassForVolume(volumeM3: number): "A" | "B" | "C" {
   return "C";
 }
 
-const CLASS_RANK = { A: 1, B: 2, C: 3 } as const;
+export const CLASS_RANK = { A: 1, B: 2, C: 3 } as const;
 
 /**
  * Доступность одного дня под конкретную заявку (объём + needsSecond).

@@ -8,13 +8,14 @@ import { requireRole } from "@/lib/auth";
 import { getDb, getTariffs, type DB } from "@/lib/db";
 import { calculateQuote, recalculate, type QuoteSnapshot, type VehicleClass } from "@/lib/pricing";
 import { tariffDrift } from "@/lib/ops";
-import { confirmOrderAction, recalcOrderAction, cancelOrderAction, assignOrderAction, closeOrderAction, forceCloseOrderAction } from "@/lib/actions";
+import { confirmOrderAction, recalcOrderAction, cancelOrderAction, assignOrderAction, closeOrderAction, forceCloseOrderAction, assignSubcontractorAction, unassignSubcontractorAction } from "@/lib/actions";
 import RouteMapLazy from "@/components/route-map-lazy";
 import { SubmitButton } from "@/components/submit-button";
 import { RevisionForm } from "@/components/revision-form";
 import { RevisionDecision } from "@/components/revision-decision";
 import { revisionFieldDiff } from "@/lib/revision";
 import { ActionRequired, type ActionItem } from "@/components/action-required";
+import { candidateVehicles, type CandidateVehicle } from "@/lib/dispatch-optimizer";
 
 export const metadata: Metadata = { title: "Панель логиста", robots: { index: false } };
 export const instant = false;
@@ -100,13 +101,17 @@ const ACTION_MSG: Record<string, string> = {
   state: "Статус не позволяет операцию.",
   role: "Недостаточно прав.",
   pending: "Сначала завершите правку: заявка ждёт подтверждения изменения.",
+  sub_assigned: "Заявка передана партнёру-перевозчику.",
+  sub_unassigned: "Партнёр снят — можно назначить свою машину.",
+  sub_class: "Класс машин партнёра ниже класса заявки.",
+  sub_error: "Не удалось передать партнёру.",
 };
 
 /** ref подставляется в текст баннера: «Готово: MS-2026-8941 — …». */
 function bannerText(code: string, ref?: string): string {
   const base = ACTION_MSG[code] ?? code;
   if (!ref) return base;
-  const okCodes = ["confirmed", "assigned", "closed", "force_closed", "cancelled", "recalculated"];
+  const okCodes = ["confirmed", "assigned", "closed", "force_closed", "cancelled", "recalculated", "sub_assigned", "sub_unassigned"];
   if (okCodes.includes(code)) return `${ref}: ${base.charAt(0).toLowerCase()}${base.slice(1)}`;
   return `${ref}: ${base}`;
 }
@@ -128,9 +133,9 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
 
   const filtered = statusFilter && statusFilter !== "all" ? rows.filter((r) => r.status === statusFilter) : rows;
 
-  const vehiclesRes = await db.execute("SELECT id, plate, label, class, capacity_m3, active FROM vehicles WHERE active = 1 ORDER BY capacity_m3");
+  const vehiclesRes = await db.execute("SELECT id, plate, label, class, capacity_m3, active, home_base, current_location FROM vehicles WHERE active = 1 ORDER BY capacity_m3");
   const vehicles = vehiclesRes.rows as unknown as
-    Array<{ id: number; plate: string; label: string; class: VehicleClass; capacity_m3: number; active: number }>;
+    Array<{ id: number; plate: string; label: string; class: VehicleClass; capacity_m3: number; active: number; home_base: string; current_location: string }>;
   const driversRes = await db.execute("SELECT id, name FROM users WHERE role = 'driver' AND active = 1 ORDER BY name");
   const drivers = driversRes.rows as unknown as
     Array<{ id: number; name: string }>;
@@ -172,6 +177,31 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
     } else if (o.status === "enroute") {
       // зависшая приёмка: протокол подписан, клиент не подтвердил; или рейс начат давно
       dispatchActions.push({ key: `enr-${o.ref}`, label: "Рейс в пути — ждём протокол/приёмку", href: `/order/${o.ref}`, tag: o.ref, urgent: o.move_date <= today });
+    }
+  }
+
+  // Умный подбор (требование @1480@): для confirmed-заказов считаем холостой пробег подачи
+  // каждой свободной машины (current_location → адрес забора) и ранжируем — только для них, не для всех 200.
+  const candidatesMap = new Map<number, CandidateVehicle[]>();
+  for (const o of filtered) {
+    if (o.status === "confirmed") {
+      candidatesMap.set(o.id, await candidateVehicles(db, o.id, o.move_date, o.from_text));
+    }
+  }
+
+  // Субподрядчики (@1480@): активные партнёры + назначение по заказам
+  const subsRes = await db.execute("SELECT id, name, class, price_mode, price_cents FROM subcontractors WHERE active = 1 ORDER BY name");
+  const subs = subsRes.rows as unknown as
+    Array<{ id: number; name: string; class: VehicleClass; price_mode: "per_km" | "per_order" | "per_day"; price_cents: number }>;
+  const subAssignMap = new Map<number, { name: string; cost_cents: number }>();
+  {
+    const saRes = await db.execute(
+      `SELECT os.order_id, os.cost_cents, s.name
+       FROM order_subcontractors os JOIN subcontractors s ON s.id = os.sub_id
+       WHERE os.order_id IN (SELECT id FROM orders WHERE status != 'cancelled')`,
+    );
+    for (const r of saRes.rows as unknown as Array<{ order_id: number; cost_cents: number; name: string }>) {
+      subAssignMap.set(Number(r.order_id), { name: r.name, cost_cents: Number(r.cost_cents) });
     }
   }
 
@@ -319,6 +349,7 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
                 <AssignForm
                   orderId={o.id}
                   vehicles={vehicles}
+                  candidates={candidatesMap.get(o.id) ?? []}
                   drivers={drivers}
                   orderClass={o.vehicle_class}
                   orderVolume={o.volume_m3}
@@ -326,6 +357,42 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
                   busy={busy}
                   orderRef={o.ref}
                 />
+              )}
+
+              {/* Отдать партнёру (субподрядчик) — только для confirmed/assigned без правки */}
+              {(o.status === "confirmed" || o.status === "assigned") && !pendingSnap && (
+                <div className="mt-3 rounded-base border border-line bg-surface p-3">
+                  <p className="mb-2 text-sm font-semibold">Отдать партнёру <span className="font-normal text-muted">— сторонний перевозчик; маржа = цена клиента − стоимость партнёра</span></p>
+                  {subAssignMap.get(o.id) ? (
+                    <div className="flex flex-wrap items-center gap-2 text-sm">
+                      <span className="chip chip-dispatched">Партнёр: {subAssignMap.get(o.id)!.name}</span>
+                      <span className="text-muted">стоимость {(subAssignMap.get(o.id)!.cost_cents / 100).toFixed(2)} € · маржа {(o.gross_cents - subAssignMap.get(o.id)!.cost_cents) / 100 >= 0 ? "+" : ""}{((o.gross_cents - subAssignMap.get(o.id)!.cost_cents) / 100).toFixed(2)} €</span>
+                      <form action={async () => { "use server"; const r = await unassignSubcontractorAction(o.id); redirectMsg(r.ok ? "sub_unassigned" : r.message?.includes("изменён") ? "state" : "sub_error", o.ref); }}>
+                        <SubmitButton className="btn btn-outline">Снять партнёра</SubmitButton>
+                      </form>
+                    </div>
+                  ) : (
+                    <div className="flex flex-wrap items-end gap-2">
+                      {subs.filter((s) => s.class !== undefined).map((s) => {
+                        const cost = s.price_mode === "per_km"
+                          ? Math.round(o.distance_km * s.price_cents)
+                          : s.price_cents;
+                        const margin = o.gross_cents - cost;
+                        return (
+                          <form key={s.id} action={async () => { "use server"; const r = await assignSubcontractorAction(o.id, s.id); redirectMsg(r.ok ? "sub_assigned" : r.message?.includes("ниже") ? "sub_class" : "sub_error", o.ref); }} className="flex flex-wrap items-center gap-2 rounded-base border border-line bg-white p-2 text-sm">
+                            <span>
+                              <b>{s.name}</b> · класс {s.class} ·{" "}
+                              {s.price_mode === "per_km" ? `${(s.price_cents / 100).toFixed(2)} €/км × ${o.distance_km} км` : s.price_mode === "per_day" ? `${(s.price_cents / 100).toFixed(2)} €/день` : `${(s.price_cents / 100).toFixed(2)} €/заказ`}
+                              {" "}→ стоимость <b>{(cost / 100).toFixed(2)} €</b>, маржа <span className={margin >= 0 ? "text-trust" : "text-danger"}>{margin >= 0 ? "+" : ""}{(margin / 100).toFixed(2)} €</span>
+                            </span>
+                            <SubmitButton className="btn btn-secondary">Передать</SubmitButton>
+                          </form>
+                        );
+                      })}
+                      {subs.length === 0 && <p className="text-sm text-muted">Активных партнёров нет — добавьте в админ-панели.</p>}
+                    </div>
+                  )}
+                </div>
               )}
 
               {o.status === "acceptance" && (
@@ -381,10 +448,11 @@ function RevisionDiffList({ currentSnap, pendingSnap }: { currentSnap: QuoteSnap
   );
 }
 function AssignForm({
-  orderId, vehicles, drivers, orderClass, orderVolume, moveDate, busy, orderRef,
+  orderId, vehicles, candidates, drivers, orderClass, orderVolume, moveDate, busy, orderRef,
 }: {
   orderId: number;
-  vehicles: Array<{ id: number; plate: string; label: string; class: VehicleClass; capacity_m3: number; active: number }>;
+  vehicles: Array<{ id: number; plate: string; label: string; class: VehicleClass; capacity_m3: number; active: number; home_base: string; current_location: string }>;
+  candidates: CandidateVehicle[];
   drivers: Array<{ id: number; name: string }>;
   orderClass: VehicleClass;
   orderVolume: number;
@@ -397,14 +465,20 @@ function AssignForm({
   const suitable = vehicles.filter(
     (v) => v.capacity_m3 >= orderVolume && CLASS_RANK[v.class] >= CLASS_RANK[orderClass],
   );
+  const candById = new Map(candidates.map((c) => [c.id, c]));
   // Занятость водителя на дату переезда — пометка в select (конфликт сервер всё равно ловит).
   const driverBusy = (id: number) => busy.get(`driver:${id}:${moveDate}`);
   return (
     <div className="mt-3 rounded-base border border-line bg-surface p-3">
-      <p className="mb-2 text-sm font-semibold">Назначение машины и бригады</p>
+      <p className="mb-2 text-sm font-semibold">Назначение машины и бригады <span className="font-normal text-muted">— машины отсортированы по холостому пробегу подачи (★ оптимальная)</span></p>
       <div className="grid gap-2 sm:grid-cols-2">
-        {suitable.map((v) => {
+        {suitable
+          .slice()
+          .sort((a, b) => (candById.get(a.id)?.score ?? Number.MAX_SAFE_INTEGER) - (candById.get(b.id)?.score ?? Number.MAX_SAFE_INTEGER))
+          .map((v) => {
           const takenBy = busy.get(`vehicle:${v.id}:${moveDate}`);
+          const cand = candById.get(v.id);
+          const loc = cand?.currentLocation || v.current_location || v.home_base;
           return (
             <form key={v.id} action={async (fd) => {
               "use server";
@@ -418,7 +492,13 @@ function AssignForm({
               redirectMsg(r.ok ? "assigned" : errCode, orderRef);
             }} className="flex flex-wrap items-center gap-2 rounded-base border border-line bg-white p-2">
               <span className="text-sm">
+                {cand?.optimal && <span className="chip chip-transit">★ оптимальная</span>}{" "}
                 {v.plate} · {v.label} · {v.capacity_m3} м³ {takenBy && <span className="chip chip-delayed">занята ({takenBy})</span>}
+              </span>
+              <span className="block w-full text-xs text-muted">
+                Место: {loc || "—"}
+                {cand?.approachKm != null && <> · подача {cand.approachKm.toFixed(1)} км / {cand.approachMin} мин · себестоимость подачи {(cand.approachCostCents! / 100).toFixed(2)} € (внутр.)</>}
+                {cand && cand.approachKm === null && <> · подача: не рассчитана</>}
               </span>
               <select name="driverId" className="input-base h-9 w-40" required aria-label="Водитель">
                 {drivers.map((d) => {

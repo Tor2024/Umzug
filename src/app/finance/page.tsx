@@ -108,6 +108,17 @@ export default async function FinancePage() {
   }
   const paidByOrder = (orderId: number): number => paidByOrderMap.get(orderId) ?? 0;
 
+  // Выплаты партнёрам (субподрядчики, @1480@)
+  const subPayRes = await db.execute(
+    `SELECT os.order_id, os.cost_cents, os.move_date, s.name, o.ref
+       FROM order_subcontractors os
+       JOIN subcontractors s ON s.id = os.sub_id
+       JOIN orders o ON o.id = os.order_id
+      ORDER BY os.order_id DESC`,
+  );
+  const subPayments = subPayRes.rows as unknown as Array<{ order_id: number; cost_cents: number; move_date: string; name: string; ref: string }>;
+  const subTotal = subPayments.reduce((acc, r) => acc + Number(r.cost_cents), 0);
+
   // Дашборд (D7.10)
   let openSum = 0, overdueSum = 0, revenue = 0;
   for (const inv of invoices) {
@@ -271,6 +282,38 @@ export default async function FinancePage() {
                 </tr>
               ))}
             </tbody>
+          </table>
+        )}
+      </section>
+
+      {/* Выплаты партнёрам (субподрядчики) */}
+      <section className="card mb-8 overflow-x-auto p-4">
+        <h2 className="mb-3 font-semibold">Выплаты партнёрам (субподрядчики)</h2>
+        {subPayments.length === 0 ? (
+          <p className="py-2 text-sm text-muted">Выплат партнёрам пока нет.</p>
+        ) : (
+          <table className="w-full min-w-[480px] text-sm">
+            <thead>
+              <tr className="border-b border-line text-left text-xs uppercase tracking-wide text-muted">
+                <th className="py-2">Заказ</th><th>Партнёр</th><th>Дата переезда</th><th className="tabular-nums">К выплате</th>
+              </tr>
+            </thead>
+            <tbody>
+              {subPayments.map((r) => (
+                <tr key={r.order_id} className="border-b border-line">
+                  <td className="py-2"><Link href={`/order/${r.ref}`} className="underline">{r.ref}</Link></td>
+                  <td>{r.name}</td>
+                  <td className="tabular-nums">{r.move_date ? dateLabel(r.move_date) : "—"}</td>
+                  <td className="tabular-nums">{EUR(r.cost_cents)}</td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr className="font-semibold">
+                <td colSpan={3} className="py-2 text-right">Итого к выплате партнёрам:</td>
+                <td className="tabular-nums">{EUR(subTotal)}</td>
+              </tr>
+            </tfoot>
           </table>
         )}
       </section>

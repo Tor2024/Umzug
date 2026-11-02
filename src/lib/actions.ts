@@ -17,7 +17,7 @@ import {
   ValidationError, type MoveConfig, type QuoteSnapshot, type VehicleClass,
 } from "./pricing";
 import { resolveRoute, validAddress } from "./geo";
-import { dayAvailability, loadFactorPct, nearestFreeDate } from "./availability";
+import { dayAvailability, loadFactorPct, nearestFreeDate, CLASS_RANK } from "./availability";
 import { isValidLatinName } from "./validate";
 
 export interface OrderInput {
@@ -683,6 +683,28 @@ export async function closeOrderAction(orderId: number): Promise<SimpleResult> {
   await logOrderEvent(db, order.id, user, "status_changed", { from: order.status, to: "closed", invoice: invoiceNumber }); // D10
   await audit(db, user.id, "invoice_created", "invoice", invoiceNumber, `order=${order.ref} amount=${order.gross_cents}`);
 
+  // Локация машины (@1480@): своя машина остаётся в городе выгрузки (партнёрская — не наша, не двигаем)
+  try {
+    const subRes = await db.execute({ sql: "SELECT 1 FROM order_subcontractors WHERE order_id = ?", args: [order.id] });
+    if (subRes.rows.length === 0) {
+      const vehRes = await db.execute({
+        sql: "SELECT vehicle_id, seq FROM trips WHERE order_id = ? ORDER BY seq DESC LIMIT 1",
+        args: [order.id],
+      });
+      const trip = vehRes.rows[0] as unknown as { vehicle_id: number } | undefined;
+      if (trip) {
+        const toRes = await db.execute({ sql: "SELECT to_text FROM orders WHERE id = ?", args: [order.id] });
+        const toRow = toRes.rows[0] as unknown as { to_text: string } | undefined;
+        if (toRow?.to_text) {
+          await db.execute({ sql: "UPDATE vehicles SET current_location = ? WHERE id = ?", args: [toRow.to_text, trip.vehicle_id] });
+          await audit(db, user.id, "vehicle_moved", "vehicle", String(trip.vehicle_id), `to=${toRow.to_text}`);
+        }
+      }
+    }
+  } catch {
+    // локация — вспомогательное поле, не блокирует закрытие
+  }
+
   // Счёт клиенту письмом (не блокирует успех)
   try {
     const contactRes = await db.execute({
@@ -1259,7 +1281,7 @@ export async function rejectRevisionAction(orderId: number): Promise<RevisionRes
 
 /** Машина create/edit (D8.6): plate/class/label/capacity/active; delete отдельно. */
 export async function saveVehicleAction(input: {
-  vehicleId?: number; plate: string; cls: string; label: string; active: boolean;
+  vehicleId?: number; plate: string; cls: string; label: string; active: boolean; homeBase?: string;
 }): Promise<SimpleResult> {
   const db = await getDb();
   const user = await currentUser();
@@ -1274,6 +1296,7 @@ export async function saveVehicleAction(input: {
   const cls = clsRes.rows[0] as unknown as { capacity_m3: number } | undefined;
   if (!cls) return { ok: false, message: "Класс не найден или деактивирован." };
   const label = input.label.trim().slice(0, 100);
+  const homeBase = input.homeBase?.trim().slice(0, 200) ?? "";
 
   if (input.vehicleId) {
     const dupRes = await db.execute({
@@ -1285,6 +1308,8 @@ export async function saveVehicleAction(input: {
       { sql: "UPDATE vehicles SET plate = ?, class = ?, label = ?, active = ? WHERE id = ?", args: [plate, input.cls, label, input.active ? 1 : 0, input.vehicleId] },
       // capacity денорм обновится через updateVehicleClassAction; здесь актуализируем сразу
       { sql: "UPDATE vehicles SET capacity_m3 = (SELECT capacity_m3 FROM vehicle_classes WHERE class = ?) WHERE id = ?", args: [input.cls, input.vehicleId] },
+      // home_base: пустой ввод = не менять (для существующей машины)
+      { sql: "UPDATE vehicles SET home_base = CASE WHEN ? = '' THEN home_base ELSE ? END WHERE id = ?", args: [homeBase, homeBase, input.vehicleId] },
     ], "write");
     await audit(db, user.id, "vehicle_update", "vehicle", String(input.vehicleId), `plate=${plate} class=${input.cls}`);
     return { ok: true, message: "Машина обновлена." };
@@ -1292,11 +1317,25 @@ export async function saveVehicleAction(input: {
   const dupRes = await db.execute({ sql: "SELECT id FROM vehicles WHERE plate = ?", args: [plate] });
   if (dupRes.rows[0]) return { ok: false, message: "Такой номер уже есть." };
   const res = await db.execute({
-    sql: "INSERT INTO vehicles (plate, class, label, capacity_m3, active) VALUES (?, ?, ?, (SELECT capacity_m3 FROM vehicle_classes WHERE class = ?), ?)",
-    args: [plate, input.cls, label, input.cls, input.active ? 1 : 0],
+    sql: "INSERT INTO vehicles (plate, class, label, capacity_m3, active, home_base, current_location) VALUES (?, ?, ?, (SELECT capacity_m3 FROM vehicle_classes WHERE class = ?), ?, ?, ?)",
+    args: [plate, input.cls, label, input.cls, input.active ? 1 : 0, homeBase, homeBase],
   });
   await audit(db, user.id, "vehicle_created", "vehicle", String(res.lastInsertRowid), `plate=${plate} class=${input.cls}`);
   return { ok: true, message: "Машина добавлена." };
+}
+
+/** Машина вернулась на базу (@1480@): current_location = home_base. */
+export async function returnVehicleAction(vehicleId: number): Promise<SimpleResult> {
+  const db = await getDb();
+  const user = await currentUser();
+  if (!user || user.role !== "admin") return { ok: false, message: "Только админ." };
+  const vRes = await db.execute({ sql: "SELECT home_base FROM vehicles WHERE id = ?", args: [vehicleId] });
+  const v = vRes.rows[0] as unknown as { home_base: string } | undefined;
+  if (!v) return { ok: false, message: "Машина не найдена." };
+  if (!v.home_base) return { ok: false, message: "У машины не указана база (home_base) — укажите её в форме сохранения." };
+  await db.execute({ sql: "UPDATE vehicles SET current_location = home_base WHERE id = ?", args: [vehicleId] });
+  await audit(db, user.id, "vehicle_returned", "vehicle", String(vehicleId), `to=${v.home_base}`);
+  return { ok: true, message: "Машина возвращена на базу." };
 }
 
 /** Удаление машины (D8.6): блок, если есть заказы/рейсы. */
@@ -1450,4 +1489,123 @@ export async function markMessagesReadAction(orderRef: string): Promise<SimpleRe
     args: [Math.floor(Date.now() / 1000), order.id, user.role],
   });
   return { ok: true, message: "Отмечено прочитанным." };
+}
+
+// ─── Субподрядчики (сторонние перевозчики, требование @1480@) ────────────────
+
+export type SubPriceMode = "per_km" | "per_order" | "per_day";
+
+export interface SubResult extends SimpleResult {
+  subId?: number;
+}
+
+export async function createSubcontractorAction(
+  input: { name: string; contact: string; phone: string; email: string; cls: VehicleClass; priceMode: SubPriceMode; priceCents: number; notes: string },
+): Promise<SubResult> {
+  const db = await getDb();
+  const user = await currentUser();
+  if (!user || user.role !== "admin") return { ok: false, message: "Только администратор." };
+
+  const name = input.name.trim();
+  if (name.length < 2) return { ok: false, message: "Укажите название партнёра." };
+  const priceMode: SubPriceMode = input.priceMode;
+  if (!["per_km", "per_order", "per_day"].includes(priceMode)) return { ok: false, message: "Неверный режим тарифа." };
+  const priceCents = Math.round(Number(input.priceCents));
+  if (!Number.isFinite(priceCents) || priceCents <= 0) return { ok: false, message: "Тариф должен быть больше нуля." };
+
+  const res = await db.execute({
+    sql: "INSERT INTO subcontractors (name, contact, phone, email, class, price_mode, price_cents, notes, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)",
+    args: [name, input.contact.trim(), input.phone.trim(), input.email.trim(), input.cls, priceMode, priceCents, input.notes.trim()],
+  });
+  const subId = Number(res.lastInsertRowid);
+  await audit(db, user.id, "sub_created", "subcontractor", String(subId), `name=${name} mode=${priceMode} price=${(priceCents / 100).toFixed(2)}€`);
+  return { ok: true, message: `Партнёр «${name}» добавлен.`, subId };
+}
+
+export async function toggleSubcontractorAction(subId: number): Promise<SimpleResult> {
+  const db = await getDb();
+  const user = await currentUser();
+  if (!user || user.role !== "admin") return { ok: false, message: "Только администратор." };
+
+  const res = await db.execute({
+    sql: "UPDATE subcontractors SET active = CASE WHEN active = 1 THEN 0 ELSE 1 END WHERE id = ?",
+    args: [subId],
+  });
+  if (res.rowsAffected === 0) return { ok: false, message: "Партнёр не найден." };
+  await audit(db, user.id, "sub_toggled", "subcontractor", String(subId));
+  return { ok: true, message: "Статус партнёра изменён." };
+}
+
+export async function assignSubcontractorAction(orderId: number, subId: number, costCents?: number): Promise<SimpleResult> {
+  const db = await getDb();
+  const user = await currentUser();
+  if (!user || !["logist", "admin"].includes(user.role)) return { ok: false, message: "Недостаточно прав." };
+
+  const orderRes = await db.execute({
+    sql: "SELECT id, ref, status, vehicle_class, move_date FROM orders WHERE id = ?",
+    args: [orderId],
+  });
+  const order = orderRes.rows[0] as unknown as { id: number; ref: string; status: string; vehicle_class: VehicleClass; move_date: string } | undefined;
+  if (!order) return { ok: false, message: "Заявка не найдена." };
+
+  const subRes = await db.execute({
+    sql: "SELECT id, name, class, price_mode, price_cents, active FROM subcontractors WHERE id = ?",
+    args: [subId],
+  });
+  const sub = subRes.rows[0] as unknown as { id: number; name: string; class: VehicleClass; price_mode: SubPriceMode; price_cents: number; active: number } | undefined;
+  if (!sub || !Number(sub.active)) return { ok: false, message: "Партнёр не найден или неактивен." };
+  if (CLASS_RANK[sub.class] < CLASS_RANK[order.vehicle_class]) {
+    return { ok: false, message: `Класс партнёра (${sub.class}) ниже класса заявки (${order.vehicle_class}).` };
+  }
+
+  // Стоимость по тарифу партнёра (costCents — явная переоценка логистом, иначе по прайсу)
+  let cost: number;
+  if (costCents != null && Number.isFinite(Number(costCents)) && Number(costCents) > 0) {
+    cost = Math.round(Number(costCents));
+  } else if (sub.price_mode === "per_km") {
+    const kmRes = await db.execute({ sql: "SELECT distance_km FROM orders WHERE id = ?", args: [orderId] });
+    const kmRow = kmRes.rows[0] as unknown as { distance_km: number } | undefined;
+    cost = Math.round(Number(kmRow?.distance_km ?? 0) * sub.price_cents);
+  } else {
+    cost = sub.price_cents; // per_order / per_day
+  }
+
+  // Снять свою машину/водителей, если были назначены (партнёр replaces собственное назначение)
+  await db.batch([
+    { sql: "DELETE FROM assignments WHERE order_id = ?", args: [order.id] },
+    { sql: "DELETE FROM trips WHERE order_id = ?", args: [order.id] },
+    { sql: "INSERT INTO order_subcontractors (order_id, sub_id, cost_cents, move_date) VALUES (?, ?, ?, ?) ON CONFLICT(order_id) DO UPDATE SET sub_id = excluded.sub_id, cost_cents = excluded.cost_cents, move_date = excluded.move_date", args: [order.id, sub.id, cost, order.move_date] },
+    { sql: "UPDATE orders SET status = 'assigned' WHERE id = ? AND status IN ('confirmed', 'assigned')", args: [order.id] },
+  ], "write");
+
+  await audit(db, user.id, "sub_assigned", "order", order.ref, `sub=${sub.name} cost=${(cost / 100).toFixed(2)}€ mode=${sub.price_mode}`);
+  return { ok: true, message: `Заявка передана партнёру «${sub.name}» (стоимость ${(cost / 100).toFixed(2)} €).` };
+}
+
+export async function unassignSubcontractorAction(orderId: number): Promise<SimpleResult> {
+  const db = await getDb();
+  const user = await currentUser();
+  if (!user || !["logist", "admin"].includes(user.role)) return { ok: false, message: "Недостаточно прав." };
+
+  const orderRes = await db.execute({
+    sql: "SELECT id, ref FROM orders WHERE id = ?",
+    args: [orderId],
+  });
+  const order = orderRes.rows[0] as unknown as { id: number; ref: string } | undefined;
+  if (!order) return { ok: false, message: "Заявка не найдена." };
+
+  const delRes = await db.execute({
+    sql: "DELETE FROM order_subcontractors WHERE order_id = ?",
+    args: [order.id],
+  });
+  if (delRes.rowsAffected === 0) return { ok: false, message: "Партнёр не был назначен." };
+
+  const updRes = await db.execute({
+    sql: "UPDATE orders SET status = 'confirmed' WHERE id = ? AND status = 'assigned'",
+    args: [order.id],
+  });
+  if (updRes.rowsAffected === 0) return { ok: false, message: "Статус заявки уже изменён." };
+
+  await audit(db, user.id, "sub_unassigned", "order", order.ref);
+  return { ok: true, message: "Партнёр снят — можно назначить свою машину." };
 }
