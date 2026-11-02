@@ -47,9 +47,6 @@ export default function HomePage() {
                 <Link href="/calc" className="btn btn-primary px-6">Рассчитать переезд</Link>
                 <Link href="#kak" className="btn btn-outline px-6">Как это работает</Link>
               </div>
-              <p className="mt-4 text-sm text-muted">
-                Демо: расчёт через открытые карты (OSM/OSRM); для Google Maps вставьте ключ в админке.
-              </p>
             </div>
             <div className="relative min-h-64 overflow-hidden rounded-container border border-line lg:min-h-96">
               <Image src="/img/fleet-sprinter.jpg" alt="Машины компании на площадке" fill className="object-cover" priority />
@@ -62,7 +59,7 @@ export default function HomePage() {
           <div className="mx-auto grid max-w-6xl gap-4 px-4 py-8 sm:grid-cols-2 lg:grid-cols-4">
             {[
               { t: "Фиксированная цена", d: "Смета закрепляется снимком тарифов — тарифы выросли, ваша цена нет." },
-              { t: "Груз застрахован", d: "Ответственность по HGB: 620 € за м³ (§ 451, § 431 HGB)." },
+              { t: "Ответственность перевозчика", d: "Перевозка по немецкому праву (HGB) — договор с полной прозрачностью условий." },
               { t: "Прозрачный расчёт", d: "Каждая строка сметы видна: база, экипаж, дорога, подъём, услуги." },
               { t: "Цифровой протокол", d: "Приёмка с подписью и хеш-цепочкой — документы не подделать." },
             ].map((b) => (
