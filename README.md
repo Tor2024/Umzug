@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Umzug Service
 
-## Getting Started
+Боевой веб-сервис для немецкой мебельной перевозочной компании (демо-данные): клиент рассчитывает и заказывает переезд онлайн, логист управляет машинами и бригадами, водитель отмечает этапы рейса со смартфона, бухгалтерия ведёт счета и претензии. Двуязычный (русский + немецкий).
 
-First, run the development server:
+**Прод:** https://umzug-seven.vercel.app
+
+## Что умеет
+
+**Клиент (kunde)**
+- Калькулятор переезда в 3 шага: маршрут (OSRM/OSM-геокодинг, карта Leaflet) → объём и этажи → услуги (упаковка, разборка кухни, HVZ, срочность +25%, догруз −15%)
+- Мгновенный расчёт по тарифам из БД со snapshot-фиксацией цены на 14 дней
+- Страница заявки: статус, бригада, карта маршрута, счёт, PDF (Kostenvoranschlag, Übernahmeprotokoll, Rechnung), история событий с именами исполнителей, чат с компанией
+- Календарь доступности дней, подтверждение приёмки переезда, экспорт своих данных (DSGVO Art. 15), удаление аккаунта (Art. 17)
+
+**Логист (disponent)**
+- Панель заказов с фильтрами, подтверждение цены и спецтребований
+- ⚡ Автоназначение: оптимальная машина + свободный экипаж (холостой пробег, занятость, класс)
+- Ручное назначение с расчётом подачи, дневной план, таймлайн рейса
+- Субподрядчики (передача партнёру, маржа), карта «Где экипаж»
+- Корректировки цены (revision) с согласованием клиентом
+
+**Водитель (fahrer)**
+- «Мой день»: рейсы, выезд кнопкой в день переезда (гвард D6.3)
+- 5 чек-поинтов рейса с геолокацией (выехал → на погрузке → погрузил → на выгрузке → завершил) — клиент и логист видят этапы и позицию на карте
+- Чек-лист загрузки + цифровой протокол приёмки (план/факт м³, подпись, SHA-хеш, цепочка протоколов)
+
+**Бухгалтерия (buchhaltung)**
+- Счета с автоматической нумерацией RE-JJJJ-0NNN (GoBD), платежи (SEPA/карта/наличные), дуннинг (2 уровня, § 288 BGB), возвраты, претензии, выплаты субподрядчикам, экспорт CSV, аналитика
+
+**Админ**
+- Тарифы, классы машин, парк, привязка водитель-машина, сотрудники, субподрядчики, Google Maps API key, полный аудит-лог
+
+**Автоматика (cron)**
+- 06:00 — напоминания клиентам (аванс, счёт)
+- 07:00 — утренние письма водителям (рейс, машина, требования), предупреждения о задержках в пути (пересчёт маршрута), дайджест админу (заказы за сутки, просрочки, загрузка парка)
+
+## Двуязычность
+
+Немецкая версия — полноценное зеркало всех страниц под `/de/*` (лендинг, калькулятор, кабинет, панели ролей, юр-страницы Impressum/Datenschutz/AGB/Widerruf). Русская — без префикса. Переключатель DE | RU в шапке и сайдбаре, первый визит открывает немецкую версию, выбор запоминается в cookie.
+
+Подход: **без центрального i18n-словаря** — тексты co-located в каждом компоненте (`const T = { ru: {...}, de: {...} }` рядом с JSX), один и тот же JSX для обеих локалей (идентичная вёрстка), общие server actions и БД. Русские UI-надписи на DE-страницах исключены (server-side ошибки мапятся по кодам).
+
+## Юридический контур (DE)
+
+Impressum (§ 5 DDG), Datenschutz (DSGVO, § 25 TDDDG — только технически необходимые cookies), AGB (HGB/BGB: тариф, обязанности, аванс, ответственность 620 €/м³ § 451 i.V.m. § 431 HGB, § 9 ArbZG), Widerrufsrecht (§§ 355/357 BGB).
+
+## Технологии
+
+- **Next.js 16** (App Router, Cache Components, Turbopack) + **TypeScript** strict
+- **Tailwind CSS 4**
+- **Turso** (libsql) — прод-БД; server actions для всех мутаций
+- **Resend** — письма; **Vercel** — хостинг + cron
+- **Leaflet / react-leaflet** — карты; OSRM/OSM (+ опционально Google) — маршруты
+- **Playwright** — e2e (RU + DE smoke, 20 тестов против прода); **vitest** — unit (тарифы, праздники, оптимизатор, валидация)
+
+## Запуск локально
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
+pnpm exec vercel env pull .env.local --environment development --yes   # TURSO_*, RESEND_*, CRON_SECRET
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Проверки: `pnpm exec tsc --noEmit` · `pnpm lint` · `pnpm vitest run` · `pnpm build` · e2e: `pnpm test:e2e` (прод по умолчанию, переопределяется `E2E_BASE_URL`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Демо-доступы (пароль `demo1234`): `klient@` / `logist@` / `voditel@` / `voditel2@` / `buh@` / `admin@example.com`.
