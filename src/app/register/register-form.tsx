@@ -4,10 +4,12 @@
 
 import { useState, useTransition } from "react";
 import { registerAction, type RegisterResult } from "@/lib/auth-actions";
+import { isValidLatinName } from "@/lib/validate";
 
 export function RegisterForm() {
   const [result, setResult] = useState<RegisterResult | null>(null);
   const [pending, startTransition] = useTransition();
+  const [nameHint, setNameHint] = useState(false);
 
   if (result?.ok && result.emailSent) {
     return (
@@ -63,12 +65,20 @@ export function RegisterForm() {
           autoComplete="name"
           className="input-base"
           placeholder="Anna Safrova"
-          pattern="[A-Za-z][A-Za-z'.-]*( [A-Za-z][A-Za-z'.-]*)+"
-          title="Латиницей, два слова (имя и фамилия), как в загранпаспорте"
+          onChange={(e) => {
+            // Мягкая живая подсказка: подсвечиваем, пока имя не станет латиницей (2 слова)
+            setNameHint(e.target.value.length > 0 && !isValidLatinName(e.target.value.trim()));
+          }}
         />
-        <p className="mt-1 text-xs text-muted">
-          Латиницей, как в загранпаспорте — имя и фамилия. Это имя будет на счетах и документах.
-        </p>
+        {nameHint ? (
+          <p className="mt-1 text-xs text-danger">
+            Латиницей, два слова — имя и фамилия, как в загранпаспорте. Пример: Anna Safrova
+          </p>
+        ) : (
+          <p className="mt-1 text-xs text-muted">
+            Латиницей, как в загранпаспорте — имя и фамилия. Это имя будет на счетах и документах.
+          </p>
+        )}
       </div>
       <div>
         <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
