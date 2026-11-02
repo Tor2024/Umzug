@@ -54,27 +54,153 @@ type VehicleRow = { id: number; plate: string; class: string; label: string; cap
 type AuditRow = { id: number; at: number; user_id: number; action: string; entity: string; entity_id: string; details: string };
 
 const ROLES = ["kunde", "logist", "driver", "finance", "admin"] as const;
+const ROLE_RU: Record<string, string> = { kunde: "Клиент", logist: "Логист", driver: "Водитель", finance: "Бухгалтер", admin: "Админ" };
 
 const HISTORY_ROLE: Record<string, string> = { kunde: "Клиент", logist: "Логист", driver: "Водитель", finance: "Бухгалтерия", admin: "Админ", system: "Система" };
-/** Человекочитаемые детали события (кратко; полные JSON — в audit). */
+
+/** Человечитое название события истории заказов (вместо технических action-кодов). */
+const HISTORY_ACTION: Record<string, string> = {
+  order_created: "Заявка создана",
+  status_changed: "Статус изменён",
+  cancelled: "Заявка отменена",
+  revision_proposed: "Предложено изменение цены",
+  revision_accepted: "Изменение цены принято",
+  revision_rejected: "Изменение цены отклонено",
+};
+
+/** Статусы заказа — по-русски (как на странице заказа). */
+const STATUS_RU: Record<string, string> = {
+  new: "Новая", confirmed: "Подтверждена", assigned: "Машина назначена",
+  enroute: "В пути", acceptance: "Приёмка", closed: "Закрыт", cancelled: "Отменён",
+};
+
+/** Человечитое название события аудита. */
+const AUDIT_ACTION: Record<string, string> = {
+  login: "Вход в систему",
+  register: "Регистрация",
+  email_verified: "Email подтверждён",
+  password_reset_requested: "Запрошен сброс пароля",
+  password_reset: "Пароль изменён по ссылке",
+  password_changed: "Пароль изменён",
+  password_reset_unknown_email: "Сброс пароля на несуществующий email",
+  order_created: "Создана заявка",
+  order_confirmed: "Заявка подтверждена (цена зафиксирована)",
+  order_recalculated: "Заявка пересчитана",
+  order_cancelled: "Заявка отменена",
+  order_assigned: "Назначены машина и экипаж",
+  order_enroute: "Машина в пути",
+  order_accepted: "Клиент принял работу",
+  order_force_accepted: "Закрыт без подтверждения клиента",
+  protocol_signed: "Подписан протокол приёмки",
+  invoice_created: "Создан счёт",
+  invoice_cancelled: "Счёт аннулирован",
+  payment_recorded: "Записан платёж",
+  payment_refunded: "Оформлен возврат",
+  dunning_refresh: "Обновлены напоминания об оплате",
+  claim_created: "Создана претензия",
+  claim_status: "Изменён статус претензии",
+  config_update: "Изменены тарифы/настройки",
+  vehicle_class_update: "Изменён класс машин",
+  vehicle_update: "Изменена машина",
+  vehicle_created: "Добавлена машина",
+  vehicle_deleted: "Удалена машина",
+  user_update: "Изменён пользователь",
+  maps_key_updated: "Обновлён Google Maps ключ",
+  account_anonymized: "Аккаунт удалён (анонимизация)",
+  message_sent: "Отправлено сообщение по заявке",
+};
+
+/** Типы объектов аудита по-русски. */
+const AUDIT_ENTITY: Record<string, string> = {
+  user: "пользователь",
+  order: "заявка",
+  invoice: "счёт",
+  claim: "претензия",
+  config: "настройки",
+  vehicle: "машина",
+  vehicle_class: "класс машин",
+};
+
+/** Человекочитаемые детали аудита (перевод ключевых technical-полей). */
+function auditDetails(action: string, details: string): string {
+  if (!details) return "";
+  try {
+    const d = JSON.parse(details) as Record<string, unknown>;
+    const parts: string[] = [];
+    for (const [k, v] of Object.entries(d)) {
+      const val = typeof v === "object" && v !== null ? JSON.stringify(v) : String(v);
+      switch (k) {
+        case "gross": parts.push(`сумма ${fmtCents(Number(v))}`); break;
+        case "amount": parts.push(`сумма ${fmtCents(Number(v))}`); break;
+        case "from_status": parts.push(`из «${STATUS_RU[String(v)] ?? String(v)}»`); break;
+        case "from": parts.push(STATUS_RU[String(v)] ? `было: ${STATUS_RU[String(v)]}` : `было: ${val}`); break;
+        case "to": parts.push(STATUS_RU[String(v)] ? `стало: ${STATUS_RU[String(v)]}` : `стало: ${val}`); break;
+        case "vehicle": parts.push(`машина №${v}`); break;
+        case "driver": parts.push(`водитель №${v}`); break;
+        case "co": parts.push(`второй водитель №${v}`); break;
+        case "method": parts.push(`способ: ${String(v)}`); break;
+        case "invoice": parts.push(`счёт ${v}`); break;
+        case "order": parts.push(`заявка ${v}`); break;
+        case "deviation": parts.push(`отклонение: ${v} м³`); break;
+        case "forced": parts.push("принудительно"); break;
+        case "anon": parts.push(`анонимизирован как ${v}`); break;
+        case "role": parts.push(`роль: ${HISTORY_ROLE[String(v)] ?? String(v)}`); break;
+        case "len": break; // длина сообщения — неинтересна
+        case "ref": break; // повторяет номер заявки
+        default: parts.push(`${k}: ${val}`);
+      }
+    }
+    return parts.join(", ");
+  } catch {
+    // Старые не-JSON details — человекочитаемые ключ=value пары
+    return details
+      .replace(/gross=(\d+)/g, (_, n) => `сумма ${fmtCents(Number(n))}`)
+      .replace(/amount=(\d+)/g, (_, n) => `сумма ${fmtCents(Number(n))}`)
+      .replace(/from_status=([a-z_]+)/g, (_, s) => `из «${STATUS_RU[s] ?? s}»`)
+      .replace(/vehicle=(\d+)/g, (_, n) => `машина №${n}`)
+      .replace(/driver=(\d+)/g, (_, n) => `водитель №${n}`)
+      .replace(/co=(\d+)/g, (_, n) => `второй водитель №${n}`)
+      .replace(/method=([a-z_]+)/g, (_, s) => `способ: ${s}`)
+      .replace(/order=([A-Z0-9-]+)/g, (_, r) => `заявка ${r}`)
+      .replace(/deviation=(-?\d+)/g, (_, n) => `отклонение: ${n} м³`)
+      .replace(/anon=(\S+)/, (_, a) => `анонимизирован как ${a}`)
+      .replace(/role=([a-z]+)/, (_, r) => `роль: ${HISTORY_ROLE[r] ?? r}`)
+      .replace(/\blen=\d+,?\s*/g, "")
+      .replace(/touched=(\d+)/, (_, n) => `затронуто счетов: ${n}`);
+  }
+}
+
+function fmtCents(cents: number): string {
+  return `${(cents / 100).toFixed(2)} €`;
+}
+
+/** Человекочитаемые детали события истории заказов. */
 function historyDetails(action: string, details: string): string {
   try {
     const d = JSON.parse(details) as Record<string, unknown>;
     if (action === "revision_accepted" && typeof d.from_gross === "number" && typeof d.to_gross === "number") {
-      return `${(d.from_gross / 100).toFixed(2)} € → ${(d.to_gross / 100).toFixed(2)} €`;
+      return `${fmtCents(d.from_gross)} → ${fmtCents(d.to_gross)}`;
     }
     if (action === "revision_rejected" && typeof d.rejected_gross === "number") {
-      return `отклонена цена ${(d.rejected_gross / 100).toFixed(2)} €`;
+      return `отклонена цена ${fmtCents(d.rejected_gross)}`;
     }
     if (action === "revision_proposed" && typeof d.new_gross === "number" && typeof d.old_gross === "number") {
       const fields = d.fields as Record<string, { from: unknown; to: unknown }> | undefined;
       const names = fields ? Object.keys(fields).join(", ") : "";
-      return `${names}: ${(d.old_gross / 100).toFixed(2)} → ${(d.new_gross / 100).toFixed(2)} €`;
+      return `${names}: ${fmtCents(d.old_gross)} → ${fmtCents(d.new_gross)}`;
     }
     if (action === "status_changed" && typeof d.from === "string" && typeof d.to === "string") {
-      return `${d.from} → ${d.to}`;
+      const extra: string[] = [];
+      if (typeof d.vehicle === "number") extra.push(`машина №${d.vehicle}`);
+      if (typeof d.driver === "number") extra.push(`водитель №${d.driver}`);
+      if (typeof d.invoice === "string") extra.push(`счёт ${d.invoice}`);
+      if (d.forced === true) extra.push("принудительно");
+      return `${STATUS_RU[d.from] ?? d.from} → ${STATUS_RU[d.to] ?? d.to}${extra.length ? `, ${extra.join(", ")}` : ""}`;
     }
-    if (action === "cancelled" && typeof d.from_status === "string") return `из ${d.from_status}`;
+    if (action === "cancelled" && typeof d.from_status === "string") return `из статуса «${STATUS_RU[d.from_status] ?? d.from_status}»`;
+    if (action === "order_created" && typeof d.gross === "number" && typeof d.ref === "string") {
+      return `сумма ${fmtCents(d.gross)}`;
+    }
     return Object.entries(d).map(([k, v]) => `${k}=${typeof v === "object" ? JSON.stringify(v) : String(v)}`).join(" ");
   } catch {
     return details;
@@ -265,8 +391,8 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
               </div>
               <label className="text-sm">
                 <span className="text-muted">Роль</span>
-                <select name="role" defaultValue={u.role} className="input-base mt-1 w-32">
-                  {ROLES.map((r) => <option key={r} value={r}>{r}</option>)}
+                <select name="role" defaultValue={u.role} className="input-base mt-1 w-40">
+                  {ROLES.map((r) => <option key={r} value={r}>{ROLE_RU[r]}</option>)}
                 </select>
               </label>
               <label className="flex items-center gap-2 text-sm">
@@ -378,7 +504,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                   {!h.client_visible && <span className="ml-1 chip chip-neutral">служебное</span>}
                 </td>
                 <td>{HISTORY_ROLE[h.actor_role] ?? h.actor_role}</td>
-                <td className="font-mono text-xs">{h.action}</td>
+                <td>{HISTORY_ACTION[h.action] ?? h.action}</td>
                 <td className="text-xs text-muted">{historyDetails(h.action, h.details)}</td>
               </tr>
             ))}
@@ -408,9 +534,9 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
               <tr key={a.id} className="border-t border-line">
                 <td className="py-2 whitespace-nowrap">{new Date(a.at * 1000).toLocaleString("ru-RU")}</td>
                 <td>{a.user_id}</td>
-                <td className="font-mono text-xs">{a.action}</td>
-                <td className="font-mono text-xs">{a.entity}{a.entity_id ? `:${a.entity_id}` : ""}</td>
-                <td className="text-xs text-muted">{a.details}</td>
+                <td>{AUDIT_ACTION[a.action] ?? a.action}</td>
+                <td>{AUDIT_ENTITY[a.entity] ?? a.entity}{a.entity_id ? ` ${a.entity_id}` : ""}</td>
+                <td className="text-xs text-muted">{auditDetails(a.action, a.details)}</td>
               </tr>
             ))}
           </tbody>
