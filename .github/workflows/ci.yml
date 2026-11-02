@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Typecheck
+        run: pnpm exec tsc --noEmit
+
+      - name: Unit tests (Vitest)
+        run: pnpm exec vitest run
+
+      - name: Build
+        run: pnpm run build
+        env:
+          # БД не нужна для сборки (ленивая инициализация), но переменные должны существовать
+          TURSO_DATABASE_URL: file:./build-probe.db
+
+  e2e:
+    runs-on: ubuntu-latest
+    needs: test
+    # E2E запускаем только на push в main — против прода (нужна живая БД с сидом)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run E2E smoke against production
+        run: pnpm exec playwright test
+        env:
+          E2E_BASE_URL: https://umzug-seven.vercel.app
