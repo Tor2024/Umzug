@@ -203,6 +203,14 @@ export async function createOrderAction(input: OrderInput): Promise<CreateOrderR
     await saveSnapshotVersion(db, orderId, JSON.stringify(snapshot), quote.gross, user.id); // D10: версия 1 при создании
     await audit(db, user.id, "order_created", "order", ref, `gross=${quote.gross}`);
 
+    // Уведомление клиенту (не блокирует успех)
+    try {
+      const { sendOrderCreatedEmail } = await import("./email");
+      await sendOrderCreatedEmail(user.email, user.name, ref, quote.gross, cfg.moveDate);
+    } catch (e) {
+      console.error("[email] order_created notify failed:", e instanceof Error ? e.message : e);
+    }
+
     return { ok: true, ref };
   } catch (e) {
     if (e instanceof Error && e.message.includes("нет свободных машин")) {
@@ -251,7 +259,33 @@ export async function confirmOrderAction(orderId: number): Promise<SimpleResult>
   });
   await logOrderEvent(db, orderId, user, "status_changed", { from: order.status, to: "confirmed" }); // D10
   await audit(db, user.id, "order_confirmed", "order", order.ref, "");
+
+  // Уведомление клиенту (не блокирует успех)
+  try {
+    const contactRes = await db.execute({
+      sql: "SELECT contact_email, contact_name FROM orders WHERE id = ?",
+      args: [orderId],
+    });
+    const contact = contactRes.rows[0] as unknown as { contact_email: string; contact_name: string } | undefined;
+    if (contact?.contact_email) {
+      const { sendOrderConfirmedEmail } = await import("./email");
+      await sendOrderConfirmedEmail(contact.contact_email, contact.contact_name, order.ref, Number(order.gross_cents), snapQuoteDeposit(order.snapshot));
+    }
+  } catch (e) {
+    console.error("[email] order_confirmed notify failed:", e instanceof Error ? e.message : e);
+  }
+
   return { ok: true };
+}
+
+/** Аванс из снимка (для писем). */
+function snapQuoteDeposit(snapshotJson: string): number {
+  try {
+    const snap = JSON.parse(snapshotJson) as { quote?: { deposit?: number } };
+    return snap.quote?.deposit ?? 0;
+  } catch {
+    return 0;
+  }
 }
 
 /** Пересчёт заявки по текущим тарифам: только для new (после confirmed пересчёт запрещён, D5.7). */
@@ -323,6 +357,23 @@ export async function cancelOrderAction(orderId: number): Promise<SimpleResult> 
   ], "write");
   await logOrderEvent(db, orderId, user, "cancelled", { from_status: order.status });
   await audit(db, user.id, "order_cancelled", "order", order.ref, `from=${order.status}`);
+
+  // Уведомление клиенту (не блокирует успех)
+  try {
+    const contactRes = await db.execute({
+      sql: "SELECT contact_email, contact_name, client_id FROM orders WHERE id = ?",
+      args: [orderId],
+    });
+    const contact = contactRes.rows[0] as unknown as { contact_email: string; contact_name: string; client_id: number } | undefined;
+    // Клиенту-инициатору отмены не пишем — он и так знает
+    if (contact?.contact_email && contact.client_id !== user.id) {
+      const { sendOrderCancelledEmail } = await import("./email");
+      await sendOrderCancelledEmail(contact.contact_email, contact.contact_name, order.ref);
+    }
+  } catch (e) {
+    console.error("[email] order_cancelled notify failed:", e instanceof Error ? e.message : e);
+  }
+
   return { ok: true, message: "Заявка отменена." };
 }
 
@@ -343,6 +394,21 @@ export async function assignOrderAction(input: { orderId: number; vehicleId: num
     }
     await logOrderEvent(db, input.orderId, user, "status_changed", { from: "confirmed", to: "assigned", vehicle: input.vehicleId, driver: input.driverId });
     await audit(db, user.id, "order_assigned", "order", ref.ref, `vehicle=${input.vehicleId} driver=${input.driverId}${input.codriverId ? ` co=${input.codriverId}` : ""}`);
+
+    // Уведомление клиенту (не блокирует успех)
+    try {
+      const infoRes = await db.execute({
+        sql: "SELECT contact_email, contact_name, move_date FROM orders WHERE id = ?",
+        args: [input.orderId],
+      });
+      const info = infoRes.rows[0] as unknown as { contact_email: string; contact_name: string; move_date: string } | undefined;
+      if (info?.contact_email) {
+        const { sendOrderAssignedEmail } = await import("./email");
+        await sendOrderAssignedEmail(info.contact_email, info.contact_name, ref.ref, info.move_date);
+      }
+    } catch (e) {
+      console.error("[email] order_assigned notify failed:", e instanceof Error ? e.message : e);
+    }
   }
   return result;
 }
@@ -477,6 +543,24 @@ export async function acceptOrderAction(orderId: number): Promise<SimpleResult> 
   });
   await logOrderEvent(db, orderId, user, "status_changed", { from: order.status, to: "acceptance" }); // D10
   await audit(db, user.id, "order_accepted", "order", order.ref, "");
+
+  // Уведомление клиенту — только если приёмку подтвердил не клиент сам (логист/админ)
+  if (user.role !== "kunde") {
+    try {
+      const contactRes = await db.execute({
+        sql: "SELECT contact_email, contact_name FROM orders WHERE id = ?",
+        args: [orderId],
+      });
+      const contact = contactRes.rows[0] as unknown as { contact_email: string; contact_name: string } | undefined;
+      if (contact?.contact_email) {
+        const { sendAcceptanceEmail } = await import("./email");
+        await sendAcceptanceEmail(contact.contact_email, contact.contact_name, order.ref);
+      }
+    } catch (e) {
+      console.error("[email] order_accepted notify failed:", e instanceof Error ? e.message : e);
+    }
+  }
+
   return { ok: true, message: "Приёмка подтверждена." };
 }
 
@@ -565,6 +649,22 @@ export async function closeOrderAction(orderId: number): Promise<SimpleResult> {
   ], "write");
   await logOrderEvent(db, order.id, user, "status_changed", { from: order.status, to: "closed", invoice: invoiceNumber }); // D10
   await audit(db, user.id, "invoice_created", "invoice", invoiceNumber, `order=${order.ref} amount=${order.gross_cents}`);
+
+  // Счёт клиенту письмом (не блокирует успех)
+  try {
+    const contactRes = await db.execute({
+      sql: "SELECT contact_email, contact_name FROM orders WHERE id = ?",
+      args: [order.id],
+    });
+    const contact = contactRes.rows[0] as unknown as { contact_email: string; contact_name: string } | undefined;
+    if (contact?.contact_email) {
+      const { sendInvoiceEmail } = await import("./email");
+      await sendInvoiceEmail(contact.contact_email, contact.contact_name, order.ref, invoiceNumber, Number(order.gross_cents), dueIso);
+    }
+  } catch (e) {
+    console.error("[email] invoice notify failed:", e instanceof Error ? e.message : e);
+  }
+
   return { ok: true, message: invoiceNumber };
 }
 

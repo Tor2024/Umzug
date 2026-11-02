@@ -89,3 +89,94 @@ function resetTemplate(name: string, resetUrl: string): string {
   </div>
 </body></html>`;
 }
+
+// ─── Уведомления о статусе заказа (клиенту) ───────────────────────────────
+
+const ORDER_URL_BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://umzug-seven.vercel.app";
+
+/** Общий каркас статусных писем. */
+function statusTemplate(title: string, bodyHtml: string, orderRef: string): string {
+  const orderUrl = `${ORDER_URL_BASE}/order/${orderRef}`;
+  return `<!doctype html>
+<html lang="ru"><body style="margin:0;padding:24px;background:#f6f7f9;font-family:Arial,Helvetica,sans-serif;color:#1a1d21;">
+  <div style="max-width:480px;margin:0 auto;background:#ffffff;border-radius:12px;padding:32px;border:1px solid #e5e7eb;">
+    <h1 style="margin:0 0 16px;font-size:20px;">Umzug Service</h1>
+    <p style="margin:0 0 12px;font-size:15px;line-height:1.5;">${title}</p>
+    ${bodyHtml}
+    <p style="margin:20px 0 0;">
+      <a href="${orderUrl}" style="display:inline-block;background:#EA7A28;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:8px;font-size:15px;font-weight:bold;">Открыть заявку ${orderRef}</a>
+    </p>
+    <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;">
+    <p style="margin:0;font-size:12px;color:#9ca3af;">Umzug Service GmbH · Umzüge in Deutschland ohne Überraschungen</p>
+  </div>
+</body></html>`;
+}
+
+function fmtEuro(cents: number): string {
+  return (cents / 100).toLocaleString("de-DE", { style: "currency", currency: "EUR" });
+}
+
+/** Заявка создана (new) — сразу после отправки из калькулятора. */
+export async function sendOrderCreatedEmail(to: string, name: string, ref: string, grossCents: number, moveDate: string): Promise<SendResult> {
+  const html = statusTemplate(
+    `Здравствуйте, ${escapeHtml(name)}! Ваша заявка принята.`,
+    `<p style="margin:0 0 12px;font-size:15px;line-height:1.5;">Заявка <b>${ref}</b> на переезд ${escapeHtml(moveDate)} создана. Предварительная стоимость: <b>${fmtEuro(grossCents)}</b> (включая НДС).</p>
+     <p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">Логист проверит расчёт и подтвердит цену — уведомим вас письмом. Смета действует 14 дней.</p>`,
+    ref,
+  );
+  return sendEmail(to, `Заявка ${ref} принята — Umzug Service`, html);
+}
+
+/** Логист подтвердил цену (confirmed). */
+export async function sendOrderConfirmedEmail(to: string, name: string, ref: string, grossCents: number, depositCents: number): Promise<SendResult> {
+  const html = statusTemplate(
+    `Здравствуйте, ${escapeHtml(name)}! Цена по заявке ${ref} подтверждена.`,
+    `<p style="margin:0 0 12px;font-size:15px;line-height:1.5;">Итоговая стоимость: <b>${fmtEuro(grossCents)}</b>, аванс 30%: <b>${fmtEuro(depositCents)}</b>.</p>
+     <p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">Следующий шаг — назначение машины и экипажа. Аванс можно оплатить по реквизитам в заявке.</p>`,
+    ref,
+  );
+  return sendEmail(to, `Цена по заявке ${ref} подтверждена — Umzug Service`, html);
+}
+
+/** Машина и экипаж назначены (assigned). */
+export async function sendOrderAssignedEmail(to: string, name: string, ref: string, moveDate: string): Promise<SendResult> {
+  const html = statusTemplate(
+    `Здравствуйте, ${escapeHtml(name)}! По заявке ${ref} назначены машина и экипаж.`,
+    `<p style="margin:0 0 12px;font-size:15px;line-height:1.5;">Дата переезда: <b>${escapeHtml(moveDate)}</b>. Состав бригады виден на странице заявки.</p>
+     <p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">Водитель свяжется с вами перед выездом. Пожалуйста, будьте на связи.</p>`,
+    ref,
+  );
+  return sendEmail(to, `Бригада назначена — заявка ${ref} — Umzug Service`, html);
+}
+
+/** Переезд завершён, счёт создан (closed + invoice). */
+export async function sendInvoiceEmail(to: string, name: string, ref: string, invoiceNumber: string, grossCents: number, dueDate: string): Promise<SendResult> {
+  const pdfUrl = `${ORDER_URL_BASE}/api/pdf/invoice/${invoiceNumber}`;
+  const html = statusTemplate(
+    `Здравствуйте, ${escapeHtml(name)}! Переезд по заявке ${ref} завершён.`,
+    `<p style="margin:0 0 12px;font-size:15px;line-height:1.5;">Счёт <b>${invoiceNumber}</b> на сумму <b>${fmtEuro(grossCents)}</b> создан. Срок оплаты: <b>${escapeHtml(dueDate)}</b>.</p>
+     <p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">Реквизиты и PDF — по кнопке ниже или на странице заявки.</p>`,
+    ref,
+  ).replace(`href="${ORDER_URL_BASE}/order/${ref}"`, `href="${pdfUrl}"`);
+  return sendEmail(to, `Счёт ${invoiceNumber} — Umzug Service`, html);
+}
+
+/** Клиент подтвердил приёмку (acceptance). */
+export async function sendAcceptanceEmail(to: string, name: string, ref: string): Promise<SendResult> {
+  const html = statusTemplate(
+    `Здравствуйте, ${escapeHtml(name)}! Приёмка по заявке ${ref} подтверждена.`,
+    `<p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">Спасибо! Если что-то не так — ответьте на это письмо или напишите в переписке по заявке.</p>`,
+    ref,
+  );
+  return sendEmail(to, `Приёмка подтверждена — заявка ${ref} — Umzug Service`, html);
+}
+
+/** Заявка отменена (cancelled). */
+export async function sendOrderCancelledEmail(to: string, name: string, ref: string): Promise<SendResult> {
+  const html = statusTemplate(
+    `Здравствуйте, ${escapeHtml(name)}! Заявка ${ref} отменена.`,
+    `<p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">Если отмена не от вас — ответьте на это письмо как можно скорее.</p>`,
+    ref,
+  );
+  return sendEmail(to, `Заявка ${ref} отменена — Umzug Service`, html);
+}
