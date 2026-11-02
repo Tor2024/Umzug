@@ -72,6 +72,17 @@ const HISTORY_ACTION: Record<string, string> = {
   revision_proposed: "Предложено изменение цены",
   revision_accepted: "Изменение цены принято",
   revision_rejected: "Изменение цены отклонено",
+  auto_assigned: "Назначено автоматически",
+  protocol_signed: "Подписан протокол приёмки",
+  reminder_deposit: "Напоминание об авансе",
+  reminder_invoice: "Напоминание о счёте",
+  driver_morning_email: "Утреннее письмо водителю",
+  traffic_delay: "Предупреждение о задержке",
+  checkpoint_departed: "Экипаж выехал",
+  checkpoint_arrived_load: "Прибыл на погрузку",
+  checkpoint_loaded: "Груз погружен",
+  checkpoint_arrived_unload: "Прибыл на выгрузку",
+  checkpoint_done: "Переезд выполнен",
 };
 
 /** Статусы заказа — по-русски (как на странице заказа). */
@@ -717,7 +728,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                   <Link className="text-accent hover:underline" href={`/order/${h.ref}`}>{h.ref}</Link>
                   {!h.client_visible && <span className="ml-1 chip chip-neutral">служебное</span>}
                 </td>
-                <td>{HISTORY_ROLE[h.actor_role] ?? h.actor_role}</td>
+                <td>{HISTORY_ROLE[h.actor_role] ?? h.actor_role}{h.actor_name ? ` · ${h.actor_name}` : ""}</td>
                 <td>{HISTORY_ACTION[h.action] ?? h.action}</td>
                 <td className="text-xs text-muted">{historyDetails(h.action, h.details)}</td>
               </tr>

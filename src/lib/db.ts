@@ -683,6 +683,8 @@ export interface HistoryRow {
   action: string;
   client_visible: number;
   details: string;
+  /** Имя автора события (LEFT JOIN users); null для системных/удалённых. */
+  actor_name?: string | null;
 }
 
 /** Бизнес-событие заказа: order_history (клиент) + audit (compliance). */
@@ -734,11 +736,15 @@ export async function snapshotVersions(db: DB, orderId: number): Promise<Snapsho
   }));
 }
 
-/** История заказа: клиент видит только client_visible=1. */
+/** История заказа: клиент видит только client_visible=1. С именем автора события. */
 export async function orderHistory(db: DB, orderId: number, includeHidden = false): Promise<HistoryRow[]> {
   await ensureSchema(db);
   const res = await db.execute({
-    sql: `SELECT * FROM order_history WHERE order_id = ? ${includeHidden ? "" : "AND client_visible = 1"} ORDER BY id DESC LIMIT 100`,
+    sql: `SELECT h.*, u.name AS actor_name
+          FROM order_history h
+          LEFT JOIN users u ON u.id = h.actor_user_id
+          WHERE h.order_id = ? ${includeHidden ? "" : "AND h.client_visible = 1"}
+          ORDER BY h.id DESC LIMIT 100`,
     args: [orderId],
   });
   return res.rows as unknown as HistoryRow[];
@@ -748,11 +754,15 @@ export interface AllHistoryRow extends HistoryRow {
   ref: string;
 }
 
-/** Полная история всех заказов (админ). */
+/** Полная история всех заказов (админ). С именем автора события. */
 export async function listAllOrderHistory(db: DB, limit = 100): Promise<AllHistoryRow[]> {
   await ensureSchema(db);
   const res = await db.execute({
-    sql: "SELECT h.*, o.ref FROM order_history h JOIN orders o ON o.id = h.order_id ORDER BY h.id DESC LIMIT ?",
+    sql: `SELECT h.*, o.ref, u.name AS actor_name
+          FROM order_history h
+          JOIN orders o ON o.id = h.order_id
+          LEFT JOIN users u ON u.id = h.actor_user_id
+          ORDER BY h.id DESC LIMIT ?`,
     args: [limit],
   });
   return res.rows as unknown as AllHistoryRow[];

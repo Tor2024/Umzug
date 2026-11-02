@@ -165,7 +165,7 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
   let lastCp: { cp: string; at: number } | null = null;
   {
     const cpRes = await db.execute({
-      sql: "SELECT cp, created_at FROM trip_checkpoints WHERE order_id = ? ORDER BY created_at DESC LIMIT 1",
+      sql: "SELECT cp, created_at AS at FROM trip_checkpoints WHERE order_id = ? ORDER BY created_at DESC LIMIT 1",
       args: [order.id],
     });
     lastCp = (cpRes.rows[0] as unknown as { cp: string; at: number } | undefined) ?? null;
@@ -324,7 +324,7 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
         <h2 className="mb-3 font-semibold">История заказа</h2>
         {history.length === 0 && <p className="text-sm text-muted">Событий пока нет.</p>}
         <ul className="grid gap-2 text-sm">
-          {history.map((h) => <HistoryEntry key={h.id} at={Number(h.at)} role={h.actor_role} action={h.action} details={h.details} />)}
+          {history.map((h) => <HistoryEntry key={h.id} at={Number(h.at)} role={h.actor_role} action={h.action} details={h.details} actorName={h.actor_name} />)}
         </ul>
         {versions.length > 1 && (
           <details className="mt-3">
@@ -450,10 +450,21 @@ const ACTION_TEXT: Record<string, string> = {
   revision_rejected: "Правка отклонена",
   status_changed: "Статус изменён",
   cancelled: "Заявка отменена",
+  auto_assigned: "Назначено автоматически (оптимальная машина + свободный экипаж)",
+  protocol_signed: "Подписан протокол приёмки",
+  reminder_deposit: "Напоминание об авансе отправлено",
+  reminder_invoice: "Напоминание о счёте отправлено",
+  driver_morning_email: "Водителю отправлено утреннее письмо",
+  traffic_delay: "Клиенту отправлено предупреждение о задержке в пути",
+  checkpoint_departed: "Экипаж выехал",
+  checkpoint_arrived_load: "Прибыл на погрузку",
+  checkpoint_loaded: "Груз погружен",
+  checkpoint_arrived_unload: "Прибыл на выгрузку",
+  checkpoint_done: "Переезд выполнен",
 };
 const ROLE_TEXT: Record<string, string> = { kunde: "Клиент", logist: "Логист", driver: "Водитель", finance: "Бухгалтерия", admin: "Админ" };
 
-function HistoryEntry({ at, role, action, details }: { at: number; role: string; action: string; details: string }) {
+function HistoryEntry({ at, role, action, details, actorName }: { at: number; role: string; action: string; details: string; actorName?: string | null }) {
   const d = (() => { try { return JSON.parse(details) as Record<string, unknown>; } catch { return {}; } })();
   let text = ACTION_TEXT[action] ?? action;
   if (action === "revision_proposed" && d.fields) {
@@ -465,11 +476,17 @@ function HistoryEntry({ at, role, action, details }: { at: number; role: string;
   if (action === "revision_accepted" && typeof d.from_gross === "number" && typeof d.to_gross === "number") {
     text += `: ${fmt(d.from_gross)} → ${fmt(d.to_gross)}`;
   }
-  if (action === "status_changed" && typeof d.to === "string") text += `: ${d.to}`;
+  if (action === "status_changed" && typeof d.to === "string") text += `: ${STATUS_LABEL[d.to] ?? d.to}`;
+  const actorLabel = (() => {
+    const roleText = ROLE_TEXT[role] ?? role;
+    // actor_user_id=0 — системный актор (cron); имя в БД отсутствует
+    if (!actorName) return roleText;
+    return `${roleText} · ${actorName}`;
+  })();
   const label = new Date(at * 1000).toLocaleString("ru-RU", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
   return (
     <li className="border-b border-line pb-2">
-      <span className="text-muted">{label} · {ROLE_TEXT[role] ?? role}</span>
+      <span className="text-muted">{label} · {actorLabel}</span>
       <span className="ml-2">{text}</span>
     </li>
   );
