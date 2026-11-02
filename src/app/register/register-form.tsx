@@ -49,12 +49,26 @@ export function RegisterForm() {
         <div role="alert" className="rounded-base border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger">
           {result.error === "exists"
             ? "Этот email уже зарегистрирован и подтверждён. Войдите."
-            : "Проверьте данные: имя, корректный email, пароль от 8 символов."}
+            : result.error === "name"
+              ? "Имя и фамилию укажите латиницей — два слова, как в загранпаспорте. Пример: Anna Safrova"
+              : "Проверьте данные: имя, корректный email, пароль от 8 символов."}
         </div>
       )}
       <div>
-        <label htmlFor="name" className="block text-sm font-medium mb-1">Имя</label>
-        <input id="name" name="name" required autoComplete="name" className="input-base" />
+        <label htmlFor="name" className="block text-sm font-medium mb-1">Имя и фамилия</label>
+        <input
+          id="name"
+          name="name"
+          required
+          autoComplete="name"
+          className="input-base"
+          placeholder="Anna Safrova"
+          pattern="[A-Za-z][A-Za-z'.-]*( [A-Za-z][A-Za-z'.-]*)+"
+          title="Латиницей, два слова (имя и фамилия), как в загранпаспорте"
+        />
+        <p className="mt-1 text-xs text-muted">
+          Латиницей, как в загранпаспорте — имя и фамилия. Это имя будет на счетах и документах.
+        </p>
       </div>
       <div>
         <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>

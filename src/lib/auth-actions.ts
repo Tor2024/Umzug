@@ -4,6 +4,7 @@
 
 import { redirect } from "next/navigation";
 import { getDb, audit, hashPassword } from "./db";
+import { isValidLatinName } from "./validate";
 import { login, setSessionCookie, clearSessionCookie, issueVerifyToken, consumeVerifyToken, issueResetToken, consumeResetToken, COOKIE } from "./auth";
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
@@ -37,19 +38,22 @@ export async function logoutAction(): Promise<void> {
 
 export interface RegisterResult {
   ok: boolean;
-  error?: "exists" | "invalid";
+  error?: "exists" | "invalid" | "name";
   verifyUrl?: string; // демо/fallback без SMTP: показываем ссылку на экране
   emailSent?: boolean; // письмо с verify-ссылкой отправлено через Resend
 }
 
 /** Регистрация клиента (kunde): email_verified=0; перерегистрация до подтверждения обновляет токен (D3.7). */
 export async function registerAction(formData: FormData): Promise<RegisterResult> {
-  const name = String(formData.get("name") ?? "").trim();
+  const name = String(formData.get("name") ?? "").trim().replace(/\s+/g, " ");
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   const password = String(formData.get("password") ?? "");
 
   if (!name || !EMAIL_RE.test(email) || password.length < 8) {
     return { ok: false, error: "invalid" };
+  }
+  if (!isValidLatinName(name)) {
+    return { ok: false, error: "name" };
   }
 
   const db = await getDb();
