@@ -40,7 +40,9 @@ export function getDb(): DB {
   return db;
 }
 
-/** Создание схемы + seed; идемпотентно; одна попытка на процесс. */
+/** Создание схемы + seed; идемпотентно; одна попытка на процесс.
+ * Если попытка упала (например, abort при prerender-отмене) — сбрасываем,
+ * чтобы следующий запрос стартовал заново, а не получал закэшированный rejection. */
 let schemaReady: Promise<void> | null = null;
 export function ensureSchema(db: DB): Promise<void> {
   schemaReady ??= (async () => {
@@ -54,7 +56,10 @@ export function ensureSchema(db: DB): Promise<void> {
       "write",
     );
     await seed(db);
-  })();
+  })().catch((err) => {
+    schemaReady = null;
+    throw err;
+  });
   return schemaReady;
 }
 
