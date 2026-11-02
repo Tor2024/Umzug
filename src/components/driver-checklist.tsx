@@ -1,6 +1,7 @@
 // Чек-лист водителя (Э5, D6): план = order_lines kind=line, один факт-объём,
 // подпись клиента текстом, заметки. INSERT-only через saveProtocolAction.
 // Черновик в localStorage protocol_draft_{orderId} (D6.10).
+// Локаль: locale prop ("ru" | "de"), тексты co-located.
 
 "use client";
 
@@ -8,13 +9,44 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { saveProtocolAction, type ProtocolResult } from "@/lib/actions";
 
+const T = {
+  ru: {
+    heading: "Чек-лист загрузки",
+    factLabel: "Фактический объём, м³",
+    factPlan: "план",
+    notesLabel: "Заметки (необязательно)",
+    sigLabel: "Подпись клиента",
+    sigHint: "ФИО, подтверждает приёмку груза",
+    saving: "Сохранение…",
+    submit: "Подписать протокол",
+    once: "Протокол составляется один раз, изменить его нельзя.",
+    allChecked: "Все позиции подтверждены.",
+    notAllChecked: "Есть непроверённые позиции.",
+  },
+  de: {
+    heading: "Beladungs-Checkliste",
+    factLabel: "Tatsächliches Volumen, m³",
+    factPlan: "Plan",
+    notesLabel: "Notizen (optional)",
+    sigLabel: "Unterschrift des Kunden",
+    sigHint: "Vor- und Nachname, bestätigt die Übernahme der Ware",
+    saving: "Speichere…",
+    submit: "Protokoll unterschreiben",
+    once: "Das Protokoll wird einmal erstellt und kann nicht geändert werden.",
+    allChecked: "Alle Positionen bestätigt.",
+    notAllChecked: "Es gibt ungeprüfte Positionen.",
+  },
+} as const;
+
 interface Props {
   orderId: number;
   planM3: number;
   items: Array<{ key: string; label: string }>;
+  locale?: "ru" | "de";
 }
 
-export function DriverChecklist({ orderId, planM3, items }: Props) {
+export function DriverChecklist({ orderId, planM3, items, locale = "ru" }: Props) {
+  const t = T[locale];
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -79,7 +111,7 @@ export function DriverChecklist({ orderId, planM3, items }: Props) {
 
   return (
     <div className="mt-4 rounded-container border border-line bg-white p-4">
-      <p className="mb-3 font-semibold">Чек-лист загрузки</p>
+      <p className="mb-3 font-semibold">{t.heading}</p>
 
       <ul className="mb-4 grid gap-2">
         {items.map((it) => (
@@ -98,7 +130,7 @@ export function DriverChecklist({ orderId, planM3, items }: Props) {
       </ul>
 
       <label className="mb-1 block text-sm font-medium" htmlFor="fact">
-        Фактический объём, м³ <span className="text-muted">(план: {planM3} м³)</span>
+        {t.factLabel} <span className="text-muted">({t.factPlan}: {planM3} m³)</span>
       </label>
       <input
         id="fact"
@@ -108,7 +140,7 @@ export function DriverChecklist({ orderId, planM3, items }: Props) {
         onChange={(e) => setFactM3(e.target.value)}
       />
 
-      <label className="mb-1 block text-sm font-medium" htmlFor="notes">Заметки (необязательно)</label>
+      <label className="mb-1 block text-sm font-medium" htmlFor="notes">{t.notesLabel}</label>
       <textarea
         id="notes"
         className="input-base mb-3"
@@ -119,7 +151,7 @@ export function DriverChecklist({ orderId, planM3, items }: Props) {
       />
 
       <label className="mb-1 block text-sm font-medium" htmlFor="sig">
-        Подпись клиента <span className="text-muted">(ФИО, подтверждает приёмку груза)</span>
+        {t.sigLabel} <span className="text-muted">({t.sigHint})</span>
       </label>
       <input
         id="sig"
@@ -132,10 +164,10 @@ export function DriverChecklist({ orderId, planM3, items }: Props) {
       {error && <p className="mb-3 rounded-container bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">{error}</p>}
 
       <button className="btn btn-primary w-full text-base" type="button" disabled={pending || !signature.trim()} onClick={submit}>
-        {pending ? "Сохранение…" : "Подписать протокол"}
+        {pending ? t.saving : t.submit}
       </button>
       <p className="mt-2 text-xs text-muted">
-        Протокол составляется один раз, изменить его нельзя. {allChecked ? "Все позиции подтверждены." : "Есть непроверённые позиции."}
+        {t.once} {allChecked ? t.allChecked : t.notAllChecked}
       </p>
     </div>
   );

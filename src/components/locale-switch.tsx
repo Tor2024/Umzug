@@ -11,7 +11,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export function LocaleSwitch({ current }: { current: "ru" | "de" }) {
+export function LocaleSwitch({ current, compact = false }: { current: "ru" | "de"; compact?: boolean }) {
   const pathname = usePathname() || "/";
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
@@ -32,11 +32,11 @@ export function LocaleSwitch({ current }: { current: "ru" | "de" }) {
         : pathname.replace(/^\/de/, "") || "/";
 
   const cls = (on: boolean) =>
-    `rounded-base px-1.5 py-0.5 text-xs font-semibold tabular-nums ${on ? "bg-primary text-white" : "text-muted hover:text-ink"}`;
+    `rounded-base font-semibold tabular-nums ${compact ? "border-white/30 bg-white/10 px-1.5 py-0.5 text-xs" : "px-1.5 py-0.5 text-xs"} ${on ? (compact ? "bg-white text-primary" : "bg-primary text-white") : compact ? "text-slate-300 hover:text-white" : "text-muted hover:text-ink"}`;
 
   return (
     <span
-      className="flex shrink-0 items-center gap-0.5 rounded-base border border-line bg-surface px-1 py-0.5"
+      className={`flex shrink-0 items-center gap-0.5 rounded-base ${compact ? "border border-white/20 bg-white/5 px-1 py-0.5" : "border border-line bg-surface px-1 py-0.5"}`}
       aria-label="Sprache / Язык"
     >
       {/* mounted-гвард чтобы URL сервера/клиента не расходились (hydration) */}
