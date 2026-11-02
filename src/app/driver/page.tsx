@@ -185,6 +185,7 @@ export default async function DriverPage({ searchParams }: { searchParams: Promi
                   {proto.notes && <p className="text-muted">Заметки: {proto.notes}</p>}
                   <p className="mt-1 text-xs text-muted">Подпись: {proto.signature}</p>
                   <p className="text-xs text-muted">Хеш: <span className="font-mono">{proto.hash.slice(0, 16)}…</span></p>
+                  <a className="btn btn-outline mt-2 inline-block px-3 py-1.5 text-sm" href={`/api/pdf/protocol/${r.ref}`} target="_blank" rel="noopener">Протокол (PDF)</a>
                 </div>
               )}
 

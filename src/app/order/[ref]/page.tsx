@@ -302,8 +302,14 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
             <div><dt className="text-muted">Оплачено</dt><dd className="tabular-nums">{fmt(invoicePaid)}</dd></div>
           </dl>
           <p className="mt-2 text-xs text-muted">Остаток к оплате: {fmt(Math.max(0, invoice.amount_cents - invoicePaid))}. Оплата — по реквизитам в счёте (демо).</p>
+          <a className="btn btn-outline mt-3 inline-block px-3 py-1.5 text-sm" href={`/api/pdf/invoice/${invoice.number}`} target="_blank" rel="noopener">Скачать PDF</a>
         </div>
       )}
+
+      {/* Kostenvoranschlag — PDF расчёта (клиент/логист) */}
+      <div className="mb-6">
+        <a className="btn btn-outline px-3 py-1.5 text-sm" href={`/api/pdf/quote/${order.ref}`} target="_blank" rel="noopener">Kostenvoranschlag (PDF)</a>
+      </div>
 
       <Link className="btn btn-outline" href="/account">В личный кабинет</Link>
     </main>

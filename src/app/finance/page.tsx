@@ -192,7 +192,10 @@ export default async function FinancePage() {
                 const st = isPaid ? { label: "Оплачен", chip: "chip-trust" } : (INV_STATUS[inv.status] ?? { label: inv.status, chip: "chip" });
                 return (
                   <tr key={inv.number} className="border-b border-line">
-                    <td className="py-2 font-medium">{inv.number}</td>
+                    <td className="py-2 font-medium">
+                      {inv.number}
+                      <a href={`/api/pdf/invoice/${inv.number}`} target="_blank" rel="noopener" className="ml-1 text-xs text-accent underline" aria-label={`PDF ${inv.number}`}>PDF</a>
+                    </td>
                     <td><Link href={`/order/${inv.ref}`} className="underline">{inv.ref}</Link></td>
                     <td>{inv.client_name}</td>
                     <td className="tabular-nums">{EUR(inv.amount_cents)}</td>
