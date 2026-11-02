@@ -182,7 +182,7 @@ export default async function DriverPage({ searchParams }: { searchParams: Promi
               <p className="mt-1 text-sm text-muted">
                 {dateLabel(r.move_date)} · {r.volume_m3} m³ · {r.distance_km} km · {r.plate} ({r.vehicle_label}) · {fmt(r.gross_cents)}
               </p>
-              {geometry && <div className="mt-3"><RouteMapLazy geometry={geometry} fromText={r.from_text} toText={r.to_text} height={200} /></div>}
+              {geometry && <div className="mt-3"><RouteMapLazy geometry={geometry} fromText={r.from_text} toText={r.to_text} height={200} locale="de" /></div>}
               {r.codriver_id && (
                 <p className="text-sm text-muted">Crew: {driverName(r.driver_id)}{r.codriver_id !== r.driver_id ? ` + ${driverName(r.codriver_id)}` : ""}</p>
               )}
@@ -256,7 +256,7 @@ export default async function DriverPage({ searchParams }: { searchParams: Promi
 function StartRouteForm({ orderId }: { orderId: number }) {
   return (
     <form action={`/api/driver/start/${orderId}`} method="post" className="mt-3">
-      <SubmitButton className="btn btn-primary w-full text-base">Losfahren</SubmitButton>
+      <SubmitButton className="btn btn-primary w-full text-base" locale="de">Losfahren</SubmitButton>
     </form>
   );
 }

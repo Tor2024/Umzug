@@ -431,6 +431,7 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
                           fromText={o.from_text}
                           toText={o.to_text}
                           height={220}
+                          locale="de"
                         />
                       </div>
                     )}
@@ -455,7 +456,7 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
                   {o.special_approved === 0 && <p className="mt-1 text-xs text-danger">Abgelehnt — bitte mit dem Kunden im Nachrichtenverlauf klären.</p>}
                 </div>
               )}
-              {geometry && <div className="mt-3"><RouteMapLazy geometry={geometry} fromText={o.from_text} toText={o.to_text} height={200} /></div>}
+              {geometry && <div className="mt-3"><RouteMapLazy geometry={geometry} fromText={o.from_text} toText={o.to_text} height={200} locale="de" /></div>}
 
               {(priceChanged || expired) && o.status === "new" && (
                 <div className="mt-3 rounded-base border border-danger/30 bg-red-50 p-3 text-sm">
@@ -484,7 +485,7 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
                   <RevisionDiffList currentSnap={snap} pendingSnap={pendingSnap} />
                   <p className="mt-1">Preis: <span className="text-muted line-through">{fmt(recalculate(snap).gross)}</span> → <b>{fmt(recalculate(pendingSnap).gross)}</b></p>
                   <div className="mt-2">
-                    <RevisionDecision orderId={o.id} kind="accept" />
+                    <RevisionDecision orderId={o.id} kind="accept" locale="de" />
                   </div>
                 </div>
               )}
@@ -496,6 +497,7 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
                     role="logist"
                     canRevise={true}
                     deadlineHint=""
+                    locale="de"
                     current={{
                       volumeM3: snap.config.volumeM3,
                       floorsFrom: snap.config.floorsFrom,

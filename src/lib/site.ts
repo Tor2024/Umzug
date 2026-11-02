@@ -12,8 +12,8 @@ export const SITE = {
   email: "info@umzugservice.example",
   address: "Musterstraße 12, 10115 Berlin",
   // Демо-реквизиты (Impressum, § 5 DDG) — заменить реальными перед запуском
-  hrb: "HRB 000 000 B (AG Charlottenburg) — демо",
+  hrb: "HRB 000 000 B (AG Charlottenburg) — Demo",
   ceo: "—",
-  vatId: "DE 000 000 000 — демо",
+  vatId: "DE 000 000 000 — Demo",
   liability: "Haftung nach HGB: Erstattung 620 € pro m³ (§ 451 i.V.m. § 431 HGB).",
 } as const;

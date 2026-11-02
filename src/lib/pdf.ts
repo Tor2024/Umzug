@@ -72,7 +72,7 @@ function senderBlock(): string[] {
     SITE.name,
     SITE.address,
     `Tel: ${SITE.phone} · ${SITE.email}`,
-    SITE.vatId.includes("демо") ? "USt-IdNr.: wird ergänzt" : `USt-IdNr.: ${SITE.vatId}`,
+    SITE.vatId.includes("демо") || SITE.vatId.includes("Demo") ? "USt-IdNr.: wird ergänzt" : `USt-IdNr.: ${SITE.vatId}`,
   ];
 }
 

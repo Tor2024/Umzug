@@ -213,7 +213,7 @@ export function CalcWizardDe({ loggedIn, tariffs = DEFAULT_TARIFFS }: { loggedIn
               {!route.loading && route.km === 0 && !route.error && <span className="text-muted">Adressen eingeben — die Entfernung wird automatisch berechnet.</span>}
             </div>
             {route.geometry && route.geometry.length >= 2 && (
-              <RouteMapLazy geometry={route.geometry} fromText={fromText} toText={toText} height={220} />
+              <RouteMapLazy geometry={route.geometry} fromText={fromText} toText={toText} height={220} locale="de" />
             )}
             <button className="btn btn-primary min-w-16" onClick={() => setStep(1)} disabled={route.km <= 0}>
               Weiter: Volumen

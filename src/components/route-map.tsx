@@ -33,9 +33,16 @@ export interface RouteMapProps {
   fromText: string;
   toText: string;
   height?: number; // px, default 260
+  locale?: "ru" | "de";
 }
 
-export default function RouteMap({ geometry, fromText, toText, height = 260 }: RouteMapProps) {
+const T = {
+  ru: { from: "Откуда", to: "Куда" },
+  de: { from: "Von", to: "Nach" },
+} as const;
+
+export default function RouteMap({ geometry, fromText, toText, height = 260, locale = "ru" }: RouteMapProps) {
+  const t = T[locale];
   const start = geometry[0];
   const end = geometry[geometry.length - 1];
   const center: [number, number] = [
@@ -50,8 +57,8 @@ export default function RouteMap({ geometry, fromText, toText, height = 260 }: R
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <Polyline positions={geometry} pathOptions={{ color: "#ea580c", weight: 4, opacity: 0.85 }} />
-        <Marker position={start} icon={iconA}><Popup>Откуда: {fromText}</Popup></Marker>
-        <Marker position={end} icon={iconB}><Popup>Куда: {toText}</Popup></Marker>
+        <Marker position={start} icon={iconA}><Popup>{t.from}: {fromText}</Popup></Marker>
+        <Marker position={end} icon={iconB}><Popup>{t.to}: {toText}</Popup></Marker>
         <FitBounds points={geometry} />
       </MapContainer>
     </div>

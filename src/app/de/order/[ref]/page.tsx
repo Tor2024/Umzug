@@ -235,7 +235,7 @@ export default async function OrderDePage({ params, searchParams }: { params: Pr
             Der Fahrer hat ein Protokoll erstellt (Ist-Beladung, Unterschrift). Ihre Bestätigung setzt die Anfrage auf „Abnahme“,
             danach schließt der Disponent den Auftrag und die Rechnung wird erstellt.
           </p>
-          <AcceptanceButton orderId={order.id} />
+          <AcceptanceButton orderId={order.id} locale="de" />
         </div>
       )}
 
@@ -262,7 +262,7 @@ export default async function OrderDePage({ params, searchParams }: { params: Pr
             </div>
           )}
         </dl>
-        {geometry && <div className="mt-4"><RouteMapLazy geometry={geometry} fromText={order.from_text} toText={order.to_text} /></div>}
+        {geometry && <div className="mt-4"><RouteMapLazy geometry={geometry} fromText={order.from_text} toText={order.to_text} locale="de" /></div>}
       </div>
 
       <div className="card mb-6 p-5">
@@ -312,6 +312,7 @@ export default async function OrderDePage({ params, searchParams }: { params: Pr
           <RevisionForm
             orderId={order.id}
             role={revRole}
+            locale="de"
             canRevise={reviseGuard.ok}
             deadlineHint={reviseGuard.ok
               ? `Änderungen noch ca. ${Math.max(0, hoursLeft - (revRole === "kunde" ? 72 : 48))} Std. möglich (Schwelle ${revRole === "kunde" ? "72" : "48"} Std.); bis zum Umzug ${hoursLeft} Std.`
@@ -391,6 +392,7 @@ export default async function OrderDePage({ params, searchParams }: { params: Pr
           {order.status === "enroute" && crewPos && (
             <div className="mt-3">
               <CrewMapLazy
+                locale="de"
                 geometry={geometry}
                 crew={{ lat: crewPos.lat!, lon: crewPos.lon!, at: crewPos.at, cpLabel: CP_LABEL[crewPos.cp] ?? crewPos.cp }}
                 fromText={order.from_text}
@@ -405,7 +407,7 @@ export default async function OrderDePage({ params, searchParams }: { params: Pr
       )}
 
       {/* Inbox — Nachrichtenverlauf Kunde & Personal */}
-      <MessageThread orderRef={order.ref} initial={initialMessages} viewerRole={user.role} />
+      <MessageThread orderRef={order.ref} initial={initialMessages} viewerRole={user.role} locale="de" />
 
       {/* Kostenvoranschlag — PDF (Kunde/Disponent) */}
       <div className="mb-6">
@@ -468,7 +470,7 @@ function PendingRevisionCardDe({ orderId, pendingSnapshot, currentSnapshot, requ
         <div className="flex justify-between text-muted"><dt>Anzahlung 30 % (neu)</dt><dd className="tabular-nums">{fmt(pendingQuote.deposit)}</dd></div>
       </dl>
       <p className="mt-2 text-xs text-muted">Berechnung nach aktuellen Tarifen; gültig bis {dateLabel(pending.quoteValidUntil)}.</p>
-      {canDecide && <div className="mt-3"><RevisionDecision orderId={orderId} kind="accept" /></div>}
+      {canDecide && <div className="mt-3"><RevisionDecision orderId={orderId} kind="accept" locale="de" /></div>}
       {!canDecide && <p className="mt-3 text-sm text-muted">Entscheidung durch {decider === "Kunde" ? "den Kunden" : "den Disponenten"}.</p>}
     </div>
   );

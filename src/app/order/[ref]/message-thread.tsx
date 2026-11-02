@@ -11,13 +11,45 @@ export type MessageRow = {
   created_at: number;
 };
 
-const ROLE_LABEL: Record<string, string> = {
-  kunde: "Клиент",
-  logist: "Логист",
-  driver: "Водитель",
-  finance: "Бухгалтер",
-  admin: "Админ",
-};
+const ROLE_LABEL = {
+  ru: {
+    kunde: "Клиент",
+    logist: "Логист",
+    driver: "Водитель",
+    finance: "Бухгалтер",
+    admin: "Админ",
+  },
+  de: {
+    kunde: "Kunde",
+    logist: "Disponent",
+    driver: "Fahrer",
+    finance: "Buchhaltung",
+    admin: "Admin",
+  },
+} as const;
+
+const T = {
+  ru: {
+    heading: "Сообщения по заявке",
+    sub: "Переписка клиента и персонала. Дублируется письмом-уведомлением (демо: письма идут на почту владельца).",
+    empty: "Сообщений пока нет.",
+    placeholder: "Ваше сообщение…",
+    sendFail: "Не удалось отправить.",
+    you: "вы",
+    sending: "Отправляю…",
+    send: "Отправить",
+  },
+  de: {
+    heading: "Nachrichten zur Anfrage",
+    sub: "Verlauf zwischen Kunde und Personal. Wird zusätzlich per E-Mail benachrichtigt (Demo: E-Mails gehen an den Inhaber).",
+    empty: "Noch keine Nachrichten.",
+    placeholder: "Ihre Nachricht…",
+    sendFail: "Senden fehlgeschlagen.",
+    you: "Sie",
+    sending: "Wird gesendet…",
+    send: "Senden",
+  },
+} as const;
 
 function timeLabel(unix: number): string {
   return new Date(unix * 1000).toLocaleString("de-DE", {
@@ -25,11 +57,14 @@ function timeLabel(unix: number): string {
   });
 }
 
-export function MessageThread({ orderRef, initial, viewerRole }: {
+export function MessageThread({ orderRef, initial, viewerRole, locale = "ru" }: {
   orderRef: string;
   initial: MessageRow[];
   viewerRole: string;
+  locale?: "ru" | "de";
 }) {
+  const t = T[locale];
+  const roleLabel = ROLE_LABEL[locale as "ru" | "de"];
   const [messages, setMessages] = useState(initial);
   const [text, setText] = useState("");
   const [error, setError] = useState("");
@@ -42,12 +77,12 @@ export function MessageThread({ orderRef, initial, viewerRole }: {
     startTransition(async () => {
       const res = await sendMessageAction(orderRef, body);
       if (!res.ok) {
-        setError(res.message ?? "Не удалось отправить.");
+        setError(res.message ?? t.sendFail);
         return;
       }
       setMessages((prev) => [
         ...prev,
-        { id: Date.now(), from_role: viewerRole, from_email: "вы", body, created_at: Math.floor(Date.now() / 1000) },
+        { id: Date.now(), from_role: viewerRole, from_email: t.you, body, created_at: Math.floor(Date.now() / 1000) },
       ]);
       setText("");
     });
@@ -55,18 +90,18 @@ export function MessageThread({ orderRef, initial, viewerRole }: {
 
   return (
     <div className="mb-6 rounded-container border border-line p-5">
-      <h2 className="font-semibold">Сообщения по заявке</h2>
+      <h2 className="font-semibold">{t.heading}</h2>
       <p className="mt-1 text-xs text-muted">
-        Переписка клиента и персонала. Дублируется письмом-уведомлением (демо: письма идут на почту владельца).
+        {t.sub}
       </p>
       {messages.length === 0 ? (
-        <p className="mt-3 text-sm text-muted">Сообщений пока нет.</p>
+        <p className="mt-3 text-sm text-muted">{t.empty}</p>
       ) : (
         <ul className="mt-3 grid gap-2">
           {messages.map((m) => (
             <li key={m.id} className="rounded-lg border border-line bg-white/60 p-3 text-sm">
               <p className="text-xs text-muted">
-                <b>{ROLE_LABEL[m.from_role] ?? m.from_role}</b> · {timeLabel(m.created_at)}
+                <b>{roleLabel[m.from_role as keyof typeof roleLabel] ?? m.from_role}</b> · {timeLabel(m.created_at)}
               </p>
               <p className="mt-1 whitespace-pre-wrap">{m.body}</p>
             </li>
@@ -76,14 +111,14 @@ export function MessageThread({ orderRef, initial, viewerRole }: {
       <div className="mt-3 grid gap-2">
         <textarea
           className="input min-h-20 w-full"
-          placeholder="Ваше сообщение…"
+          placeholder={t.placeholder}
           maxLength={2000}
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
         {error && <p className="text-sm text-red-600">{error}</p>}
         <button className="btn btn-primary px-4 py-2 text-sm" onClick={submit} disabled={pending || text.trim().length < 2}>
-          {pending ? "Отправляю…" : "Отправить"}
+          {pending ? t.sending : t.send}
         </button>
       </div>
     </div>

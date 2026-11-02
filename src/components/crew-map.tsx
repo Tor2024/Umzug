@@ -30,14 +30,23 @@ function FitBounds({ points }: { points: [number, number][] }) {
 
 export interface CrewMapProps {
   geometry: [number, number][] | null; // маршрут [lat, lon] (route.geometry) — может отсутствовать
-  crew: { lat: number; lon: number; at: number; cpLabel: string }; // последняя позиция с координатами
+  crew: { lat: number; lon: number; at: number; cpLabel: string } | null; // последняя позиция с координатами
   fromText: string;
   toText: string;
   height?: number;
+  locale?: "ru" | "de";
 }
 
-export default function CrewMap({ geometry, crew, fromText, toText, height = 240 }: CrewMapProps) {
-  const pos: [number, number] = [crew.lat, crew.lon];
+const T = {
+  ru: { from: "Откуда", to: "Куда", crewHere: "Экипаж здесь" },
+  de: { from: "Von", to: "Nach", crewHere: "Crew hier" },
+} as const;
+
+export default function CrewMap({ geometry, crew, fromText, toText, height = 240, locale = "ru" }: CrewMapProps) {
+  const t = T[locale];
+  // В lazy-обёртке crew гарантированно не null (guard), но TS требует проверки
+  const c = crew ?? { lat: 0, lon: 0, at: 0, cpLabel: "" };
+  const pos: [number, number] = [c.lat, c.lon];
   // Центр: вокруг позиции экипажа; если есть маршрут — подгоняем под весь маршрут
   const center: [number, number] = geometry?.length
     ? [(geometry[0][0] + geometry[geometry.length - 1][0]) / 2, (geometry[0][1] + geometry[geometry.length - 1][1]) / 2]
@@ -56,13 +65,13 @@ export default function CrewMap({ geometry, crew, fromText, toText, height = 240
         )}
         {geometry && geometry.length >= 2 && (
           <>
-            <Marker position={geometry[0]} icon={pinIcon}><Popup>Откуда: {fromText}</Popup></Marker>
-            <Marker position={geometry[geometry.length - 1]} icon={pinIcon}><Popup>Куда: {toText}</Popup></Marker>
+            <Marker position={geometry[0]} icon={pinIcon}><Popup>{t.from}: {fromText}</Popup></Marker>
+            <Marker position={geometry[geometry.length - 1]} icon={pinIcon}><Popup>{t.to}: {toText}</Popup></Marker>
           </>
         )}
         <Marker position={pos} icon={crewIcon}>
           <Popup>
-            Экипаж здесь · {crew.cpLabel} · {new Date(crew.at * 1000).toLocaleString("de-DE")}
+            {t.crewHere} · {c.cpLabel} · {new Date(c.at * 1000).toLocaleString("de-DE")}
           </Popup>
         </Marker>
         <FitBounds points={fitPoints} />

@@ -37,7 +37,7 @@ export function LocaleSwitch({ current, compact = false }: { current: "ru" | "de
   return (
     <span
       className={`flex shrink-0 items-center gap-0.5 rounded-base ${compact ? "border border-white/20 bg-white/5 px-1 py-0.5" : "border border-line bg-surface px-1 py-0.5"}`}
-      aria-label="Sprache / Язык"
+      aria-label="Sprache wechseln / Change language"
     >
       {/* mounted-гвард чтобы URL сервера/клиента не расходились (hydration) */}
       <Link href={mounted ? mirror : pathname} hrefLang="de" className={cls(current === "de")}>DE</Link>
