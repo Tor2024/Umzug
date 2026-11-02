@@ -37,7 +37,7 @@ export default function HomePage() {
             <div className="flex flex-col justify-center">
               <span className="chip chip-trust w-fit">Фиксированная цена · Смета действует 14 дней</span>
               <h1 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">
-                Переезд по Германии — с точной ценой заранее
+                Переезд по Германии — без сюрпризов
               </h1>
               <p className="mt-4 max-w-prose text-lg text-muted">
                 Реальный маршрут, экипаж и машина по объёму вещей. Считаете сами за минуту,
