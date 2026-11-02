@@ -20,6 +20,7 @@ import { resolveRoute, validAddress } from "./geo";
 import { SITE } from "./site";
 import { dayAvailability, loadFactorPct, nearestFreeDate, CLASS_RANK } from "./availability";
 import { isValidLatinName } from "./validate";
+import { candidateVehicles } from "./dispatch-optimizer";
 
 export interface OrderInput {
   fromText: string;
@@ -1676,4 +1677,130 @@ export async function rejectSpecialRequestsAction(orderId: number): Promise<Simp
   await logOrderEvent(db, order.id, user, "special_requests_rejected", {});
   await audit(db, user.id, "special_requests_rejected", "order", order.ref);
   return { ok: true, message: "Требования отклонены — обсудите детали с клиентом в переписке." };
+}
+
+
+/** №9 (@2244): чек-поинт рейса (departed/arrived_load/loaded/arrived_unload/done).
+ *  Водитель — только свой рейс; admin — любой. departed может нести геолокацию. */
+export async function saveCheckpointAction(
+  orderId: number,
+  cp: "departed" | "arrived_load" | "loaded" | "arrived_unload" | "done",
+  lat?: number,
+  lon?: number,
+): Promise<SimpleResult> {
+  const user = await currentUser();
+  if (!user || (user.role !== "driver" && user.role !== "admin")) {
+    return { ok: false, message: "Недостаточно прав." };
+  }
+  const db = await getDb();
+  const oRes = await db.execute({
+    sql: "SELECT id, ref, status FROM orders WHERE id = ?",
+    args: [orderId],
+  });
+  const order = oRes.rows[0] as unknown as { id: number; ref: string; status: string } | undefined;
+  if (!order) return { ok: false, message: "Заявка не найдена." };
+
+  if (user.role === "driver") {
+    const tripRes = await db.execute({
+      sql: "SELECT 1 FROM trips WHERE order_id = ? AND (driver_id = ? OR codriver_id = ?)",
+      args: [order.id, user.id, user.id],
+    });
+    if (tripRes.rows.length === 0) return { ok: false, message: "Вы не назначены на этот рейс." };
+  }
+
+  // departed = выехал: заказ должен быть в enroute; остальные — не раньше departed
+  if (cp === "departed") {
+    if (order.status !== "enroute") return { ok: false, message: "Сначала нажмите «Выехал» в статусе «машина назначена»." };
+  } else {
+    const depRes = await db.execute({
+      sql: "SELECT 1 FROM trip_checkpoints WHERE order_id = ? AND cp = 'departed'",
+      args: [order.id],
+    });
+    if (depRes.rows.length === 0) return { ok: false, message: "Сначала отметьте «Выехал»." };
+  }
+
+  await db.execute({
+    sql: "INSERT INTO trip_checkpoints (order_id, driver_id, cp, lat, lon, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+    args: [order.id, user.id, cp, lat ?? null, lon ?? null, Math.floor(Date.parse(new Date().toISOString()) / 1000)],
+  });
+  await logOrderEvent(db, order.id, user, `checkpoint_${cp}`, { lat: lat ?? null, lon: lon ?? null });
+  return { ok: true, message: "Отметка сохранена." };
+}
+
+/** №7 (@2244): авто-назначение — оптимальная машина по холостому пробегу + водитель,
+ *  привязанный к этой машине (driver_vehicle_id), иначе первый свободный; второй
+ *  водитель при смене >10ч. Логист может потом перезапустить вручную. */
+export async function autoAssignAction(orderId: number): Promise<SimpleResult> {
+  const user = await currentUser();
+  if (!user || (user.role !== "logist" && user.role !== "admin")) {
+    return { ok: false, message: "Недостаточно прав." };
+  }
+  const db = await getDb();
+  const oRes = await db.execute({
+    sql: "SELECT id, ref, status, vehicle_class, move_date, from_text, snapshot FROM orders WHERE id = ?",
+    args: [orderId],
+  });
+  const order = oRes.rows[0] as unknown as
+    | { id: number; ref: string; status: string; vehicle_class: VehicleClass; move_date: string; from_text: string; snapshot: string }
+    | undefined;
+  if (!order) return { ok: false, message: "Заявка не найдена." };
+  if (order.status !== "confirmed" && order.status !== "assigned") {
+    return { ok: false, message: "Назначение возможно только после подтверждения цены." };
+  }
+
+  const candidates = await candidateVehicles(db, order.id, order.move_date, order.from_text);
+  const optimal = candidates.find((c) => c.optimal) ?? candidates[0];
+  if (!optimal) {
+    return { ok: false, message: "Нет свободной машины нужного класса и вместимости на эту дату." };
+  }
+
+  // Водители: активные; приоритет — привязанный к оптимальной машине
+  const drvRes = await db.execute({
+    sql: `SELECT u.id, u.name, u.driver_vehicle_id,
+            (SELECT COUNT(*) FROM assignments a WHERE a.resource_type = 'driver' AND a.resource_id = u.id AND a.move_date = ?) AS busy
+          FROM users u WHERE u.role = 'driver' AND u.active = 1 ORDER BY u.id`,
+    args: [order.move_date],
+  });
+  const drivers = drvRes.rows as unknown as Array<{ id: number; name: string; driver_vehicle_id: number | null; busy: number }>;
+  const free = drivers.filter((d) => !Number(d.busy));
+  if (free.length === 0) return { ok: false, message: "Нет свободных водителей на эту дату." };
+
+  const bound = free.find((d) => Number(d.driver_vehicle_id) === optimal.id);
+  const driverId = (bound ?? free[0]).id;
+
+  // Второй водитель при смене >10ч (из снимка)
+  let codriverId: number | undefined;
+  try {
+    const snap = JSON.parse(order.snapshot) as QuoteSnapshot;
+    if (recalculate(snap).needsSecondDriver) {
+      const co = free.find((d) => d.id !== driverId);
+      if (!co) return { ok: false, message: "Смена >10 ч — нужен второй водитель, но свободных водителей больше нет." };
+      codriverId = co.id;
+    }
+  } catch { /* снимок повреждён — назначаем без второго */ }
+
+  const res = await assignOrder(db, {
+    orderId: order.id,
+    vehicleId: optimal.id,
+    driverId,
+    codriverId,
+  }, { id: user.id, role: user.role });
+  if (!res.ok) return { ok: false, message: res.error === "busy" ? "Ресурс уже занят (только что?). Попробуйте ещё раз." : res.message };
+  await logOrderEvent(db, order.id, user, "auto_assigned", {
+    vehicle: optimal.id, driver: driverId, codriver: codriverId ?? null,
+  });
+  return { ok: true, message: `Назначено автоматически: ${optimal.label} + водитель. Проверьте и при необходимости скорректируйте вручную.` };
+}
+
+/** Привязка водителя к основной машине (№@2246): админ назначает; 0/пусто = отвязать. */
+export async function bindDriverVehicleAction(driverId: number, vehicleId: number | null): Promise<SimpleResult> {
+  const user = await currentUser();
+  if (!user || user.role !== "admin") return { ok: false, message: "Только администратор." };
+  const db = await getDb();
+  await db.execute({
+    sql: "UPDATE users SET driver_vehicle_id = ? WHERE id = ? AND role = 'driver'",
+    args: [vehicleId ?? null, driverId],
+  });
+  await audit(db, user.id, "driver_vehicle_bound", "user", String(driverId), `vehicle=${vehicleId ?? "none"}`);
+  return { ok: true, message: vehicleId ? "Основная машина водителя обновлена." : "Привязка снята." };
 }

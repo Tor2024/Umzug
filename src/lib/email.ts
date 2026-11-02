@@ -254,6 +254,85 @@ export async function sendOrderReminderEmail(
   return sendEmail(to, subject, html);
 }
 
+// ─── Утренний cron (0 7 * * *) ─────────────────────────────────────────────
+
+/** №8: водителю о сегодняшней поездке (реф, время, адреса, машина, требования). */
+export async function sendDriverMorningEmail(
+  to: string, driverName: string, ref: string, startTime: string,
+  fromText: string, toText: string, vehicle: string,
+  requirements: string | null, selfPack: boolean,
+): Promise<SendResult> {
+  const time = startTime || "08:00";
+  const packLine = selfPack
+    ? `<p style="margin:0 0 12px;font-size:14px;line-height:1.5;color:#b45309;"><b>Клиент упаковывает сам</b> — упаковочная услуга не требуется, только погрузка/разгрузка.</p>`
+    : "";
+  const reqHtml = requirements
+    ? `<p style="margin:0 0 12px;font-size:14px;line-height:1.5;"><b>Согласованные доп. требования:</b><br>${escapeHtml(requirements)}</p>`
+    : "";
+  const html = brandedShell({
+    greeting: `Доброе утро, ${escapeHtml(driverName)}! Сегодня у вас поездка по заявке <b>${ref}</b>.`,
+    bodyHtml: `<table role="presentation" cellpadding="6" style="font-size:14px;line-height:1.5;color:#374151;">
+        <tr><td><b>Время начала:</b></td><td><b>${escapeHtml(time)}</b></td></tr>
+        <tr><td><b>Погрузка:</b></td><td>${escapeHtml(fromText)}</td></tr>
+        <tr><td><b>Разгрузка:</b></td><td>${escapeHtml(toText)}</td></tr>
+        <tr><td><b>Машина:</b></td><td>${escapeHtml(vehicle)}</td></tr>
+      </table>
+      ${packLine}${reqHtml}
+      <p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">Отмечайте этапы поездки на странице водителя — клиент видит статус в реальном времени.</p>`,
+    actionUrl: `${ORDER_URL_BASE}/driver`,
+    actionLabel: "Открыть страницу водителя",
+  });
+  return sendEmail(to, `Сегодняшняя поездка ${ref}, начало ${time} — Umzug Service`, html);
+}
+
+/** №6: клиенту — предупреждение о дорожной задержке (пересчёт маршрута утром). */
+export async function sendTrafficDelayEmail(
+  to: string, name: string, ref: string, expectedMin: number, actualMin: number,
+): Promise<SendResult> {
+  const extra = Math.max(0, actualMin - expectedMin);
+  const html = statusTemplate(
+    `Здравствуйте, ${escapeHtml(name)}! Информируем о возможной задержке по заявке ${ref}.`,
+    `<p style="margin:0 0 12px;font-size:15px;line-height:1.5;">Утренний мониторинг дорожной обстановки показал осложнение на маршруте: время в пути сейчас ориентировочно <b>${actualMin} мин</b> вместо ожидаемых ${expectedMin} мин (+~${extra} мин).</p>
+     <p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">Ваш экипаж постарается компенсировать задержку — водитель свяжется с вами при значительном сдвиге графика. Приносим извинения за возможные неудобства.</p>`,
+    ref,
+  );
+  return sendEmail(to, `Возможна задержка по заявке ${ref} — Umzug Service`, html);
+}
+
+function digestRow(label: string, count: number, warn = false): string {
+  if (!count) return "";
+  const color = warn ? "#b91c1c" : "#374151";
+  return `<tr><td style="padding:4px 12px 4px 0;font-size:14px;color:#6b7280;">${label}</td>
+               <td style="padding:4px 0;font-size:14px;font-weight:bold;color:${color};text-align:right;">${count}</td></tr>`;
+}
+
+/** №10: админу — дайджест за сутки (статусы, счета, незаназначенные, парк). */
+export async function sendAdminDigestEmail(
+  to: string, byStatus: Record<string, number>, overdueCount: number,
+  unassignedCount: number, fleetBusy: number, fleetTotal: number,
+): Promise<SendResult> {
+  const statusLabels: Record<string, string> = {
+    new: "Новые заявки", confirmed: "Подтверждённые", assigned: "Назначенные",
+    enroute: "В пути", acceptance: "На приёмке", closed: "Завершённые", cancelled: "Отменённые",
+  };
+  const statusRows = Object.entries(statusLabels)
+    .map(([k, label]) => digestRow(label, byStatus[k] ?? 0, k === "new" && (byStatus[k] ?? 0) > 0))
+    .join("");
+  const fleetTxt = fleetTotal > 0 ? `${fleetBusy} из ${fleetTotal} машин занято сегодня` : "Нет данных по парку";
+  const html = brandedShell({
+    greeting: `Доброе утро! Сводка по Umzug Service за последние сутки.`,
+    bodyHtml: `<table role="presentation" style="margin:0 0 16px;">${statusRows}</table>
+      <p style="margin:0 0 12px;font-size:14px;line-height:1.5;">
+        <b>Просроченные счета:</b> <span style="color:${overdueCount ? "#b91c1c" : "inherit"};font-weight:bold;">${overdueCount}</span><br>
+        <b>Незаназначенные на ближайшие 48ч:</b> <span style="color:${unassignedCount ? "#b45309" : "inherit"};font-weight:bold;">${unassignedCount}</span><br>
+        <b>Парк:</b> ${escapeHtml(fleetTxt)}
+      </p>`,
+    actionUrl: `${ORDER_URL_BASE}/dispatch`,
+    actionLabel: "Открыть диспетчерскую",
+  });
+  return sendEmail(to, `Утренний дайджест — Umzug Service`, html);
+}
+
 // ─── Сообщения переписки (staff → клиент) ─────────────────────────────────
 
 /** Экспортировано для sendMessageAction (actions.ts): письмо о новом ответе сотрудника. */

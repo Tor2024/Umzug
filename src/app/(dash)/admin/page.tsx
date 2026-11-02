@@ -13,6 +13,7 @@ import {
   updateApiKeyAction,
   createSubcontractorAction,
   toggleSubcontractorAction,
+  bindDriverVehicleAction,
   type TariffBatchResult,
   type SimpleResult,
 } from "@/lib/actions";
@@ -53,7 +54,7 @@ const KEY_LABELS: Record<string, string> = {
 };
 
 type ClassRow = { class: string; label: string; capacity_m3: number; included_m3: number; base_cents: number; active: number };
-type UserRow = { id: number; email: string; name: string; role: string; active: number; email_verified: number };
+type UserRow = { id: number; email: string; name: string; role: string; active: number; email_verified: number; driver_vehicle_id?: number | null };
 type VehicleRow = { id: number; plate: string; class: string; label: string; capacity_m3: number; active: number; home_base: string; current_location: string };
 type SubRow = { id: number; name: string; contact: string; phone: string; email: string; class: string; price_mode: string; price_cents: number; notes: string; active: number };
 type AuditRow = { id: number; at: number; user_id: number; action: string; entity: string; entity_id: string; details: string };
@@ -315,6 +316,13 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
     const { redirect } = await import("next/navigation");
     redirect(`/admin?msg=${r.ok ? "subToggled" : "error"}`);
   }
+  async function bindForm(fd: FormData): Promise<void> {
+    "use server";
+    const vRaw = String(fd.get("vehicleId") ?? "");
+    const r = await bindDriverVehicleAction(Number(fd.get("driverId")), vRaw === "" ? null : Number(vRaw));
+    const { redirect } = await import("next/navigation");
+    redirect(`/admin?msg=${r.ok ? "bindOk" : "error"}&details=${encodeURIComponent(r.message ?? "")}`);
+  }
 
   const configRowsRes = await db.execute("SELECT key, value FROM config");
   const configRows = configRowsRes.rows as unknown as { key: string; value: string }[];
@@ -322,7 +330,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
   const tariffKeys = Object.keys(CONFIG_SCHEMA).filter((k) => k.startsWith("pricing.") || k === "finance.due_days");
   const classesRes = await db.execute("SELECT * FROM vehicle_classes ORDER BY class");
   const classes = classesRes.rows as unknown as ClassRow[];
-  const usersRes = await db.execute("SELECT id, email, name, role, active, email_verified FROM users ORDER BY role, id");
+  const usersRes = await db.execute("SELECT id, email, name, role, active, email_verified, driver_vehicle_id FROM users ORDER BY role, id");
   const users = usersRes.rows as unknown as UserRow[];
   const vehiclesRes = await db.execute("SELECT id, plate, class, label, capacity_m3, active, home_base, current_location FROM vehicles ORDER BY id");
   const vehicles = vehiclesRes.rows as unknown as VehicleRow[];
@@ -347,10 +355,11 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
     subCreated: { text: "Партнёр добавлен.", ok: true },
     subToggled: { text: "Статус партнёра изменён.", ok: true },
     subError: { text: "Партнёр не сохранён.", ok: false },
+    bindOk: { text: "Привязка водителя к машине сохранена.", ok: true },
     error: { text: "Не сохранилось — проверьте выделенные значения.", ok: false },
   };
   const banner = msg ? MSG[msg] : undefined;
-  const bannerDetails = msg === "staffError" || msg === "staffCreated" || msg === "subError"
+  const bannerDetails = msg === "staffError" || msg === "staffCreated" || msg === "subError" || msg === "bindOk"
     ? (await searchParams).details
     : undefined;
 
@@ -563,6 +572,33 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
               <input type="hidden" name="active" value="on" />
             <SubmitButton className="btn btn-primary">Добавить машину</SubmitButton>
           </form>
+        </div>
+      </section>
+
+      {/* ── Привязка водителей к машинам (№7): авто-назначение берёт машину водителя ── */}
+      <section className="mt-10">
+        <h2 className="text-lg font-semibold">Привязка водителей к машинам</h2>
+        <p className="mt-1 text-sm text-muted">
+          Основная машина водителя — используется кнопкой «⚡ Назначить автоматически» и в утренних письмах водителю.
+        </p>
+        <div className="mt-4 space-y-2">
+          {users.filter((u) => u.role === "driver").map((u) => {
+            const bound = vehicles.find((v) => v.id === u.driver_vehicle_id);
+            return (
+              <div key={u.id} className="card flex flex-wrap items-center justify-between gap-3 p-3 text-sm">
+                <span className="font-medium">{u.name} <span className="text-muted">· {u.email}</span></span>
+                <span className={bound ? "chip chip-trust" : "chip chip-neutral"}>{bound ? `Основная: ${bound.plate}` : "Без основной машины"}</span>
+                <form action={bindForm} className="flex items-center gap-2">
+                  <input type="hidden" name="driverId" value={u.id} />
+                  <select name="vehicleId" className="input-base h-9 text-sm" defaultValue={u.driver_vehicle_id ?? ""}>
+                    <option value="">— без —</option>
+                    {vehicles.map((v) => <option key={v.id} value={v.id}>{v.plate} ({v.label})</option>)}
+                  </select>
+                  <SubmitButton className="btn btn-outline h-9 px-3 text-sm">Сохранить</SubmitButton>
+                </form>
+              </div>
+            );
+          })}
         </div>
       </section>
 

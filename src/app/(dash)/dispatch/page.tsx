@@ -8,7 +8,7 @@ import { requireRole } from "@/lib/auth";
 import { getDb, getTariffs, type DB } from "@/lib/db";
 import { calculateQuote, recalculate, type QuoteSnapshot, type VehicleClass } from "@/lib/pricing";
 import { tariffDrift } from "@/lib/ops";
-import { confirmOrderAction, recalcOrderAction, cancelOrderAction, assignOrderAction, closeOrderAction, forceCloseOrderAction, assignSubcontractorAction, unassignSubcontractorAction, approveSpecialRequestsAction, rejectSpecialRequestsAction } from "@/lib/actions";
+import { confirmOrderAction, recalcOrderAction, cancelOrderAction, assignOrderAction, closeOrderAction, forceCloseOrderAction, assignSubcontractorAction, unassignSubcontractorAction, approveSpecialRequestsAction, rejectSpecialRequestsAction, autoAssignAction } from "@/lib/actions";
 import RouteMapLazy from "@/components/route-map-lazy";
 import { SubmitButton } from "@/components/submit-button";
 import { RevisionForm } from "@/components/revision-form";
@@ -112,13 +112,14 @@ const ACTION_MSG: Record<string, string> = {
   spRejected: "Доп. требования клиента отклонены.",
   sub_class: "Класс машин партнёра ниже класса заявки.",
   sub_error: "Не удалось передать партнёру.",
+  autoAssigned: "Назначено автоматически: оптимальная машина + свободный экипаж.",
 };
 
 /** ref подставляется в текст баннера: «Готово: MS-2026-8941 — …». */
 function bannerText(code: string, ref?: string): string {
   const base = ACTION_MSG[code] ?? code;
   if (!ref) return base;
-  const okCodes = ["confirmed", "assigned", "closed", "force_closed", "cancelled", "recalculated", "sub_assigned", "sub_unassigned", "spApproved", "spRejected"];
+  const okCodes = ["confirmed", "assigned", "closed", "force_closed", "cancelled", "recalculated", "sub_assigned", "sub_unassigned", "spApproved", "spRejected", "autoAssigned"];
   if (okCodes.includes(code)) return `${ref}: ${base.charAt(0).toLowerCase()}${base.slice(1)}`;
   return `${ref}: ${base}`;
 }
@@ -465,7 +466,11 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
               )}
 
               {o.status === "confirmed" && !pendingSnap && (
-                <AssignForm
+                <div className="mt-3">
+                  <form action={async () => { "use server"; const r = await autoAssignAction(o.id); redirectMsg(r.ok ? "autoAssigned" : r.message ?? "state", o.ref); }} className="mb-3">
+                    <SubmitButton className="btn btn-secondary">⚡ Назначить автоматически <span className="font-normal text-muted">(оптимальная машина + свободный экипаж)</span></SubmitButton>
+                  </form>
+                  <AssignForm
                   orderId={o.id}
                   vehicles={vehicles}
                   candidates={candidatesMap.get(o.id) ?? []}
@@ -475,7 +480,8 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
                   moveDate={o.move_date}
                   busy={busy}
                   orderRef={o.ref}
-                />
+                  />
+                </div>
               )}
 
               {/* Отдать партнёру (субподрядчик) — только для confirmed/assigned без правки */}

@@ -8,6 +8,7 @@ import { requireRole } from "@/lib/auth";
 import { getDb, verifyChain, type ProtocolRow } from "@/lib/db";
 import { recalculate, type QuoteSnapshot } from "@/lib/pricing";
 import { DriverChecklist } from "@/components/driver-checklist";
+import { DriverCheckpoints } from "@/components/driver-checkpoints";
 import RouteMapLazy from "@/components/route-map-lazy";
 import { SubmitButton } from "@/components/submit-button";
 import { ActionRequired, type ActionItem } from "@/components/action-required";
@@ -110,6 +111,20 @@ export default async function DriverPage({ searchParams }: { searchParams: Promi
   }
   const driverName = (id: number): string => nameMap.get(id) ?? `#${id}`;
 
+  // Чек-поинты рейсов (№9): Map<order_id, string[]> уже проставленных этапов
+  const cpMap = new Map<number, string[]>();
+  if (orderIds.length > 0) {
+    const cpRes = await db.execute({
+      sql: `SELECT order_id, cp FROM trip_checkpoints WHERE order_id IN (${orderIds.map(() => "?").join(",")}) ORDER BY created_at`,
+      args: orderIds,
+    });
+    for (const c of cpRes.rows as unknown as Array<{ order_id: number; cp: string }>) {
+      const arr = cpMap.get(Number(c.order_id)) ?? [];
+      arr.push(c.cp);
+      cpMap.set(Number(c.order_id), arr);
+    }
+  }
+
   // ── Панель «Требует вашего действия» водителя (после предвыборки protoMap) ──
   const tomorrowIso = (() => { const d = new Date(todayIso + "T12:00:00Z"); d.setUTCDate(d.getUTCDate() + 1); return d.toISOString().slice(0, 10); })();
   const driverActions: ActionItem[] = [];
@@ -194,11 +209,14 @@ export default async function DriverPage({ searchParams }: { searchParams: Promi
 
               {/* Шаг дня 2: чек-лист + протокол (только enroute, D6.1) */}
               {r.status === "enroute" && !proto && (
-                <DriverChecklist
-                  orderId={r.id}
-                  planM3={r.volume_m3}
-                  items={planMap.get(r.id) ?? []}
-                />
+                <>
+                  <DriverCheckpoints orderId={r.id} doneCheckpoints={cpMap.get(r.id) ?? []} />
+                  <DriverChecklist
+                    orderId={r.id}
+                    planM3={r.volume_m3}
+                    items={planMap.get(r.id) ?? []}
+                  />
+                </>
               )}
 
               {/* Шаг дня 3: протокол подписан — только просмотр (D6.1 append-only) */}

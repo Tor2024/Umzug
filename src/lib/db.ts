@@ -88,6 +88,9 @@ const SCHEMA_SQL = `
     pending_email_token TEXT,
     pending_email_expires INTEGER,
     phone           TEXT NOT NULL DEFAULT '',
+    -- Привязка водителя к основной машине (админ задаёт; предложение 7/8)
+    driver_vehicle_id INTEGER,
+    phone           TEXT NOT NULL DEFAULT '',
     created_at      INTEGER NOT NULL
   );
   CREATE INDEX IF NOT EXISTS idx_users_reset_token ON users(reset_token);
@@ -286,6 +289,18 @@ const SCHEMA_SQL = `
     created_at INTEGER NOT NULL
   );
   CREATE INDEX IF NOT EXISTS idx_messages_order ON messages(order_id, created_at);
+
+  -- Чек-поинты рейса (предложение 9): водитель жмёт по ходу дня, клиент видит статус/ETA.
+  CREATE TABLE IF NOT EXISTS trip_checkpoints (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    order_id    INTEGER NOT NULL REFERENCES orders(id),
+    driver_id   INTEGER REFERENCES users(id),
+    cp          TEXT NOT NULL CHECK (cp IN ('departed','arrived_load','loaded','arrived_unload','done')),
+    lat         REAL,
+    lon         REAL,
+    created_at  INTEGER NOT NULL
+  );
+  CREATE INDEX IF NOT EXISTS idx_trip_cp_order ON trip_checkpoints(order_id, created_at);
 `;
 
 // ---------------------------------------------------------------------------

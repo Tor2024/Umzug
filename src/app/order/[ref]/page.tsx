@@ -154,6 +154,23 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
     | { plate: string; vehicle_label: string; driver_name: string | null; codriver_name: string | null }
     | undefined;
 
+  // №9: живой статус экипажа — последний чек-поинт рейса (виден клиенту)
+  const CP_LABEL: Record<string, string> = {
+    departed: "Экипаж выехал",
+    arrived_load: "Прибыл на погрузку",
+    loaded: "Груз погружен",
+    arrived_unload: "Прибыл на выгрузку",
+    done: "Переезд выполнен",
+  };
+  let lastCp: { cp: string; at: number } | null = null;
+  {
+    const cpRes = await db.execute({
+      sql: "SELECT cp, created_at FROM trip_checkpoints WHERE order_id = ? ORDER BY created_at DESC LIMIT 1",
+      args: [order.id],
+    });
+    lastCp = (cpRes.rows[0] as unknown as { cp: string; at: number } | undefined) ?? null;
+  }
+
   // UX-feedback: баннер результата действия, переживает router.replace(?msg=...) (D10/UX)
   const ORDER_MSG: Record<string, string> = {
     accepted: "Приёмка подтверждена. Логист получил заявку на закрытие.",
@@ -340,6 +357,18 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
           </dl>
           <p className="mt-2 text-xs text-muted">Остаток к оплате: {fmt(Math.max(0, invoice.amount_cents - invoicePaid))}. Оплата — по реквизитам в счёте (демо).</p>
           <a className="btn btn-outline mt-3 inline-block px-3 py-1.5 text-sm" href={`/api/pdf/invoice/${invoice.number}`} target="_blank" rel="noopener">Скачать PDF</a>
+        </div>
+      )}
+
+      {/* №9: живой статус экипажа (последний чек-поинт рейса) */}
+      {lastCp && (
+        <div className="mb-6 rounded-base border border-trust/30 bg-emerald-50 p-4 text-sm">
+          <p className="font-semibold">Статус экипажа</p>
+          <p className="mt-1">
+            <span className="chip chip-trust">✓ {CP_LABEL[lastCp.cp] ?? lastCp.cp}</span>
+            {" · "}
+            <span className="text-muted">{new Date(lastCp.at * 1000).toLocaleString("de-DE")}</span>
+          </p>
         </div>
       )}
 
