@@ -543,6 +543,7 @@ export async function saveProtocolAction(input: ProtocolInput): Promise<Protocol
     args: [order.id, loadedJson, deviation, notes, signature, prevHash, hash, signedAt],
   });
   await audit(db, user.id, "protocol_signed", "order", order.ref, `deviation=${deviation}`);
+  await logOrderEvent(db, order.id, user, "protocol_signed", { deviation, hash: hash.slice(0, 12) });
   return { ok: true };
 }
 
