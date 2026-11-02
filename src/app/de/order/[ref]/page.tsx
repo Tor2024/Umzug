@@ -414,7 +414,7 @@ export default async function OrderDePage({ params, searchParams }: { params: Pr
         <a className="btn btn-outline px-3 py-1.5 text-sm" href={`/api/pdf/quote/${order.ref}`} target="_blank" rel="noopener">Kostenvoranschlag (PDF)</a>
       </div>
 
-      <Link className="btn btn-outline" href="/de/login">Zum Kundenkonto</Link>
+      <Link className="btn btn-outline" href="/de/account">Zum Kundenkonto</Link>
     </main>
   );
 }
