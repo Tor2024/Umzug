@@ -14,7 +14,7 @@ export interface SendResult {
 }
 
 /** Базовая отправка. Возвращает ошибку, а не бросает — регистрация не должна падать из-за SMTP. */
-async function sendEmail(to: string, subject: string, html: string): Promise<SendResult> {
+export async function sendEmail(to: string, subject: string, html: string): Promise<SendResult> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) return { sent: false, reason: "no_api_key" };
 

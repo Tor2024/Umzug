@@ -246,6 +246,17 @@ const SCHEMA_SQL = `
     last   INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (prefix, year)
   );
+  CREATE TABLE IF NOT EXISTS messages (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    order_id   INTEGER NOT NULL REFERENCES orders(id),
+    from_role  TEXT NOT NULL CHECK (from_role IN ('kunde','logist','driver','finance','admin')),
+    from_user_id INTEGER,
+    from_email TEXT NOT NULL DEFAULT '',
+    body       TEXT NOT NULL,
+    read_at    INTEGER,
+    created_at INTEGER NOT NULL
+  );
+  CREATE INDEX IF NOT EXISTS idx_messages_order ON messages(order_id, created_at);
 `;
 
 // ---------------------------------------------------------------------------

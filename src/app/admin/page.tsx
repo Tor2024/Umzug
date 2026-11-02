@@ -180,6 +180,8 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       <h1 className="text-2xl font-bold">Админ-панель</h1>
       <p className="mt-1 text-sm text-muted">
         <Link className="text-accent underline" href="/analytics">Аналитика →</Link>
+        {" · "}
+        <Link className="text-accent underline" href="/inbox">Инбокс →</Link>
       </p>
       {banner && (
         <div role="status" className={`mt-4 rounded-base border px-4 py-3 text-sm ${banner.ok ? "border-trust/30 bg-emerald-50 text-emerald-900" : "border-danger/30 bg-red-50 text-red-900"}`}>

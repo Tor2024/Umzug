@@ -1152,3 +1152,77 @@ export async function deleteAccountAction(): Promise<SimpleResult> {
   await audit(db, user.id, "account_anonymized", "user", String(user.id), `anon=${anonEmail}`);
   return { ok: true, message: "Аккаунт удалён (данные анонимизированы согласно GoBD)." };
 }
+
+// ─── Задача 9: инбокс — сообщения по заявке (клиент ↔ персонал) ───────────
+
+export async function sendMessageAction(orderRef: string, body: string): Promise<SimpleResult> {
+  const db = await getDb();
+  const user = await currentUser();
+  if (!user) return { ok: false, message: "Войдите в аккаунт." };
+
+  const text = body.trim().slice(0, 2000);
+  if (text.length < 2) return { ok: false, message: "Сообщение слишком короткое." };
+
+  const orderRes = await db.execute({
+    sql: "SELECT id, client_id, ref, contact_email FROM orders WHERE ref = ?",
+    args: [orderRef],
+  });
+  const order = orderRes.rows[0] as unknown as { id: number; client_id: number; ref: string; contact_email: string } | undefined;
+  if (!order) return { ok: false, message: "Заявка не найдена." };
+
+  // Клиент пишет только в свою заявку; персонал — в любую.
+  if (user.role === "kunde" && order.client_id !== user.id) {
+    return { ok: false, message: "Нет доступа к этой заявке." };
+  }
+
+  await db.execute({
+    sql: "INSERT INTO messages (order_id, from_role, from_user_id, from_email, body, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+    args: [order.id, user.role, user.id, user.email, text, Math.floor(Date.now() / 1000)],
+  });
+  await audit(db, user.id, "message_sent", "order", order.ref, `role=${user.role} len=${text.length}`);
+
+  // Письмо-уведомление адресату (не блокирует успех действия).
+  try {
+    const { sendEmail } = await import("./email");
+    const staff = user.role !== "kunde";
+    // Демо: resend.dev доставляет только на email владельца Resend-аккаунта,
+    // поэтому реальный адрес получателя подменяем только если это безопасно —
+    // фактически письмо всё равно уйдёт на аккаунт владельца.
+    const to = order.contact_email;
+    const subject = staff
+      ? `Ответ по заявке ${order.ref} — Помощник с переездом`
+      : `Новое сообщение по заявке ${order.ref} — Помощник с переездом`;
+    const html = `<div style="font-family:sans-serif;max-width:560px">
+      <p>${staff ? "Ответ персонала по вашей заявке" : "Новое сообщение по вашей заявке"} <b>${order.ref}</b>:</p>
+      <blockquote style="border-left:3px solid #ccc;padding-left:12px;color:#333">${text.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>")}</blockquote>
+      <p>Открыть заявку: <a href="${process.env.NEXT_PUBLIC_SITE_URL ?? "https://umzug-seven.vercel.app"}/order/${order.ref}">${order.ref}</a></p>
+    </div>`;
+    await sendEmail(to, subject, html);
+  } catch {
+    // уведомление необязательно
+  }
+
+  return { ok: true, message: "Сообщение отправлено." };
+}
+
+export async function markMessagesReadAction(orderRef: string): Promise<SimpleResult> {
+  const db = await getDb();
+  const user = await currentUser();
+  if (!user) return { ok: false, message: "Войдите в аккаунт." };
+
+  const orderRes = await db.execute({
+    sql: "SELECT id, client_id FROM orders WHERE ref = ?",
+    args: [orderRef],
+  });
+  const order = orderRes.rows[0] as unknown as { id: number; client_id: number } | undefined;
+  if (!order) return { ok: false, message: "Заявка не найдена." };
+  if (user.role === "kunde" && order.client_id !== user.id) {
+    return { ok: false, message: "Нет доступа к этой заявке." };
+  }
+
+  await db.execute({
+    sql: "UPDATE messages SET read_at = ? WHERE order_id = ? AND read_at IS NULL AND from_role <> ?",
+    args: [Math.floor(Date.now() / 1000), order.id, user.role],
+  });
+  return { ok: true, message: "Отмечено прочитанным." };
+}

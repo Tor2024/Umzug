@@ -13,6 +13,7 @@ import { RevisionForm } from "@/components/revision-form";
 import { RevisionDecision } from "@/components/revision-decision";
 import { orderHistory, snapshotVersions } from "@/lib/db";
 import { canRevise, hoursUntilMove, orderAgeHours, revisionFieldDiff, type OrderForRevision } from "@/lib/revision";
+import { MessageThread, type MessageRow } from "./message-thread";
 
 export const metadata: Metadata = { title: "Заявка", robots: { index: false } };
 export const instant = false;
@@ -116,6 +117,12 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
   const pendingSnap = order.pending_snapshot ? (JSON.parse(order.pending_snapshot) as QuoteSnapshot) : null;
   const history = await orderHistory(db, order.id);
   const versions = await snapshotVersions(db, order.id);
+  // Задача 9: инбокс — последние сообщения по заявке
+  const msgRes = await db.execute({
+    sql: "SELECT id, from_role, from_email, body, created_at FROM messages WHERE order_id = ? ORDER BY created_at ASC LIMIT 100",
+    args: [order.id],
+  });
+  const initialMessages = msgRes.rows as unknown as MessageRow[];
   // D11: карточка бригады после назначения (имена + машина, БЕЗ телефонов — PII)
   const crewRes = await db.execute({
     sql: `SELECT v.plate, v.label AS vehicle_label, du.name AS driver_name, cu.name AS codriver_name
@@ -305,6 +312,9 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
           <a className="btn btn-outline mt-3 inline-block px-3 py-1.5 text-sm" href={`/api/pdf/invoice/${invoice.number}`} target="_blank" rel="noopener">Скачать PDF</a>
         </div>
       )}
+
+      {/* Инбокс — переписка клиента и персонала (задача 9) */}
+      <MessageThread orderRef={order.ref} initial={initialMessages} viewerRole={user.role} />
 
       {/* Kostenvoranschlag — PDF расчёта (клиент/логист) */}
       <div className="mb-6">
