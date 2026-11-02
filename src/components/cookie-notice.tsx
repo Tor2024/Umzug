@@ -77,7 +77,7 @@ export function CookieNotice() {
     <div
       role="dialog"
       aria-label={L.aria}
-      className="fixed inset-x-3 bottom-3 z-50 sm:inset-x-auto sm:left-4 sm:max-w-md"
+      className="fixed inset-x-3 bottom-3 z-50 sm:inset-x-auto sm:right-4 sm:max-w-md"
     >
       <div className="rounded-2xl border border-line bg-white p-5 shadow-xl">
         <div className="flex items-start gap-3">
