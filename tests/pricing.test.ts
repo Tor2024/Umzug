@@ -8,6 +8,7 @@ import {
   type Tariffs,
   type MoveConfig,
 } from "../src/lib/pricing";
+import { loadFactorPct, type DayAvailability, type DayStatus } from "../src/lib/availability";
 
 const T: Tariffs = structuredClone(DEFAULT_TARIFFS);
 
@@ -173,6 +174,54 @@ describe("calculateQuote", () => {
     const q = calculateQuote(cfg(), T2);
     expect(q.vat).toBe(0);
     expect(q.gross).toBe(q.net);
+  });
+});
+
+describe("loadFactorPct (задача 6)", () => {
+  const av = (status: DayStatus, freeSuitable = 2): DayAvailability => ({
+    status,
+    freeVehicles: 2,
+    freeDrivers: 2,
+    freeSuitable,
+    pendingOrders: 0,
+    maxVehicles: 4,
+    maxDrivers: 2,
+  });
+
+  it("busy → maxPct, partial → половина, free → 0", () => {
+    expect(loadFactorPct(av("busy"), 20)).toBe(20);
+    expect(loadFactorPct(av("partial"), 20)).toBe(10);
+    expect(loadFactorPct(av("free"), 20)).toBe(0);
+  });
+
+  it("maxPct <= 0 → всегда 0 (выключено)", () => {
+    expect(loadFactorPct(av("busy"), 0)).toBe(0);
+    expect(loadFactorPct(av("busy"), -5)).toBe(0);
+  });
+});
+
+describe("autoLoadPct в расчёте (задача 6)", () => {
+  it("multiplierPct учитывает autoLoadPct", () => {
+    const base = calculateQuote(cfg(), T);
+    const loaded = calculateQuote(cfg({ autoLoadPct: 20 }), T);
+    // 20% авто-коэффициента: gross = round(round((subtotal-discount)*(1+20/100)) с НДС)
+    expect(loaded.gross).toBeGreaterThan(base.gross);
+    const netNoVat = Math.round((base.subtotal - base.discount) * 1.2);
+    expect(loaded.net).toBe(netNoVat);
+  });
+
+  it("undefined autoLoadPct → идентично базовому расчёту", () => {
+    const base = calculateQuote(cfg(), T);
+    const noField = calculateQuote(cfg({ autoLoadPct: undefined }), T);
+    expect(noField.gross).toBe(base.gross);
+  });
+
+  it("autoLoadPct фиксируется в снимке и воспроизводится recalculate", () => {
+    const cfgFull = cfg({ autoLoadPct: 15 });
+    const quote = calculateQuote(cfgFull, T);
+    const snap = makeSnapshot(cfgFull, structuredClone(T));
+    expect(snap.config.autoLoadPct).toBe(15);
+    expect(recalculate(snap).gross).toBe(quote.gross);
   });
 });
 

@@ -17,7 +17,7 @@ import {
   ValidationError, type MoveConfig, type QuoteSnapshot, type VehicleClass,
 } from "./pricing";
 import { resolveRoute, validAddress } from "./geo";
-import { dayAvailability, nearestFreeDate } from "./availability";
+import { dayAvailability, loadFactorPct, nearestFreeDate } from "./availability";
 
 export interface OrderInput {
   fromText: string;
@@ -111,6 +111,8 @@ export async function createOrderAction(input: OrderInput): Promise<CreateOrderR
 
   let quote;
   let snapshot: QuoteSnapshot;
+  // D11: доступность дня (вычисляется в расчётном блоке, используется для гварда записи)
+  let av: Awaited<ReturnType<typeof dayAvailability>> | null = null;
   try {
     validateConfig(cfg);
     const tariffs = await getTariffs(db);
@@ -119,6 +121,15 @@ export async function createOrderAction(input: OrderInput): Promise<CreateOrderR
       cfg.vehicleClass = await classForVolume(db, cfg.volumeM3);
       cfg.classForced = false;
     }
+    quote = calculateQuote(cfg, tariffs);
+    // Задача 6: предварительный расчёт нужен до dayAvailability, чтобы узнать needsSecond;
+    // финальный расчёт — ниже после авто-коэффициента загрузки.
+    const preliminary = quote;
+    av = await dayAvailability(db, cfg.moveDate, {
+      volumeM3: cfg.volumeM3,
+      needsSecond: preliminary.needsSecondDriver,
+    });
+    cfg.autoLoadPct = loadFactorPct(av, tariffs.autoLoadPct);
     quote = calculateQuote(cfg, tariffs);
     snapshot = makeSnapshot(cfg, tariffs);
     // Контроль воспроизводимости (D4.11)
@@ -154,10 +165,7 @@ export async function createOrderAction(input: OrderInput): Promise<CreateOrderR
   const now = Math.floor(Date.now() / 1000);
   try {
     // D11: проверка ресурсов до записи (single source of truth — availability.ts)
-    const av = await dayAvailability(db, cfg.moveDate, {
-      volumeM3: cfg.volumeM3,
-      needsSecond: recalculate(snapshot).needsSecondDriver,
-    });
+    if (!av) throw new Error("Доступность дня не рассчитана");
     if (av.status === "busy") {
       const nearest = await nearestFreeDate(db, cfg.moveDate, { volumeM3: cfg.volumeM3 });
       return { ok: false, error: "busy", message: `На ${cfg.moveDate} нет свободных машин нужной вместимости или свободных водителей. Ближайшая дата: ${nearest ?? "уточните по телефону"}.` };

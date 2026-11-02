@@ -15,6 +15,8 @@ export interface DayAvailability {
   pendingOrders: number;  // new-заявок на дату (не резервируют)
   maxVehicles: number;
   maxDrivers: number;
+  /** Задача 6: авто-коэффициент загрузки этой даты (заполняется API; 0 = выключено) */
+  autoLoadPct?: number;
 }
 
 export interface MonthAvailability {
@@ -168,4 +170,15 @@ export async function nearestFreeDate(
     iso = d.toISOString().slice(0, 10);
   }
   return null;
+}
+
+/**
+ * Авто-коэффициент загрузки дня (задача 6, D1.5): чистая функция от статуса дня.
+ * busy → maxPct, partial → half, free/closed → 0. maxPct=0 → всегда 0 (выключено).
+ */
+export function loadFactorPct(av: DayAvailability, maxPct: number): number {
+  if (maxPct <= 0) return 0;
+  if (av.status === "busy") return maxPct;
+  if (av.status === "partial") return Math.round(maxPct / 2);
+  return 0;
 }

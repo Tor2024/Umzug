@@ -35,6 +35,7 @@ export interface Tariffs {
   sharedLoadPct: number;        // −15 (догруз), применяется ПЕРВЫМ к subtotal
   seasonPct: number;            // сезонный коэффициент месяца (0 = нейтрально)
   loadPct: number;              // ручной коэффициент загрузки даты (D1.5)
+  autoLoadPct: number;          // максимум авто-коэффициента загрузки (0 = выключено; задача 6)
   quoteValidDays: number;       // снимок цены валиден N дней
 }
 
@@ -60,6 +61,8 @@ export interface MoveConfig {
   isHoliday?: boolean;          // немецкий праздник (данные)
   express?: boolean;
   sharedLoad?: boolean;
+  /** Авто-коэффициент загрузки дня (задача 6): вычисляется на сервере из dayAvailability, фиксируется в снимке. */
+  autoLoadPct?: number;
 }
 
 export interface LineItem {
@@ -205,7 +208,8 @@ export function calculateQuote(cfg: MoveConfig, t: Tariffs): Quote {
   // 11. Коэффициенты спроса — один множитель (D1.1, D1.5)
   const multiplierPct = t.seasonPct + t.loadPct +
     (isWeekend(cfg) ? t.weekendPct : 0) +
-    (cfg.express ? t.expressPct : 0);
+    (cfg.express ? t.expressPct : 0) +
+    (cfg.autoLoadPct ?? 0);
   const net = Math.round((subtotal - discount) * (1 + multiplierPct / 100));
 
   // 12. НДС один раз; § 19 UStG — vatEnabled=false
@@ -263,5 +267,5 @@ export const DEFAULT_TARIFFS: Tariffs = {
   hvzZoneCents: 9490,
   vatPct: 19, vatEnabled: true, depositPct: 30,
   weekendPct: 10, expressPct: 25, sharedLoadPct: 15,
-  seasonPct: 0, loadPct: 0, quoteValidDays: 14,
+  seasonPct: 0, loadPct: 0, autoLoadPct: 0, quoteValidDays: 14,
 };

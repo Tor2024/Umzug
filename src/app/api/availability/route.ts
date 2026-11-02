@@ -3,8 +3,8 @@
 
 import { NextResponse, type NextRequest } from "next/server";
 import { cookies } from "next/headers";
-import { getDb, findSession } from "@/lib/db";
-import { monthAvailability, nearestFreeDate } from "@/lib/availability";
+import { getDb, findSession, getTariffs } from "@/lib/db";
+import { monthAvailability, nearestFreeDate, loadFactorPct } from "@/lib/availability";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
@@ -32,7 +32,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   };
 
   const db = await getDb();
+  // Задача 6: per-date авто-коэффициент загрузки (0, если pricing.auto_load_pct=0 — выключено)
+  const tariffs = await getTariffs(db);
   const data = await monthAvailability(db, month, opts);
+  for (const dateIso of Object.keys(data.dates)) {
+    data.dates[dateIso].autoLoadPct = loadFactorPct(data.dates[dateIso], tariffs.autoLoadPct);
+  }
   // Подсказка для express/переполненного месяца: ближайшая свободная дата
   const anyFree = Object.entries(data.dates).find(([, d]) => d.status === "free" || d.status === "partial");
   if (!anyFree) {

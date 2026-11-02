@@ -317,6 +317,7 @@ export const CONFIG_SCHEMA: Record<string, { type: "int" | "pct" | "cents" | "bo
   "pricing.shared_load_pct": { type: "pct", min: 0, max: 50 },
   "pricing.season_pct": { type: "pct", min: -50, max: 50 },
   "pricing.load_pct": { type: "pct", min: -50, max: 100 },
+  "pricing.auto_load_pct": { type: "pct", min: 0, max: 50 },
   "pricing.quote_valid_days": { type: "int", min: 1, max: 60 },
   "finance.due_days": { type: "int", min: 1, max: 60 },
   "maps.api_key": { type: "string", min: 0, max: 200 },
@@ -346,6 +347,7 @@ const TARIFF_KEYS: Record<string, keyof Tariffs> = {
   "pricing.shared_load_pct": "sharedLoadPct",
   "pricing.season_pct": "seasonPct",
   "pricing.load_pct": "loadPct",
+  "pricing.auto_load_pct": "autoLoadPct",
   "pricing.quote_valid_days": "quoteValidDays",
 };
 
@@ -504,6 +506,7 @@ async function seed(db: DB): Promise<void> {
     "pricing.shared_load_pct": String(DEFAULT_TARIFFS.sharedLoadPct),
     "pricing.season_pct": String(DEFAULT_TARIFFS.seasonPct),
     "pricing.load_pct": String(DEFAULT_TARIFFS.loadPct),
+    "pricing.auto_load_pct": String(DEFAULT_TARIFFS.autoLoadPct),
     "pricing.quote_valid_days": String(DEFAULT_TARIFFS.quoteValidDays),
     "finance.due_days": "14",
     "company.name": "Помощник с переездом GmbH",

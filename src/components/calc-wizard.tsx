@@ -80,6 +80,8 @@ export function CalcWizard({ loggedIn, tariffs = DEFAULT_TARIFFS }: { loggedIn: 
   const [extraCrew, setExtraCrew] = useState(0);
   const [express, setExpress] = useState(false);
   const [sharedLoad, setSharedLoad] = useState(false);
+  // Задача 6: авто-коэффициент загрузки выбранной даты (из календаря)
+  const [autoLoadPct, setAutoLoadPct] = useState(0);
 
   // Черновой расчёт на клиенте (официальная цена — после сабмита, D4.13)
   const draft = useMemo<MoveConfig>(() => ({
@@ -88,7 +90,8 @@ export function CalcWizard({ loggedIn, tariffs = DEFAULT_TARIFFS }: { loggedIn: 
     floorsFrom, floorsTo, elevatorFrom, elevatorTo,
     boxes, kitchen, furnitureItems, packHours, hvzZones, extraCrew,
     moveDate, express, sharedLoad,
-  }), [volumeM3, route.km, route.minutes, floorsFrom, floorsTo, elevatorFrom, elevatorTo, boxes, kitchen, furnitureItems, packHours, hvzZones, extraCrew, moveDate, express, sharedLoad]);
+    autoLoadPct: autoLoadPct || undefined,
+  }), [volumeM3, route.km, route.minutes, floorsFrom, floorsTo, elevatorFrom, elevatorTo, boxes, kitchen, furnitureItems, packHours, hvzZones, extraCrew, moveDate, express, sharedLoad, autoLoadPct]);
 
   const quote = useMemo(() => {
     try {
@@ -160,13 +163,14 @@ export function CalcWizard({ loggedIn, tariffs = DEFAULT_TARIFFS }: { loggedIn: 
             </label>
             <label className="grid gap-1 text-sm">
               <span className="font-medium">Дата переезда</span>
-              <input className="input-base" type="date" value={moveDate} onChange={(e) => setMoveDate(e.target.value)} />
+              <input className="input-base" type="date" value={moveDate} onChange={(e) => { setMoveDate(e.target.value); setAutoLoadPct(0); }} />
               <span className="text-xs text-muted">Воскресенья и праздники недоступны (§ 9 ArbZG).</span>
             </label>
             <AvailabilityCalendar
               loggedIn={loggedIn}
               value={moveDate}
               onChange={(iso) => setMoveDate(iso)}
+              onSelectDay={(d) => setAutoLoadPct(d.autoLoadPct ?? 0)}
             />
             <div aria-live="polite" className="rounded-container border border-line bg-surface px-4 py-3 text-sm">
               {route.loading && <span className="text-muted">Считаем маршрут…</span>}

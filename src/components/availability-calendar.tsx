@@ -5,7 +5,7 @@
 // Переключение месяцев в границах [сегодня, +3 мес]. Пустой месяц → nearestFree подсказка.
 
 import { useEffect, useState } from "react";
-import type { MonthAvailability, DayStatus } from "@/lib/availability";
+import type { MonthAvailability, DayStatus, DayAvailability } from "@/lib/availability";
 
 const DAY_NAMES = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 const MONTH_NAMES = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
@@ -23,9 +23,11 @@ export interface AvailabilityCalendarProps {
   needsSecond?: boolean;
   value: string;          // ISO выбранной даты
   onChange: (iso: string) => void;
+  /** Задача 6: колбэк с данными выбранного дня (для авто-коэффициента загрузки) */
+  onSelectDay?: (d: DayAvailability) => void;
 }
 
-export function AvailabilityCalendar({ loggedIn, volumeM3, needsSecond, value, onChange }: AvailabilityCalendarProps) {
+export function AvailabilityCalendar({ loggedIn, volumeM3, needsSecond, value, onChange, onSelectDay }: AvailabilityCalendarProps) {
   const [month, setMonth] = useState<string>(() => new Date().toISOString().slice(0, 7));
   const [data, setData] = useState<MonthAvailability | null>(null);
   const [nearestFree, setNearestFree] = useState<string | null>(null);
@@ -101,7 +103,7 @@ export function AvailabilityCalendar({ loggedIn, volumeM3, needsSecond, value, o
               disabled={!selectable}
               aria-pressed={selected}
               title={`${iso}: ${label(iso, d)}`}
-              onClick={() => onChange(iso)}
+              onClick={() => { onChange(iso); onSelectDay?.(d); }}
               className={`flex h-10 flex-col items-center justify-center rounded-base border text-sm ${STATUS_CLASS[d.status]} ${selected ? "ring-2 ring-accent" : ""}`}
             >
               <span className="leading-none">{Number(iso.slice(8))}</span>
