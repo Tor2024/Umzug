@@ -16,6 +16,7 @@ import { RevisionDecision } from "@/components/revision-decision";
 import { revisionFieldDiff } from "@/lib/revision";
 import { ActionRequired, type ActionItem } from "@/components/action-required";
 import { candidateVehicles, type CandidateVehicle } from "@/lib/dispatch-optimizer";
+import { resolveRoute } from "@/lib/geo";
 
 export const metadata: Metadata = { title: "Панель логиста", robots: { index: false } };
 export const instant = false;
@@ -189,6 +190,47 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
     }
   }
 
+  // ── Возврат машины на базу (@1641): видимость диспетчеру ──
+  // Для assigned-заказов СВОЕЙ машиной: расстояние выгрузка → база машины +
+  // есть ли следующий заказ в этом городе (тогда возврат не требуется).
+  const cityOfText = (q: string): string => {
+    const parts = q.split(",").map((p) => p.trim()).filter(Boolean);
+    return parts.length >= 2 ? (parts[parts.length - 1] ?? "") : "";
+  };
+  const returnInfoMap = new Map<number, { km: number | null; costCents: number | null; hasNextOrder: boolean }>();
+  {
+    const asgRes = await db.execute(
+      `SELECT a.order_id, v.home_base
+       FROM assignments a JOIN vehicles v ON v.id = a.resource_id
+       WHERE a.resource_type = 'vehicle'
+         AND a.order_id IN (SELECT id FROM orders WHERE status = 'assigned')`,
+    );
+    const asgRows = asgRes.rows as unknown as Array<{ order_id: number; home_base: string }>;
+    // Города будущих заборов (для проверки «рядом есть следующий заказ»)
+    const futureRes = await db.execute(
+      `SELECT id, from_text FROM orders
+       WHERE status IN ('new','confirmed','assigned') AND move_date >= date('now')`,
+    );
+    const futureRows = futureRes.rows as unknown as Array<{ id: number; from_text: string }>;
+    const assignedById = new Map(asgRows.map((r) => [Number(r.order_id), r]));
+    for (const o of filtered) {
+      if (o.status !== "assigned") continue;
+      const asg = assignedById.get(o.id);
+      if (!asg || !asg.home_base) continue;
+      const destCity = cityOfText(o.to_text);
+      const hasNextOrder = futureRows.some(
+        (f) => f.id !== o.id && destCity !== "" && cityOfText(f.from_text) === destCity,
+      );
+      let km: number | null = null;
+      try {
+        const rr = await resolveRoute(o.to_text, asg.home_base, "");
+        if (rr && !rr.error && rr.km > 0) km = rr.km;
+      } catch { /* гео-сервис недоступен — km остаётся null */ }
+      const costCents = km != null ? Math.round(km * 104) : null; // APPROACH_COST_PER_KM_CENTS
+      returnInfoMap.set(o.id, { km, costCents, hasNextOrder });
+    }
+  }
+
   // Субподрядчики (@1480@): активные партнёры + назначение по заказам
   const subsRes = await db.execute("SELECT id, name, class, price_mode, price_cents FROM subcontractors WHERE active = 1 ORDER BY name");
   const subs = subsRes.rows as unknown as
@@ -267,6 +309,14 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
                 <span className={CHIP_CLASS[o.status]}>{STATUS_LABEL[o.status]}</span>
                 <span className="chip chip-neutral">Класс {o.vehicle_class}</span>
                 {needsSecond && <span className="chip chip-delayed">Смена &gt;10 ч — нужен 2-й водитель</span>}
+                {/* Возврат машины на базу (@1641): акцент для диспетчера */}
+                {(() => {
+                  const ri = returnInfoMap.get(o.id);
+                  if (o.status !== "assigned") return null;
+                  if (ri?.hasNextOrder) return <span className="chip chip-trust">Есть следующий заказ в этом городе — возврат не требуется</span>;
+                  if (ri?.km != null) return <span className="chip chip-delayed">Возврат на базу: {ri.km} км · себестоимость {((ri.costCents ?? 0) / 100).toFixed(2)} € (внутр.)</span>;
+                  return <span className="chip chip-neutral">Возврат на базу: не рассчитан</span>;
+                })()}
                 {pendingSnap && (
                   <span className="chip chip-dispatched">
                     {o.revision_requested_by === "kunde" ? "Правка клиента — требуется решение" : "Ждёт подтверждения клиента"}
