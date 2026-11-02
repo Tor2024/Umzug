@@ -6,7 +6,17 @@ export function SiteHeader() {
     <header className="sticky top-0 z-30 border-b border-line bg-white/95 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2 font-bold">
-          <span className="flex size-8 items-center justify-center rounded-base bg-primary text-sm text-white">ПП</span>
+          {/* Логотип: фургон в оранжевом круге (совпадает с favicon) */}
+          <svg className="size-8 shrink-0" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="32" fill="#EA7A28"/>
+            <g transform="translate(13.5,17.5)" stroke="#ffffff" fill="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M 3 20 L 3 12 Q 3 4 12 4 L 27 4 Q 32 4 35 9 L 38 14 Q 39 16 39 20 L 37 20"/>
+              <path d="M 3 20 L 5 20"/>
+              <circle cx="11" cy="22" r="3.4"/>
+              <circle cx="29" cy="22" r="3.4"/>
+              <path d="M 15 22 L 25 22"/>
+            </g>
+          </svg>
           <span className="hidden sm:inline">Помощник с переездом</span>
         </Link>
         <nav className="flex items-center gap-1 text-sm sm:gap-4">
