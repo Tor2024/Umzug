@@ -127,7 +127,10 @@ export default async function FinancePage() {
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-8">
       <h1 className="mb-1 text-2xl font-bold">Бухгалтерия</h1>
-      <p className="mb-6 text-sm text-muted">{user.name} · счета, платежи, дуннинг, претензии</p>
+      <p className="mb-6 text-sm text-muted">
+        {user.name} · счета, платежи, дуннинг, претензии ·{" "}
+        <Link className="text-accent underline" href="/analytics">Аналитика →</Link>
+      </p>
 
       {/* Дашборд */}
       <section className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
