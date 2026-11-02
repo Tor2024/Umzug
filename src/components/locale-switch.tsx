@@ -26,7 +26,7 @@ export function LocaleSwitch({ current, compact = false }: { current: "ru" | "de
   const deHref = current === "de" ? pathname : pathname === "/" ? "/de" : pathname === "/de" ? "/de" : `/de${pathname}`;
 
   const cls = (on: boolean) =>
-    `rounded-base font-semibold tabular-nums ${compact ? "border-white/30 bg-white/10 px-1.5 py-0.5 text-xs" : "px-1.5 py-0.5 text-xs"} ${on ? (compact ? "bg-white text-primary" : "bg-primary text-white") : compact ? "text-slate-300 hover:text-white" : "text-muted hover:text-ink"}`;
+    `rounded-base font-semibold tabular-nums ${compact ? "border-white/30 bg-white/10 px-1.5 py-0.5 text-xs" : "px-1.5 py-0.5 text-xs"} ${on ? "bg-accent text-white" : compact ? "text-slate-300 hover:text-white" : "text-muted hover:text-ink"}`;
 
   return (
     <span

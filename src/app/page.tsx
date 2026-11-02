@@ -2,7 +2,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { SiteHeader, SiteFooter } from "@/components/site-chrome";
 import { SITE } from "@/lib/site";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import type { Metadata } from "next";
+
+// Первый визит (нет cookie locale) → /de (немецкая версия по умолчанию — решение
+// пользователя). Повторные визиты: cookie locale запоминает выбор переключателя
+// DE|RU (locale-switch.tsx), поэтому RU-посетители остаются на RU-лендинге.
+export const instant = false;
 
 export const metadata: Metadata = {
   title: "Umzug Service — расчёт переезда по Германии за минуту",
@@ -26,7 +33,10 @@ const SERVICES = [
   { img: "/img/hvz-street.jpg", t: "Halteverbotszone", d: "Организуем зону парковки у подъезда в день переезда — по запросу в заявке." },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const jar = await cookies();
+  if (jar.get("locale")?.value !== "ru") redirect("/de");
+
   return (
     <div className="flex min-h-dvh flex-col">
       <SiteHeader />
