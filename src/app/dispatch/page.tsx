@@ -369,7 +369,13 @@ function AssignForm({
   busy: Map<string, string>;
   orderRef: string;
 }) {
-  const suitable = vehicles.filter((v) => v.capacity_m3 >= orderVolume);
+  // Класс A<B<C: машина не ниже оплаченного класса И вместимость ≥ объёма заказа (D5.6, как в assignOrder).
+  const CLASS_RANK: Record<VehicleClass, number> = { A: 1, B: 2, C: 3 };
+  const suitable = vehicles.filter(
+    (v) => v.capacity_m3 >= orderVolume && CLASS_RANK[v.class] >= CLASS_RANK[orderClass],
+  );
+  // Занятость водителя на дату переезда — пометка в select (конфликт сервер всё равно ловит).
+  const driverBusy = (id: number) => busy.get(`driver:${id}:${moveDate}`);
   return (
     <div className="mt-3 rounded-base border border-line bg-surface p-3">
       <p className="mb-2 text-sm font-semibold">Назначение машины и бригады</p>
@@ -392,17 +398,23 @@ function AssignForm({
                 {v.plate} · {v.label} · {v.capacity_m3} м³ {takenBy && <span className="chip chip-delayed">занята ({takenBy})</span>}
               </span>
               <select name="driverId" className="input-base h-9 w-40" required aria-label="Водитель">
-                {drivers.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
+                {drivers.map((d) => {
+                  const b = driverBusy(d.id);
+                  return <option key={d.id} value={d.id}>{d.name}{b ? ` — занят (${b})` : ""}</option>;
+                })}
               </select>
               <select name="codriverId" className="input-base h-9 w-40" aria-label="Второй водитель">
                 <option value="">— без второго —</option>
-                {drivers.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
+                {drivers.map((d) => {
+                  const b = driverBusy(d.id);
+                  return <option key={d.id} value={d.id}>{d.name}{b ? ` — занят (${b})` : ""}</option>;
+                })}
               </select>
               <SubmitButton>Назначить</SubmitButton>
             </form>
           );
         })}
-        {suitable.length === 0 && <p className="text-sm text-danger">Нет свободных машин нужной вместимости ({orderVolume} м³, класс ≥ {orderClass}).</p>}
+        {suitable.length === 0 && <p className="text-sm text-danger">Нет машин нужной вместимости ({orderVolume} м³) и класса ≥ {orderClass}.</p>}
       </div>
     </div>
   );
