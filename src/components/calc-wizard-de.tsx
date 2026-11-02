@@ -25,6 +25,34 @@ interface RouteState {
 
 const STEPS = ["Strecke", "Volumen", "Leistungen"] as const;
 
+// DE-маппинг server-side ошибок createOrderAction: error-код → немецкий текст.
+// res.message остаётся русским (RU-клиент использует его), DE-клиент строит текст из кода.
+const CREATE_ERR: Record<string, string> = {
+  auth: "Bitte melden Sie sich an, um die Anfrage zu senden.",
+  role: "Nur Kundenkonten können eine Anfrage senden.",
+  limit: "Sie haben bereits 3 Anfragen in Bearbeitung. Bitte warten Sie auf die Bearbeitung.",
+  address: "Bitte geben Sie Start- und Zieladresse an (3–200 Zeichen).",
+  validation: "Eingabe ungültig. Bitte prüfen Sie Volumen, Datum und Uhrzeit (07:00–17:00).",
+  route: "Route konnte nicht berechnet werden. Anfrage wurde nicht erstellt.",
+  busy: "Am gewählten Datum sind keine Fahrzeuge passender Kapazität oder freie Fahrer verfügbar.",
+};
+
+function deErr(res: { error?: string; nearest?: string | null }): string | undefined {
+  const base = res.error ? CREATE_ERR[res.error] : undefined;
+  if (res.error === "busy" && res.nearest) {
+    return `${base} Nächster freier Tag: ${res.nearest}.`;
+  }
+  return base;
+}
+
+// /api/route возвращает русские error-строки (RU-клиент показывает их напрямую).
+// DE-клиент маппит по известным строкам; неизвестные показываются как есть (fallback-путь).
+function routeErrorDe(msg: string): string {
+  if (msg.includes("Слишком много запросов")) return "Zu viele Anfragen — bitte in einer Minute erneut versuchen.";
+  if (msg.includes("Укажите оба адреса")) return "Bitte beide Adressen angeben (3–200 Zeichen).";
+  return msg;
+}
+
 export function CalcWizardDe({ loggedIn, tariffs = DEFAULT_TARIFFS }: { loggedIn: boolean; tariffs?: typeof DEFAULT_TARIFFS }) {
   const router = useRouter();
   const [step, setStep] = useState(0);
@@ -145,7 +173,7 @@ export function CalcWizardDe({ loggedIn, tariffs = DEFAULT_TARIFFS }: { loggedIn
       } else if (res.error === "auth") {
         router.push(`/de/login?next=${encodeURIComponent("/de/calc")}`);
       } else {
-        setErr(res.message ?? "Anfrage konnte nicht erstellt werden.");
+        setErr(deErr(res) ?? "Anfrage konnte nicht erstellt werden.");
       }
     });
   };
@@ -209,7 +237,7 @@ export function CalcWizardDe({ loggedIn, tariffs = DEFAULT_TARIFFS }: { loggedIn
               {!route.loading && route.km > 0 && (
                 <span>Entfernung: <b>{route.km} km</b> · ~{Math.round(route.minutes / 60 * 10) / 10} Std. <span className="text-muted">({route.provider === "google" ? "Google Maps" : "OSRM/OSM"})</span></span>
               )}
-              {!route.loading && route.km === 0 && route.error && <span className="text-danger">{route.error}</span>}
+              {!route.loading && route.km === 0 && route.error && <span className="text-danger">{routeErrorDe(route.error)}</span>}
               {!route.loading && route.km === 0 && !route.error && <span className="text-muted">Adressen eingeben — die Entfernung wird automatisch berechnet.</span>}
             </div>
             {route.geometry && route.geometry.length >= 2 && (

@@ -54,6 +54,8 @@ export interface CreateOrderResult {
   ref?: string;
   error?: string;         // код ошибки для UI
   message?: string;       // человекочитаемо
+  nearest?: string | null; // ближайшая свободная дата (error: "busy")
+  moveDate?: string;       // запрошенная дата (error: "busy")
 }
 
 async function currentUser() {
@@ -188,7 +190,7 @@ export async function createOrderAction(input: OrderInput): Promise<CreateOrderR
     if (!av) throw new Error("Доступность дня не рассчитана");
     if (av.status === "busy") {
       const nearest = await nearestFreeDate(db, cfg.moveDate, { volumeM3: cfg.volumeM3 });
-      return { ok: false, error: "busy", message: `На ${cfg.moveDate} нет свободных машин нужной вместимости или свободных водителей. Ближайшая дата: ${nearest ?? "уточните по телефону"}.` };
+      return { ok: false, error: "busy", message: `На ${cfg.moveDate} нет свободных машин нужной вместимости или свободных водителей. Ближайшая дата: ${nearest ?? "уточните по телефону"}.`, nearest, moveDate: cfg.moveDate };
     }
 
     const ref = await nextRef;

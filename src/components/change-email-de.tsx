@@ -11,11 +11,35 @@ export function ChangeEmailDe({ currentEmail }: { currentEmail: string }) {
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [pending, startTransition] = useTransition();
 
+  // changeEmailAction возвращает русские message (общий экшен для RU/DE).
+  // DE-клиент маппит по известным строкам — как routeErrorDe в calc-wizard-de.
+  function deMsg(ok: boolean, m: string): string {
+    if (ok) {
+      if (m.includes("отправлено")) return "Der Bestätigungslink wurde an die neue Adresse gesendet.";
+      if (m.includes("обновлён")) return "E-Mail aktualisiert.";
+      return m;
+    }
+    const MAP: Array<[RegExp, string]> = [
+      [/Войдите/, "Bitte melden Sie sich an."],
+      [/Некорректный email/, "Ungültige E-Mail-Adresse."],
+      [/недоступен/, "Diese E-Mail-Adresse ist nicht verfügbar."],
+      [/не найден/, "Benutzer nicht gefunden."],
+      [/Пароль неверный/, "Falsches Passwort."],
+      [/уже ваш текущий/, "Das ist bereits Ihre aktuelle E-Mail-Adresse."],
+      [/уже зарегистрирован/, "Diese E-Mail-Adresse ist bereits registriert."],
+      [/Письмо не отправлено/, "E-Mail konnte nicht gesendet werden (Demo-Limit Resend) — bitte später erneut versuchen."],
+      [/недействительна|истекла/, "Der Link ist ungültig oder abgelaufen."],
+      [/уже занят/, "Diese E-Mail-Adresse wird bereits von einem anderen Konto verwendet."],
+    ];
+    for (const [re, de] of MAP) if (re.test(m)) return de;
+    return m;
+  }
+
   function submit() {
     setMsg(null);
     startTransition(async () => {
       const res = await changeEmailAction(email, password);
-      setMsg({ ok: res.ok, text: res.message });
+      setMsg({ ok: res.ok, text: deMsg(res.ok, res.message) });
       if (res.ok) {
         setEmail("");
         setPassword("");
