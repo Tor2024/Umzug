@@ -4,6 +4,9 @@
  * но доставляет ТОЛЬКО на email владельца Resend-аккаунта.
  * Боевой режим: VERIFY_EMAIL_ENABLED=0 отключает отправку (ссылка на экране);
  * при подключении своего домена — DOMAIN + FROM_EMAIL env vars.
+ *
+ * Фирменный бланк (@1999): единый каркас brandedShell — лого в тёмном хедере,
+ * оранжевая акцент-полоса, вежливый официальный тон, футер с реквизитами.
  */
 
 const RESEND_API = "https://api.resend.com/emails";
@@ -42,86 +45,136 @@ export async function sendEmail(to: string, subject: string, html: string): Prom
   }
 }
 
-function verifyTemplate(name: string, verifyUrl: string): string {
+// ─── Фирменный бланк (@1999) ───────────────────────────────────────────────
+
+const ORDER_URL_BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://umzug-seven.vercel.app";
+
+/** Лого: фургон в оранжевом круге (совпадает с сайтом). SVG понимают Gmail/Apple/Яндекс. */
+function logoSvg(): string {
+  return `<svg width="36" height="36" viewBox="0 0 64 64" style="display:block;border-radius:50%;" aria-hidden="true"><circle cx="32" cy="32" r="32" fill="#EA7A28"/><g transform="translate(13.5,17.5)" stroke="#ffffff" fill="none" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M 3 20 L 3 12 Q 3 4 12 4 L 27 4 Q 32 4 35 9 L 38 14 Q 39 16 39 20 L 37 20"/><path d="M 3 20 L 5 20"/><circle cx="11" cy="22" r="3.4"/><circle cx="29" cy="22" r="3.4"/><path d="M 15 22 L 25 22"/></g></svg>`;
+}
+
+export interface ShellOpts {
+  /** Абзац-приветствие (уже с escapeHtml, если нужно). */
+  greeting?: string;
+  /** Основной HTML-контент (абзацы). */
+  bodyHtml: string;
+  /** Кнопка-действие (одна). */
+  actionUrl?: string;
+  actionLabel?: string;
+  /** Мелкий текст под кнопкой (fallback-ссылка, примечание). */
+  noteHtml?: string;
+}
+
+/**
+ * Единый фирменный бланк: тёмный хедер с лого, оранжевая полоса,
+ * контент, футер с реквизитами и вежливой подписью.
+ */
+function brandedShell({ greeting, bodyHtml, actionUrl, actionLabel, noteHtml }: ShellOpts): string {
+  const button = actionUrl && actionLabel
+    ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:20px 0 0;"><tr><td style="background:#EA7A28;border-radius:8px;">
+         <a href="${actionUrl}" style="display:inline-block;padding:12px 24px;color:#ffffff;text-decoration:none;font-size:15px;font-weight:bold;">${actionLabel}</a>
+       </td></tr></table>`
+    : "";
+  const note = noteHtml
+    ? `<p style="margin:16px 0 0;font-size:13px;color:#6b7280;line-height:1.5;">${noteHtml}</p>`
+    : "";
   return `<!doctype html>
 <html lang="ru"><body style="margin:0;padding:24px;background:#f6f7f9;font-family:Arial,Helvetica,sans-serif;color:#1a1d21;">
-  <div style="max-width:480px;margin:0 auto;background:#ffffff;border-radius:12px;padding:32px;border:1px solid #e5e7eb;">
-    <h1 style="margin:0 0 16px;font-size:20px;">Umzug Service</h1>
-    <p style="margin:0 0 12px;font-size:15px;line-height:1.5;">Здравствуйте, ${escapeHtml(name)}!</p>
-    <p style="margin:0 0 20px;font-size:15px;line-height:1.5;">Подтвердите ваш email — нажмите кнопку ниже. Ссылка действует 24 часа.</p>
-    <a href="${verifyUrl}" style="display:inline-block;background:#1a56db;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:8px;font-size:15px;font-weight:bold;">Подтвердить email</a>
-    <p style="margin:20px 0 0;font-size:13px;color:#6b7280;line-height:1.5;">Если кнопка не работает, скопируйте ссылку в браузер:<br><a href="${verifyUrl}" style="color:#1a56db;word-break:break-all;">${verifyUrl}</a></p>
-    <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;">
-    <p style="margin:0;font-size:12px;color:#9ca3af;">Если вы не регистрировались — просто проигнорируйте это письмо.</p>
+  <div style="max-width:520px;margin:0 auto;background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e5e7eb;">
+    <div style="background:#0f172a;padding:18px 28px;">
+      <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+        <td style="padding-right:12px;">${logoSvg()}</td>
+        <td style="vertical-align:middle;">
+          <span style="color:#ffffff;font-size:17px;font-weight:bold;">Umzug Service</span><br>
+          <span style="color:#94a3b8;font-size:12px;">Umzüge in Deutschland — ohne Überraschungen</span>
+        </td>
+      </tr></table>
+    </div>
+    <div style="height:3px;background:#EA7A28;"></div>
+    <div style="padding:28px;">
+      ${greeting ? `<p style="margin:0 0 12px;font-size:15px;line-height:1.5;">${greeting}</p>` : ""}
+      ${bodyHtml}
+      ${button}
+      ${note}
+      <p style="margin:24px 0 0;font-size:14px;line-height:1.5;color:#374151;">С уважением,<br>команда <b>Umzug Service</b></p>
+    </div>
+    <div style="background:#0f172a;padding:16px 28px;">
+      <p style="margin:0;font-size:12px;color:#cbd5e1;line-height:1.6;">
+        <b style="color:#ffffff;">Umzug Service GmbH</b> · Musterstraße 12, 10115 Berlin<br>
+        <a href="tel:+4930000000000" style="color:#94a3b8;text-decoration:none;">+49 (0)30 000 000 00</a> ·
+        <a href="mailto:info@umzugservice.example" style="color:#94a3b8;text-decoration:none;">info@umzugservice.example</a> ·
+        <a href="${ORDER_URL_BASE}" style="color:#EA7A28;text-decoration:none;">umzug-seven.vercel.app</a>
+      </p>
+    </div>
   </div>
 </body></html>`;
+}
+
+/** Fallback-ссылка для писем с кнопкой (мелким текстом). */
+function fallbackLink(url: string): string {
+  return `Если кнопка не работает, скопируйте ссылку в браузер:<br><a href="${url}" style="color:#EA7A28;word-break:break-all;">${url}</a>`;
 }
 
 function escapeHtml(s: string): string {
   return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 }
 
+function fmtEuro(cents: number): string {
+  return (cents / 100).toLocaleString("de-DE", { style: "currency", currency: "EUR" });
+}
+
+// ─── Аккаунт: подтверждение email, сброс пароля ───────────────────────────
+
 /** Письмо подтверждения регистрации. */
 export async function sendVerifyEmail(to: string, name: string, token: string): Promise<SendResult> {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://umzug-seven.vercel.app";
-  const verifyUrl = `${base}/verify?token=${token}`;
-  return sendEmail(to, "Подтвердите email — Umzug Service", verifyTemplate(name, verifyUrl));
+  const verifyUrl = `${ORDER_URL_BASE}/verify?token=${token}`;
+  const html = brandedShell({
+    greeting: `Здравствуйте, ${escapeHtml(name)}!`,
+    bodyHtml: `<p style="margin:0 0 12px;font-size:15px;line-height:1.5;">Благодарим за регистрацию в Umzug Service. Остался последний шаг — подтвердите ваш email, нажав кнопку ниже.</p>`,
+    actionUrl: verifyUrl,
+    actionLabel: "Подтвердить email",
+    noteHtml: `${fallbackLink(verifyUrl)}<br><br>Ссылка действует 24 часа. Если вы не регистрировались — просто проигнорируйте это письмо.`,
+  });
+  return sendEmail(to, "Подтвердите email — Umzug Service", html);
 }
 
 /** Письмо восстановления пароля: ссылка действует 1 час. */
 export async function sendResetEmail(to: string, name: string, token: string): Promise<SendResult> {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://umzug-seven.vercel.app";
-  const resetUrl = `${base}/reset-password?token=${token}`;
-  return sendEmail(to, "Восстановление пароля — Umzug Service", resetTemplate(name, resetUrl));
-}
-
-function resetTemplate(name: string, resetUrl: string): string {
-  return `<!doctype html>
-<html lang="ru"><body style="margin:0;padding:24px;background:#f6f7f9;font-family:Arial,Helvetica,sans-serif;color:#1a1d21;">
-  <div style="max-width:480px;margin:0 auto;background:#ffffff;border-radius:12px;padding:32px;border:1px solid #e5e7eb;">
-    <h1 style="margin:0 0 16px;font-size:20px;">Umzug Service</h1>
-    <p style="margin:0 0 12px;font-size:15px;line-height:1.5;">Здравствуйте, ${escapeHtml(name)}!</p>
-    <p style="margin:0 0 20px;font-size:15px;line-height:1.5;">Вы запросили восстановление пароля. Нажмите кнопку ниже и задайте новый пароль. Ссылка действует <b>1 час</b>.</p>
-    <a href="${resetUrl}" style="display:inline-block;background:#1a56db;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:8px;font-size:15px;font-weight:bold;">Задать новый пароль</a>
-    <p style="margin:20px 0 0;font-size:13px;color:#6b7280;line-height:1.5;">Если кнопка не работает, скопируйте ссылку в браузер:<br><a href="${resetUrl}" style="color:#1a56db;word-break:break-all;">${resetUrl}</a></p>
-    <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;">
-    <p style="margin:0;font-size:12px;color:#9ca3af;">Если вы не запрашивали сброс пароля — просто проигнорируйте это письмо, пароль останется прежним.</p>
-  </div>
-</body></html>`;
+  const resetUrl = `${ORDER_URL_BASE}/reset-password?token=${token}`;
+  const html = brandedShell({
+    greeting: `Здравствуйте, ${escapeHtml(name)}!`,
+    bodyHtml: `<p style="margin:0 0 12px;font-size:15px;line-height:1.5;">Вы запросили восстановление пароля. Нажмите кнопку ниже и задайте новый пароль.</p>`,
+    actionUrl: resetUrl,
+    actionLabel: "Задать новый пароль",
+    noteHtml: `${fallbackLink(resetUrl)}<br><br>Ссылка действует <b>1 час</b>. Если вы не запрашивали сброс — просто проигнорируйте это письмо, пароль останется прежним.`,
+  });
+  return sendEmail(to, "Восстановление пароля — Umzug Service", html);
 }
 
 // ─── Уведомления о статусе заказа (клиенту) ───────────────────────────────
 
-const ORDER_URL_BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://umzug-seven.vercel.app";
-
-/** Общий каркас статусных писем. */
-function statusTemplate(title: string, bodyHtml: string, orderRef: string): string {
-  const orderUrl = `${ORDER_URL_BASE}/order/${orderRef}`;
-  return `<!doctype html>
-<html lang="ru"><body style="margin:0;padding:24px;background:#f6f7f9;font-family:Arial,Helvetica,sans-serif;color:#1a1d21;">
-  <div style="max-width:480px;margin:0 auto;background:#ffffff;border-radius:12px;padding:32px;border:1px solid #e5e7eb;">
-    <h1 style="margin:0 0 16px;font-size:20px;">Umzug Service</h1>
-    <p style="margin:0 0 12px;font-size:15px;line-height:1.5;">${title}</p>
-    ${bodyHtml}
-    <p style="margin:20px 0 0;">
-      <a href="${orderUrl}" style="display:inline-block;background:#EA7A28;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:8px;font-size:15px;font-weight:bold;">Открыть заявку ${orderRef}</a>
-    </p>
-    <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;">
-    <p style="margin:0;font-size:12px;color:#9ca3af;">Umzug Service GmbH · Umzüge in Deutschland ohne Überraschungen</p>
-  </div>
-</body></html>`;
-}
-
-function fmtEuro(cents: number): string {
-  return (cents / 100).toLocaleString("de-DE", { style: "currency", currency: "EUR" });
+/** Общий каркас статусных писем: greeting + body + кнопка «Открыть заявку» (или своя ссылка). */
+function statusTemplate(
+  greeting: string,
+  bodyHtml: string,
+  orderRef: string,
+  action?: { url: string; label: string },
+): string {
+  return brandedShell({
+    greeting,
+    bodyHtml,
+    actionUrl: action?.url ?? `${ORDER_URL_BASE}/order/${orderRef}`,
+    actionLabel: action?.label ?? `Открыть заявку ${orderRef}`,
+  });
 }
 
 /** Заявка создана (new) — сразу после отправки из калькулятора. */
 export async function sendOrderCreatedEmail(to: string, name: string, ref: string, grossCents: number, moveDate: string): Promise<SendResult> {
   const html = statusTemplate(
-    `Здравствуйте, ${escapeHtml(name)}! Ваша заявка принята.`,
+    `Здравствуйте, ${escapeHtml(name)}! Ваша заявка принята — спасибо за доверие.`,
     `<p style="margin:0 0 12px;font-size:15px;line-height:1.5;">Заявка <b>${ref}</b> на переезд ${escapeHtml(moveDate)} создана. Предварительная стоимость: <b>${fmtEuro(grossCents)}</b> (включая НДС).</p>
-     <p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">Логист проверит расчёт и подтвердит цену — уведомим вас письмом. Смета действует 14 дней.</p>`,
+     <p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">Наш логист внимательно проверит расчёт и подтвердит цену — мы сообщим вам письмом. Смета действует 14 дней.</p>`,
     ref,
   );
   return sendEmail(to, `Заявка ${ref} принята — Umzug Service`, html);
@@ -130,9 +183,9 @@ export async function sendOrderCreatedEmail(to: string, name: string, ref: strin
 /** Логист подтвердил цену (confirmed). */
 export async function sendOrderConfirmedEmail(to: string, name: string, ref: string, grossCents: number, depositCents: number): Promise<SendResult> {
   const html = statusTemplate(
-    `Здравствуйте, ${escapeHtml(name)}! Цена по заявке ${ref} подтверждена.`,
+    `Здравствуйте, ${escapeHtml(name)}! Рад сообщить: цена по заявке ${ref} подтверждена.`,
     `<p style="margin:0 0 12px;font-size:15px;line-height:1.5;">Итоговая стоимость: <b>${fmtEuro(grossCents)}</b>, аванс 30%: <b>${fmtEuro(depositCents)}</b>.</p>
-     <p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">Следующий шаг — назначение машины и экипажа. Аванс можно оплатить по реквизитам в заявке.</p>`,
+     <p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">Следующий шаг — мы назначим машину и экипаж. Аванс удобно оплатить по реквизитам на странице заявки.</p>`,
     ref,
   );
   return sendEmail(to, `Цена по заявке ${ref} подтверждена — Umzug Service`, html);
@@ -143,21 +196,22 @@ export async function sendOrderAssignedEmail(to: string, name: string, ref: stri
   const html = statusTemplate(
     `Здравствуйте, ${escapeHtml(name)}! По заявке ${ref} назначены машина и экипаж.`,
     `<p style="margin:0 0 12px;font-size:15px;line-height:1.5;">Дата переезда: <b>${escapeHtml(moveDate)}</b>. Состав бригады виден на странице заявки.</p>
-     <p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">Водитель свяжется с вами перед выездом. Пожалуйста, будьте на связи.</p>`,
+     <p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">Ваш водитель свяжется с вами накануне переезда. Пожалуйста, будьте на связи — и лёгкого переезда!</p>`,
     ref,
   );
   return sendEmail(to, `Бригада назначена — заявка ${ref} — Umzug Service`, html);
 }
 
-/** Переезд завершён, счёт создан (closed + invoice). */
+/** Переезд завершён, счёт создан (closed + invoice): кнопка ведёт на PDF счёта. */
 export async function sendInvoiceEmail(to: string, name: string, ref: string, invoiceNumber: string, grossCents: number, dueDate: string): Promise<SendResult> {
   const pdfUrl = `${ORDER_URL_BASE}/api/pdf/invoice/${invoiceNumber}`;
   const html = statusTemplate(
-    `Здравствуйте, ${escapeHtml(name)}! Переезд по заявке ${ref} завершён.`,
+    `Здравствуйте, ${escapeHtml(name)}! Переезд по заявке ${ref} успешно завершён.`,
     `<p style="margin:0 0 12px;font-size:15px;line-height:1.5;">Счёт <b>${invoiceNumber}</b> на сумму <b>${fmtEuro(grossCents)}</b> создан. Срок оплаты: <b>${escapeHtml(dueDate)}</b>.</p>
-     <p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">Реквизиты и PDF — по кнопке ниже или на странице заявки.</p>`,
+     <p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">PDF-версия счёта — по кнопке ниже или на странице заявки. Благодарим за сотрудничество!</p>`,
     ref,
-  ).replace(`href="${ORDER_URL_BASE}/order/${ref}"`, `href="${pdfUrl}"`);
+    { url: pdfUrl, label: `Скачать счёт ${invoiceNumber} (PDF)` },
+  );
   return sendEmail(to, `Счёт ${invoiceNumber} — Umzug Service`, html);
 }
 
@@ -165,7 +219,7 @@ export async function sendInvoiceEmail(to: string, name: string, ref: string, in
 export async function sendAcceptanceEmail(to: string, name: string, ref: string): Promise<SendResult> {
   const html = statusTemplate(
     `Здравствуйте, ${escapeHtml(name)}! Приёмка по заявке ${ref} подтверждена.`,
-    `<p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">Спасибо! Если что-то не так — ответьте на это письмо или напишите в переписке по заявке.</p>`,
+    `<p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">Спасибо! Если что-то не так — просто ответьте на это письмо или напишите нам в переписке по заявке, мы всё исправим.</p>`,
     ref,
   );
   return sendEmail(to, `Приёмка подтверждена — заявка ${ref} — Umzug Service`, html);
@@ -175,7 +229,7 @@ export async function sendAcceptanceEmail(to: string, name: string, ref: string)
 export async function sendOrderCancelledEmail(to: string, name: string, ref: string): Promise<SendResult> {
   const html = statusTemplate(
     `Здравствуйте, ${escapeHtml(name)}! Заявка ${ref} отменена.`,
-    `<p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">Если отмена не от вас — ответьте на это письмо как можно скорее.</p>`,
+    `<p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">Если отмена не от вас — пожалуйста, ответьте на это письмо как можно скорее, разберёмся.</p>`,
     ref,
   );
   return sendEmail(to, `Заявка ${ref} отменена — Umzug Service`, html);
@@ -191,11 +245,35 @@ export async function sendOrderReminderEmail(
   const html = statusTemplate(
     `Здравствуйте, ${escapeHtml(name)}! ${when}, а заявка ${ref} ещё не подтверждена.`,
     `<p style="margin:0 0 12px;font-size:15px;line-height:1.5;">Дата переезда: <b>${escapeHtml(moveDate)}</b>. Заявка всё ещё в статусе «новая» — логист ещё не подтвердил цену.</p>
-     <p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">Пожалуйста, дождитесь подтверждения цены или свяжитесь с нами. Без подтверждения машина на эту дату не закреплена.</p>`,
+     <p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">Пожалуйста, дождитесь подтверждения или свяжитесь с нами — будем рады помочь. Без подтверждения машина на эту дату не закреплена.</p>`,
     ref,
   );
   const subject = kind === "48h"
     ? `Заявка ${ref}: до переезда ~2 дня, заявка не подтверждена — Umzug Service`
     : `Заявка ${ref}: переезд завтра, заявка не подтверждена — Umzug Service`;
   return sendEmail(to, subject, html);
+}
+
+// ─── Сообщения переписки (staff → клиент) ─────────────────────────────────
+
+/** Экспортировано для sendMessageAction (actions.ts): письмо о новом ответе сотрудника. */
+export function threadMessageTemplate(name: string, ref: string, fromLabel: string, body: string): string {
+  return brandedShell({
+    greeting: `Здравствуйте, ${escapeHtml(name)}!`,
+    bodyHtml: `<p style="margin:0 0 12px;font-size:15px;line-height:1.5;">Новое сообщение в переписке по заявке <b>${ref}</b> — ${escapeHtml(fromLabel === "Наша команда" ? "нам" : "от вас")}:</p>
+     <blockquote style="margin:0 0 12px;padding:12px 16px;border-left:3px solid #EA7A28;background:#fff7ed;border-radius:0 8px 8px 0;font-size:14px;line-height:1.5;white-space:pre-wrap;">${escapeHtml(body)}</blockquote>`,
+    noteHtml: `Ответить можно прямо на странице заявки — будем рады помочь.`,
+  });
+}
+
+/** Дуннинг-письмо (просрочка оплаты счёта). Экспортировано для dunningRefreshAction. */
+export function dunningTemplate(name: string, invoiceNumber: string, ref: string, daysTxt: string): string {
+  const orderUrl = `${ORDER_URL_BASE}/order/${ref}`;
+  return brandedShell({
+    greeting: `Уважаемый(-ая) ${escapeHtml(name)}!`,
+    bodyHtml: `<p style="margin:0 0 12px;font-size:15px;line-height:1.5;">Обращаем ваше внимание: оплата по счёту <b>${escapeHtml(invoiceNumber)}</b> (заявка ${ref}) просрочена на ${escapeHtml(daysTxt)}.</p>
+     <p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">Просим погасить задолженность в удобный срок либо связаться с нами — мы обязательно найдём решение.</p>`,
+    actionUrl: orderUrl,
+    actionLabel: `Открыть заявку ${ref}`,
+  });
 }

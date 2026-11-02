@@ -875,21 +875,17 @@ export async function dunningRefreshAction(): Promise<SimpleResult> {
       if (levelUp) {
         try {
           const oRes = await db.execute({
-            sql: "SELECT ref, contact_email FROM orders WHERE id = ?",
+            sql: "SELECT ref, contact_name, contact_email FROM orders WHERE id = ?",
             args: [r.order_id],
           });
-          const o = oRes.rows[0] as unknown as { ref: string; contact_email: string } | undefined;
+          const o = oRes.rows[0] as unknown as { ref: string; contact_name: string; contact_email: string } | undefined;
           if (o && !o.contact_email.endsWith("@deleted.local")) {
-            const { sendEmail } = await import("./email");
+            const { sendEmail, dunningTemplate } = await import("./email");
             const daysTxt = newLvl >= 2 ? "более 30 дней" : "более 14 дней";
             await sendEmail(
               o.contact_email,
               `Просрочка оплаты по счёту ${r.number} — Umzug Service`,
-              `<div style="font-family:sans-serif;max-width:560px">
-                <p>Уважаемый клиент, оплата по счёту <b>${r.number}</b> (заявка ${o.ref}) просрочена на ${daysTxt}.</p>
-                <p>Просьба погасить задолженность или связаться с нами для уточнения деталей.</p>
-                <p><a href="${process.env.NEXT_PUBLIC_SITE_URL ?? "https://umzug-seven.vercel.app"}/order/${o.ref}">Открыть заявку ${o.ref}</a></p>
-              </div>`,
+              dunningTemplate(o.contact_name.split(" ")[0] ?? o.contact_name, r.number, o.ref, daysTxt),
             );
             emailed++;
           }
@@ -1435,10 +1431,10 @@ export async function sendMessageAction(orderRef: string, body: string): Promise
   if (text.length < 2) return { ok: false, message: "Сообщение слишком короткое." };
 
   const orderRes = await db.execute({
-    sql: "SELECT id, client_id, ref, contact_email FROM orders WHERE ref = ?",
+    sql: "SELECT id, client_id, ref, contact_name, contact_email FROM orders WHERE ref = ?",
     args: [orderRef],
   });
-  const order = orderRes.rows[0] as unknown as { id: number; client_id: number; ref: string; contact_email: string } | undefined;
+  const order = orderRes.rows[0] as unknown as { id: number; client_id: number; ref: string; contact_name: string; contact_email: string } | undefined;
   if (!order) return { ok: false, message: "Заявка не найдена." };
 
   // Клиент пишет только в свою заявку; персонал — в любую.
@@ -1456,17 +1452,15 @@ export async function sendMessageAction(orderRef: string, body: string): Promise
   try {
     // Аудит #7: анонимизированным клиентам (deleted.local) письма не отправляем.
     if (!order.contact_email.endsWith("@deleted.local")) {
-      const { sendEmail } = await import("./email");
+      const { sendEmail, threadMessageTemplate } = await import("./email");
       const staff = user.role !== "kunde";
       const to = order.contact_email;
       const subject = staff
         ? `Ответ по заявке ${order.ref} — Umzug Service`
         : `Новое сообщение по заявке ${order.ref} — Umzug Service`;
-      const html = `<div style="font-family:sans-serif;max-width:560px">
-        <p>${staff ? "Ответ персонала по вашей заявке" : "Новое сообщение по вашей заявке"} <b>${order.ref}</b>:</p>
-        <blockquote style="border-left:3px solid #ccc;padding-left:12px;color:#333">${text.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>")}</blockquote>
-        <p>Открыть заявку: <a href="${process.env.NEXT_PUBLIC_SITE_URL ?? "https://umzug-seven.vercel.app"}/order/${order.ref}">${order.ref}</a></p>
-      </div>`;
+      // Фирменный бланк (@1999): от кого (роль) + текст сообщения.
+      const fromLabel = staff ? "Наша команда" : "Клиент";
+      const html = threadMessageTemplate(order.contact_name.split(" ")[0] ?? order.contact_name, order.ref, fromLabel, text);
       await sendEmail(to, subject, html);
     }
   } catch {
