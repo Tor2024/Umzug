@@ -84,9 +84,13 @@ const SCHEMA_SQL = `
     verify_expires  INTEGER,
     reset_token     TEXT,
     reset_expires   INTEGER,
+    pending_email   TEXT,
+    pending_email_token TEXT,
+    pending_email_expires INTEGER,
     created_at      INTEGER NOT NULL
   );
   CREATE INDEX IF NOT EXISTS idx_users_reset_token ON users(reset_token);
+  CREATE INDEX IF NOT EXISTS idx_users_pending_email ON users(pending_email_token);
   CREATE TABLE IF NOT EXISTS sessions (
     token_hash  TEXT PRIMARY KEY,
     user_id     INTEGER NOT NULL REFERENCES users(id),

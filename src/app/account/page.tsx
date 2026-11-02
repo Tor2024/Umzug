@@ -6,6 +6,7 @@ import { connection } from "next/server";
 import { requireUser } from "@/lib/auth";
 import { getDb } from "@/lib/db";
 import { DeleteAccount } from "./delete-account";
+import { ChangeEmail } from "./change-email";
 
 export const metadata: Metadata = { title: "Личный кабинет", robots: { index: false } };
 export const instant = false;
@@ -52,6 +53,8 @@ export default async function AccountPage() {
           Скачайте все ваши данные в формате JSON: профиль, заявки, документы, платежи.
         </p>
         <a className="btn btn-outline" href="/api/account/export" download>Экспорт JSON</a>
+        <h2 className="mt-5 mb-1 font-semibold">Смена email</h2>
+        <ChangeEmail currentEmail={user.email} />
       </div>
 
       <h2 className="mb-3 font-semibold">Мои заявки</h2>

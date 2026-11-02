@@ -426,6 +426,14 @@ export async function startRouteAction(orderId: number): Promise<SimpleResult> {
   if (!canTransition("assigned", "enroute", user.role)) {
     return { ok: false, message: "Недостаточно прав." };
   }
+  // Аудит #1: водитель может выехать только на заказ, куда назначен (trips).
+  if (user.role === "driver") {
+    const tripRes = await db.execute({
+      sql: "SELECT id FROM trips WHERE order_id = ? AND (driver_id = ? OR codriver_id = ?)",
+      args: [orderId, user.id, user.id],
+    });
+    if (!tripRes.rows[0]) return { ok: false, message: "Вы не назначены на этот рейс." };
+  }
   const orderRes = await db.execute({
     sql: "SELECT id, ref, status, move_date FROM orders WHERE id = ?",
     args: [orderId],
@@ -470,6 +478,14 @@ export async function saveProtocolAction(input: ProtocolInput): Promise<Protocol
   if (!user) return { ok: false, message: "Войдите в систему." };
   if (user.role !== "driver" && user.role !== "admin") {
     return { ok: false, message: "Протокол составляет водитель." };
+  }
+  // Аудит #1: водитель подписывает протокол только на своём рейсе (trips).
+  if (user.role === "driver") {
+    const tripRes = await db.execute({
+      sql: "SELECT id FROM trips WHERE order_id = ? AND (driver_id = ? OR codriver_id = ?)",
+      args: [input.orderId, user.id, user.id],
+    });
+    if (!tripRes.rows[0]) return { ok: false, message: "Вы не назначены на этот рейс." };
   }
   const orderRes = await db.execute({
     sql: "SELECT id, ref, status, snapshot, volume_m3 FROM orders WHERE id = ?",
@@ -764,13 +780,21 @@ export async function cancelInvoiceAction(invoiceNumber: string): Promise<Simple
     return { ok: false, message: "Только бухгалтерия." };
   }
   const invRes = await db.execute({
-    sql: "SELECT number, paid_at FROM invoices WHERE number = ?",
+    sql: `SELECT i.number, i.paid_at, i.order_id,
+      (SELECT COALESCE(SUM(amount_cents),0) FROM payments WHERE order_id = i.order_id) AS paid_sum
+      FROM invoices i WHERE i.number = ?`,
     args: [invoiceNumber],
   });
   const inv = invRes.rows[0] as unknown as
-    { number: string; paid_at: number | null } | undefined;
+    { number: string; paid_at: number | null; order_id: number; paid_sum: number } | undefined;
   if (!inv) return { ok: false, message: "Счёт не найден." };
   if (inv.paid_at) return { ok: false, message: "Оплаченный счёт нельзя отменить." };
+  if (Number(inv.paid_sum) > 0) {
+    return {
+      ok: false,
+      message: `На заказ этого счёта уже поступило ${Math.round(Number(inv.paid_sum) / 100)} € — сначала оформите возврат платежа, затем отменяйте счёт.`,
+    };
+  }
   await db.execute({ sql: "UPDATE invoices SET status = 'cancelled' WHERE number = ?", args: [invoiceNumber] });
   await audit(db, user.id, "invoice_cancelled", "invoice", invoiceNumber, "");
   return { ok: true, message: "Счёт отменён (номер сохранён, GoBD)." };
@@ -785,24 +809,53 @@ export async function dunningRefreshAction(): Promise<SimpleResult> {
   }
   const todayIso = new Date().toISOString().slice(0, 10);
   const rowsRes = await db.execute(
-    "SELECT number, due_date, dunning_level, status FROM invoices WHERE status IN ('open','overdue') AND paid_at IS NULL",
+    "SELECT number, due_date, dunning_level, status, order_id FROM invoices WHERE status IN ('open','overdue') AND paid_at IS NULL",
   );
-  const rows = rowsRes.rows as unknown as Array<{ number: string; due_date: string; dunning_level: number; status: string }>;
+  const rows = rowsRes.rows as unknown as Array<{ number: string; due_date: string; dunning_level: number; status: string; order_id: number }>;
   let touched = 0;
+  let emailed = 0;
   for (const r of rows) {
     if (r.due_date > todayIso) continue;
     const days = Math.floor((Date.now() - new Date(`${r.due_date}T12:00:00`).getTime()) / 86400000);
     const lvl = days > 30 ? 2 : days > 14 ? 1 : 0;
+    const newLvl = Math.max(lvl, r.dunning_level);
+    const levelUp = newLvl > r.dunning_level;
     if (lvl > r.dunning_level || r.status !== "overdue") {
       await db.execute({
         sql: "UPDATE invoices SET dunning_level = ?, status = 'overdue' WHERE number = ?",
-        args: [Math.max(lvl, r.dunning_level), r.number],
+        args: [newLvl, r.number],
       });
       touched++;
+      // Аудит #4: при повышении уровня дуннинга — письмо клиенту (не блокирует refresh).
+      if (levelUp) {
+        try {
+          const oRes = await db.execute({
+            sql: "SELECT ref, contact_email FROM orders WHERE id = ?",
+            args: [r.order_id],
+          });
+          const o = oRes.rows[0] as unknown as { ref: string; contact_email: string } | undefined;
+          if (o && !o.contact_email.endsWith("@deleted.local")) {
+            const { sendEmail } = await import("./email");
+            const daysTxt = newLvl >= 2 ? "более 30 дней" : "более 14 дней";
+            await sendEmail(
+              o.contact_email,
+              `Просрочка оплаты по счёту ${r.number} — Umzug Service`,
+              `<div style="font-family:sans-serif;max-width:560px">
+                <p>Уважаемый клиент, оплата по счёту <b>${r.number}</b> (заявка ${o.ref}) просрочена на ${daysTxt}.</p>
+                <p>Просьба погасить задолженность или связаться с нами для уточнения деталей.</p>
+                <p><a href="${process.env.NEXT_PUBLIC_SITE_URL ?? "https://umzug-seven.vercel.app"}/order/${o.ref}">Открыть заявку ${o.ref}</a></p>
+              </div>`,
+            );
+            emailed++;
+          }
+        } catch (e) {
+          console.error("dunning email failed:", e);
+        }
+      }
     }
   }
-  await audit(db, user.id, "dunning_refresh", "invoice", "", `touched=${touched}`);
-  return { ok: true, message: `Дуннинг обновлён: счетов затронуто ${touched}.` };
+  await audit(db, user.id, "dunning_refresh", "invoice", "", `touched=${touched} emailed=${emailed}`);
+  return { ok: true, message: `Дуннинг обновлён: счетов затронуто ${touched}, писем отправлено ${emailed}.` };
 }
 
 /** Претензия вручную (D7.8): finance/admin, компенсация = отрицательный payment отдельным экшеном. */
@@ -1296,6 +1349,14 @@ export async function deleteAccountAction(): Promise<SimpleResult> {
     sql: "UPDATE orders SET contact_email = ?, contact_name = '(удалено)' WHERE client_id = ?",
     args: [anonEmail, user.id],
   });
+  // Аудит #6: переписка инбокса тоже обезличивается (ст. 17 DSGVO).
+  await db.execute({
+    sql: `UPDATE messages SET from_email = ?, from_user_id = NULL
+      WHERE from_user_id = ? OR from_email IN (
+        SELECT contact_email FROM orders WHERE client_id = ?
+      )`,
+    args: [anonEmail, user.id, user.id],
+  });
   await invalidateUserSessions(db, user.id);
   await audit(db, user.id, "account_anonymized", "user", String(user.id), `anon=${anonEmail}`);
   return { ok: true, message: "Аккаунт удалён (данные анонимизированы согласно GoBD)." };
@@ -1331,21 +1392,21 @@ export async function sendMessageAction(orderRef: string, body: string): Promise
 
   // Письмо-уведомление адресату (не блокирует успех действия).
   try {
-    const { sendEmail } = await import("./email");
-    const staff = user.role !== "kunde";
-    // Демо: resend.dev доставляет только на email владельца Resend-аккаунта,
-    // поэтому реальный адрес получателя подменяем только если это безопасно —
-    // фактически письмо всё равно уйдёт на аккаунт владельца.
-    const to = order.contact_email;
-    const subject = staff
-      ? `Ответ по заявке ${order.ref} — Umzug Service`
-      : `Новое сообщение по заявке ${order.ref} — Umzug Service`;
-    const html = `<div style="font-family:sans-serif;max-width:560px">
-      <p>${staff ? "Ответ персонала по вашей заявке" : "Новое сообщение по вашей заявке"} <b>${order.ref}</b>:</p>
-      <blockquote style="border-left:3px solid #ccc;padding-left:12px;color:#333">${text.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>")}</blockquote>
-      <p>Открыть заявку: <a href="${process.env.NEXT_PUBLIC_SITE_URL ?? "https://umzug-seven.vercel.app"}/order/${order.ref}">${order.ref}</a></p>
-    </div>`;
-    await sendEmail(to, subject, html);
+    // Аудит #7: анонимизированным клиентам (deleted.local) письма не отправляем.
+    if (!order.contact_email.endsWith("@deleted.local")) {
+      const { sendEmail } = await import("./email");
+      const staff = user.role !== "kunde";
+      const to = order.contact_email;
+      const subject = staff
+        ? `Ответ по заявке ${order.ref} — Umzug Service`
+        : `Новое сообщение по заявке ${order.ref} — Umzug Service`;
+      const html = `<div style="font-family:sans-serif;max-width:560px">
+        <p>${staff ? "Ответ персонала по вашей заявке" : "Новое сообщение по вашей заявке"} <b>${order.ref}</b>:</p>
+        <blockquote style="border-left:3px solid #ccc;padding-left:12px;color:#333">${text.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>")}</blockquote>
+        <p>Открыть заявку: <a href="${process.env.NEXT_PUBLIC_SITE_URL ?? "https://umzug-seven.vercel.app"}/order/${order.ref}">${order.ref}</a></p>
+      </div>`;
+      await sendEmail(to, subject, html);
+    }
   } catch {
     // уведомление необязательно
   }

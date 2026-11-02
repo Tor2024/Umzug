@@ -62,9 +62,26 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
   if (!order) {
     return <main className="mx-auto max-w-xl px-4 py-10"><p>Заявка не найдена.</p></main>;
   }
-  const canView = user.role === "logist" || user.role === "admin" || order.client_id === user.id;
+  // Аудит #3: водитель, назначенный на рейс (trips), тоже видит заявку.
+  let assignedDriver = false;
+  if (user.role === "driver") {
+    const tripRes = await db.execute({
+      sql: "SELECT id FROM trips WHERE order_id = ? AND (driver_id = ? OR codriver_id = ?)",
+      args: [order.id, user.id, user.id],
+    });
+    assignedDriver = !!tripRes.rows[0];
+  }
+  const canView = user.role === "logist" || user.role === "admin" || order.client_id === user.id || assignedDriver;
   if (!canView) {
     return <main className="mx-auto max-w-xl px-4 py-10"><p>Нет доступа к этой заявке.</p></main>;
+  }
+  // Аудит #2: логист/админ открыл заявку — клиентские сообщения прочитаны.
+  if (user.role === "logist" || user.role === "admin") {
+    const nowS = Math.floor(Date.parse(new Date().toISOString()) / 1000);
+    await db.execute({
+      sql: "UPDATE messages SET read_at = ? WHERE order_id = ? AND read_at IS NULL AND from_role <> ?",
+      args: [nowS, order.id, user.role],
+    });
   }
 
   const snap = JSON.parse(order.snapshot) as QuoteSnapshot;
