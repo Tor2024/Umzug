@@ -88,9 +88,8 @@ const SCHEMA_SQL = `
     pending_email_token TEXT,
     pending_email_expires INTEGER,
     phone           TEXT NOT NULL DEFAULT '',
-    -- Привязка водителя к основной машине (админ задаёт; предложение 7/8)
+    -- Привязка водителя к основной машине (админ задаёт, предложение 7/8)
     driver_vehicle_id INTEGER,
-    phone           TEXT NOT NULL DEFAULT '',
     created_at      INTEGER NOT NULL
   );
   CREATE INDEX IF NOT EXISTS idx_users_reset_token ON users(reset_token);
