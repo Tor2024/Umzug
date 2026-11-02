@@ -25,6 +25,14 @@ export function LocaleSwitch({ current, compact = false }: { current: "ru" | "de
   const ruHref = current === "ru" ? pathname : pathname.replace(/^\/de/, "") || "/";
   const deHref = current === "de" ? pathname : pathname === "/" ? "/de" : pathname === "/de" ? "/de" : `/de${pathname}`;
 
+  // ВАЖНО: cookie надо выставить ДО перехода. Серверный редирект / → /de читает
+  // cookie в момент запроса: если на /de кликнули RU, а cookie ещё locale=de,
+  // сервер отправит обратно на /de (переключение не сработает). Поэтому оба
+  // линка синхронно ставят свою cookie в onClick — редирект видит актуальный выбор.
+  const setCookie = (v: "ru" | "de") => {
+    document.cookie = `locale=${v}; path=/; max-age=31536000; samesite=lax`;
+  };
+
   const cls = (on: boolean) =>
     `rounded-base font-semibold tabular-nums ${compact ? "border-white/30 px-1.5 py-0.5 text-xs" : "px-1.5 py-0.5 text-xs"} ${on ? "bg-accent text-white" : compact ? "text-slate-300 hover:text-white" : "text-muted hover:text-ink"}`;
 
@@ -34,8 +42,8 @@ export function LocaleSwitch({ current, compact = false }: { current: "ru" | "de
       aria-label="Sprache wechseln / Change language"
     >
       {/* mounted-гвард чтобы URL сервера/клиента не расходились (hydration) */}
-      <Link href={mounted ? deHref : pathname} hrefLang="de" className={cls(current === "de")}>DE</Link>
-      <Link href={mounted ? ruHref : pathname} hrefLang="ru" className={cls(current === "ru")}>RU</Link>
+      <Link href={mounted ? deHref : pathname} hrefLang="de" className={cls(current === "de")} onClick={() => setCookie("de")}>DE</Link>
+      <Link href={mounted ? ruHref : pathname} hrefLang="ru" className={cls(current === "ru")} onClick={() => setCookie("ru")}>RU</Link>
     </span>
   );
 }
