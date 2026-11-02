@@ -1,7 +1,7 @@
 "use client";
 
 // DE-версия калькулятора (Э3): точная копия calc-wizard.tsx с немецкими текстами.
-// Логика/экшены общие (см. @b14@): createOrderAction тот же, редирект /order/{ref}.
+// Логика/экшены общие (см. @b14@): createOrderAction тот же, редирект /de/order/{ref}.
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -141,7 +141,7 @@ export function CalcWizardDe({ loggedIn, tariffs = DEFAULT_TARIFFS }: { loggedIn
     startTransition(async () => {
       const res = await createOrderAction(input);
       if (res.ok && res.ref) {
-        router.push(`/order/${res.ref}`);
+        router.push(`/de/order/${res.ref}`);
       } else if (res.error === "auth") {
         router.push(`/de/login?next=${encodeURIComponent("/de/calc")}`);
       } else {

@@ -21,15 +21,9 @@ export function LocaleSwitch({ current, compact = false }: { current: "ru" | "de
     return () => clearTimeout(t);
   }, [current]);
 
-  // Зеркальный путь: /de/x → /x, /x → /de/x, / → /de (лендинг DE) и /de → /
-  const mirror =
-    current === "ru"
-      ? pathname === "/"
-        ? "/de"
-        : `/de${pathname}`
-      : pathname === "/de"
-        ? "/"
-        : pathname.replace(/^\/de/, "") || "/";
+  // Зеркальные пути: RU-ссылка ведёт на RU-путь (без /de), DE-ссылка — на DE-путь (с /de).
+  const ruHref = current === "ru" ? pathname : pathname.replace(/^\/de/, "") || "/";
+  const deHref = current === "de" ? pathname : pathname === "/" ? "/de" : pathname === "/de" ? "/de" : `/de${pathname}`;
 
   const cls = (on: boolean) =>
     `rounded-base font-semibold tabular-nums ${compact ? "border-white/30 bg-white/10 px-1.5 py-0.5 text-xs" : "px-1.5 py-0.5 text-xs"} ${on ? (compact ? "bg-white text-primary" : "bg-primary text-white") : compact ? "text-slate-300 hover:text-white" : "text-muted hover:text-ink"}`;
@@ -40,8 +34,8 @@ export function LocaleSwitch({ current, compact = false }: { current: "ru" | "de
       aria-label="Sprache wechseln / Change language"
     >
       {/* mounted-гвард чтобы URL сервера/клиента не расходились (hydration) */}
-      <Link href={mounted ? mirror : pathname} hrefLang="de" className={cls(current === "de")}>DE</Link>
-      <Link href={mounted ? mirror : pathname} hrefLang="ru" className={cls(current === "ru")}>RU</Link>
+      <Link href={mounted ? deHref : pathname} hrefLang="de" className={cls(current === "de")}>DE</Link>
+      <Link href={mounted ? ruHref : pathname} hrefLang="ru" className={cls(current === "ru")}>RU</Link>
     </span>
   );
 }

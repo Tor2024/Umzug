@@ -270,7 +270,7 @@ export default async function OrderDePage({ params, searchParams }: { params: Pr
         <dl className="grid gap-1.5 text-sm">
           {lines.map((l, i) => (
             <div key={`${l.key}-${i}`} className="flex justify-between gap-3">
-              <dt className="text-muted">{l.label}</dt>
+              <dt className="text-muted">{l.key === "base" ? `Grundpreis (${l.label.replace(/^База \((.+)\)$/, "$1").replace(/т(?=\))/, "t")})` : l.label}</dt>
               <dd className="tabular-nums">{fmt(l.amount)}</dd>
             </div>
           ))}
