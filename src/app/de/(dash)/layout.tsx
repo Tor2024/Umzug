@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 import { getDb, findSession, type SessionUser } from "@/lib/db";
 import { COOKIE } from "@/lib/auth";
 import { DashSidebar } from "@/components/dash-sidebar";
+import { DeLocaleCookie } from "@/components/de-locale-cookie";
 
 export default async function DashLayoutDe({ children }: { children: React.ReactNode }) {
   const store = await cookies();
@@ -19,6 +20,7 @@ export default async function DashLayoutDe({ children }: { children: React.React
 
   return (
     <div className="flex min-h-screen">
+      <DeLocaleCookie />
       <DashSidebar userName={user.name} role={user.role} locale="de" />
       <div className="min-w-0 flex-1 bg-page">
         <main className="mx-auto max-w-6xl px-4 py-6 lg:px-6">{children}</main>

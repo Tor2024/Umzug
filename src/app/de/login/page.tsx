@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { loginAction } from "@/lib/auth-actions";
+import { DeLocaleCookie } from "@/components/de-locale-cookie";
 
 // DE-версия /login (этап 2 i18n): тот же JSX-скелет, co-located переводы.
+// DeLocaleCookie: cookie locale=de для locale-aware редиректа login/success → /de/*.
 
 export const metadata: Metadata = { title: "Anmelden", robots: { index: false } };
 export const instant = false;
@@ -39,6 +41,7 @@ export default async function LoginPageDe({
 
   return (
     <main className="flex-1 flex items-center justify-center px-4 py-16">
+      <DeLocaleCookie />
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <svg className="mx-auto size-12" viewBox="0 0 64 64" aria-hidden="true">
