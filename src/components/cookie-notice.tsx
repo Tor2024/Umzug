@@ -12,14 +12,18 @@ const KEY = "cookie_notice_ack";
 const LABELS = {
   ru: {
     aria: "Уведомление о cookies",
-    text: <>Мы используем только <b>технически необходимые</b> cookies (сессия, язык). Реклама и отслеживание — отсутствуют. Подробнее: </>,
+    title: "Cookies",
+    text: "Только технически необходимые:",
+    noAds: "Реклама и отслеживание — отсутствуют. Подробнее:",
     more: "Datenschutz",
     ok: "Понятно",
     dp: "/datenschutz",
   },
   de: {
     aria: "Cookie-Hinweis",
-    text: <>Wir verwenden nur <b>technisch notwendige</b> Cookies (Sitzung, Sprache). Keine Werbung, kein Tracking. Mehr dazu: </>,
+    title: "Cookies & Datenschutz",
+    text: "Nur technisch notwendige:",
+    noAds: "Keine Werbung, kein Tracking. Mehr dazu:",
     more: "Datenschutz",
     ok: "Verstanden",
     dp: "/de/datenschutz",
@@ -73,14 +77,24 @@ export function CookieNotice() {
     <div
       role="dialog"
       aria-label={L.aria}
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-surface p-4 shadow-lg"
+      className="fixed inset-x-3 bottom-3 z-50 sm:inset-x-auto sm:left-4 sm:max-w-md"
     >
-      <div className="mx-auto flex max-w-3xl flex-col gap-3 sm:flex-row sm:items-center">
-        <p className="flex-1 text-sm">
-          {L.text}
-          <a className="text-accent hover:underline" href={L.dp}>{L.more}</a>.
-        </p>
-        <button className="btn btn-primary shrink-0 px-4 py-1.5 text-sm" type="button" onClick={ack}>
+      <div className="rounded-2xl border border-line bg-white p-5 shadow-xl">
+        <div className="flex items-start gap-3">
+          <span aria-hidden="true" className="text-2xl leading-none">🍪</span>
+          <div className="min-w-0 flex-1">
+            <p className="font-semibold text-ink">{L.title}</p>
+            <p className="mt-1.5 flex flex-wrap items-center gap-1 text-sm text-muted">
+              {L.text}
+              <span className="rounded-full bg-surface px-2 py-0.5 text-xs font-medium text-ink">Sitzung</span>
+              <span className="rounded-full bg-surface px-2 py-0.5 text-xs font-medium text-ink">Sprache</span>
+            </p>
+            <p className="mt-1.5 text-sm text-muted">
+              {L.noAds} <a className="text-accent hover:underline" href={L.dp}>{L.more}</a>.
+            </p>
+          </div>
+        </div>
+        <button className="btn btn-primary mt-4 w-full min-w-16" type="button" onClick={ack}>
           {L.ok}
         </button>
       </div>
