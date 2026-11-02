@@ -122,7 +122,7 @@ export default async function DriverPage({ searchParams }: { searchParams: Promi
   }
 
   return (
-    <main className="mx-auto max-w-md px-4 py-6">
+    <>
       <h1 className="mb-1 text-2xl font-bold">Мой день</h1>
       <p className="mb-6 text-sm text-muted">{user.name} · {todayIso}</p>
 
@@ -219,7 +219,7 @@ export default async function DriverPage({ searchParams }: { searchParams: Promi
         Цепочка протоколов: {chain.valid ? "валидна" : `НАРУШЕНА (звено ${chain.brokenAt})`} · {chain.count} протоколов
       </p>
       <DashLink />
-    </main>
+    </>
   );
 }
 

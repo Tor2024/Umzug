@@ -62,7 +62,7 @@ export function SiteFooter() {
           <ul className="mt-2 space-y-1 text-slate-300">
             <li>Musterstraße 12, 10115 Berlin</li>
             <li><a href="tel:+49030000000000" className="hover:text-accent-soft">+49 (0)30 000 000 00</a></li>
-            <li><a href="mailto:info@pomoshnik-pereezd.example" className="hover:text-accent-soft">info@pomoshnik-pereezd.example</a></li>
+            <li><a href="mailto:info@umzugservice.example" className="hover:text-accent-soft">info@umzugservice.example</a></li>
           </ul>
         </div>
       </div>

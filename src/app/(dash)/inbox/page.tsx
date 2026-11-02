@@ -41,7 +41,7 @@ export default async function InboxPage() {
     Array<{ ref: string; status: string; client_msgs: number; last_at: number }>;
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-10">
+    <>
       <h1 className="text-2xl font-bold">Инбокс</h1>
       <p className="mt-1 text-sm text-muted">Непрочитанные сообщения клиентов и все переписки по заявкам.</p>
 
@@ -78,6 +78,6 @@ export default async function InboxPage() {
         </ul>
       )}
       <p className="mt-6 text-xs text-muted">Роль автора видна на странице заявки ({ROLE_LABEL.kunde} и др.). Ответ клиенту — прямо в переписке на странице заявки.</p>
-    </main>
+    </>
   );
 }

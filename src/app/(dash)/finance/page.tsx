@@ -137,7 +137,7 @@ export default async function FinancePage() {
   const todayIso = new Date().toISOString().slice(0, 10);
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-8">
+    <>
       <h1 className="mb-1 text-2xl font-bold">Бухгалтерия</h1>
       <p className="mb-6 text-sm text-muted">
         {user.name} · счета, платежи, дуннинг, претензии ·{" "}
@@ -374,7 +374,7 @@ export default async function FinancePage() {
       </section>
 
       <p className="text-xs text-muted">Демо-среда: сегодня {todayIso}. Нумерация RE-ГГГГ-0NNN сквозная (GoBD), аннулированный счёт сохраняет номер.</p>
-    </main>
+    </>
   );
 }
 

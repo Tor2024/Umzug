@@ -63,6 +63,12 @@ export interface MoveConfig {
   sharedLoad?: boolean;
   /** Авто-коэффициент загрузки дня (задача 6): вычисляется на сервере из dayAvailability, фиксируется в снимке. */
   autoLoadPct?: number;
+  /**
+   * Холостой возврат машины на базу после выгрузки (км). Вычисляется на сервере
+   * (resolveRoute(to → база компании)) и в визарде, фиксируется в снимке.
+   * Клиент платит возврат полностью (решение пользователя).
+   */
+  returnKm?: number;
 }
 
 export interface LineItem {
@@ -198,6 +204,16 @@ export function calculateQuote(cfg: MoveConfig, t: Tariffs): Quote {
   // 9. HVZ
   if (cfg.hvzZones > 0) {
     lines.push({ key: "hvz", label: "Halteverbotszone", amount: cfg.hvzZones * t.hvzZoneCents, meta: { zones: cfg.hvzZones } });
+  }
+
+  // 9b. Холостой возврат машины на базу (Leerfahrt): клиент платит по той же ставке за км,
+  // без бесплатных км (решение пользователя: полный возврат в цену).
+  const returnKm = Math.max(0, cfg.returnKm ?? 0);
+  if (returnKm > 0) {
+    lines.push({
+      key: "return", label: "Rückfahrt (Leerfahrt zur Basis)", amount: Math.round(returnKm * t.perKmCents),
+      meta: { km: round2(returnKm), rateCents: t.perKmCents },
+    });
   }
 
   const subtotal = lines.reduce((s, l) => s + l.amount, 0);

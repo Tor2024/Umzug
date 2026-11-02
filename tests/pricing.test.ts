@@ -279,3 +279,29 @@ describe("минимальная стоимость (floor)", () => {
     expect(recalculate(snap).gross).toBe(calculateQuote(tiny, HIGH_FLOOR).gross);
   });
 });
+
+describe("возврат на базу (returnKm, @1641)", () => {
+  it("без returnKm строки Rückfahrt нет", () => {
+    const q = calculateQuote(cfg(), T);
+    expect(q.lines.find((l) => l.key === "return")).toBeUndefined();
+  });
+
+  it("returnKm добавляет строку Rückfahrt = км × perKmCents (без freeKm)", () => {
+    const q = calculateQuote(cfg({ returnKm: 50 }), T);
+    const line = q.lines.find((l) => l.key === "return");
+    expect(line).toBeDefined();
+    expect(line?.amount).toBe(50 * T.perKmCents); // perKmCents = 80 → 4000 центов
+    expect(line?.label).toBe("Rückfahrt (Leerfahrt zur Basis)");
+    // subtotal включает возврат
+    const withoutReturn = calculateQuote(cfg(), T);
+    expect(q.subtotal).toBe(withoutReturn.subtotal + 4000);
+  });
+
+  it("снимок фиксирует returnKm, recalculate воспроизводит", () => {
+    const cfgFull = cfg({ returnKm: 120 });
+    const quote = calculateQuote(cfgFull, T);
+    const snap = makeSnapshot(cfgFull, T);
+    expect(snap.config.returnKm).toBe(120);
+    expect(recalculate(snap).gross).toBe(quote.gross);
+  });
+});

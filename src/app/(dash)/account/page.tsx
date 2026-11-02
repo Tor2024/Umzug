@@ -70,7 +70,7 @@ export default async function AccountPage() {
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-8">
+    <>
       <h1 className="mb-1 text-2xl font-bold sm:text-3xl">Личный кабинет</h1>
       <p className="mb-6 text-muted">{user.name} · {user.email}</p>
 
@@ -116,6 +116,6 @@ export default async function AccountPage() {
       <div className="mt-8">
         <DeleteAccount />
       </div>
-    </main>
+    </>
   );
 }

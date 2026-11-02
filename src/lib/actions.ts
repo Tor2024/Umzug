@@ -17,6 +17,7 @@ import {
   ValidationError, type MoveConfig, type QuoteSnapshot, type VehicleClass,
 } from "./pricing";
 import { resolveRoute, validAddress } from "./geo";
+import { SITE } from "./site";
 import { dayAvailability, loadFactorPct, nearestFreeDate, CLASS_RANK } from "./availability";
 import { isValidLatinName } from "./validate";
 
@@ -88,6 +89,10 @@ export async function createOrderAction(input: OrderInput): Promise<CreateOrderR
   if (!route || route.km <= 0 || route.error) {
     return { ok: false, error: "route", message: route?.error ?? "Маршрут не рассчитан. Заявка не создана." };
   }
+  // Возврат машины на базу (SITE.address) — холостой пробег после выгрузки.
+  // Не блокирует заявку: при сбое гео-сервиса returnKm = 0 (возврат будет учтён логистом вручную).
+  const returnRoute = await resolveRoute(toText, SITE.address, apiKey);
+  const returnKm = returnRoute && !returnRoute.error && returnRoute.km > 0 ? returnRoute.km : 0;
 
   const cfg: MoveConfig = {
     vehicleClass: input.vehicleClass,
@@ -108,6 +113,7 @@ export async function createOrderAction(input: OrderInput): Promise<CreateOrderR
     moveDate: input.moveDate,
     express: input.express,
     sharedLoad: input.sharedLoad,
+    returnKm,
   };
 
   let quote;

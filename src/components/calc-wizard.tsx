@@ -43,12 +43,21 @@ export function CalcWizard({ loggedIn, tariffs = DEFAULT_TARIFFS }: { loggedIn: 
   const [route, setRoute] = useState<RouteState>({ loading: false, km: 0, minutes: 0, provider: "" });
   const reqId = useRef(0);
 
+  // Холостой возврат машины на базу (требование пользователя: полный возврат в клиентской цене).
+  // Пересчитывается при изменении адреса выгрузки; debounce общий с основным маршрутом.
+  const [returnKm, setReturnKm] = useState(0);
+  const returnReqId = useRef(0);
+
   useEffect(() => {
     if (fromText.trim().length < 3 || toText.trim().length < 3) {
-      const t = setTimeout(() => setRoute({ loading: false, km: 0, minutes: 0, provider: "" }), 0);
+      const t = setTimeout(() => {
+        setRoute({ loading: false, km: 0, minutes: 0, provider: "" });
+        setReturnKm(0);
+      }, 0);
       return () => clearTimeout(t);
     }
     const id = ++reqId.current;
+    const rid = ++returnReqId.current;
     const t = setTimeout(() => {
       setRoute((r) => ({ ...r, loading: true }));
       fetch(`/api/route?from=${encodeURIComponent(fromText)}&to=${encodeURIComponent(toText)}`)
@@ -59,6 +68,16 @@ export function CalcWizard({ loggedIn, tariffs = DEFAULT_TARIFFS }: { loggedIn: 
         })
         .catch(() => {
           if (reqId.current === id) setRoute({ loading: false, km: 0, minutes: 0, provider: "", error: "Сервис маршрутов недоступен." });
+        });
+      // Возврат: адрес выгрузки → база компании (SITE.address на сервере)
+      fetch(`/api/route/return?to=${encodeURIComponent(toText)}`)
+        .then((r) => r.json())
+        .then((j: { km?: number }) => {
+          if (returnReqId.current !== rid) return;
+          setReturnKm(j.km ?? 0);
+        })
+        .catch(() => {
+          if (returnReqId.current === rid) setReturnKm(0);
         });
     }, 500);
     return () => clearTimeout(t);
@@ -91,7 +110,8 @@ export function CalcWizard({ loggedIn, tariffs = DEFAULT_TARIFFS }: { loggedIn: 
     boxes, kitchen, furnitureItems, packHours, hvzZones, extraCrew,
     moveDate, express, sharedLoad,
     autoLoadPct: autoLoadPct || undefined,
-  }), [volumeM3, route.km, route.minutes, floorsFrom, floorsTo, elevatorFrom, elevatorTo, boxes, kitchen, furnitureItems, packHours, hvzZones, extraCrew, moveDate, express, sharedLoad, autoLoadPct]);
+    returnKm: returnKm > 0 ? returnKm : undefined,
+  }), [volumeM3, route.km, route.minutes, floorsFrom, floorsTo, elevatorFrom, elevatorTo, boxes, kitchen, furnitureItems, packHours, hvzZones, extraCrew, moveDate, express, sharedLoad, autoLoadPct, returnKm]);
 
   const quote = useMemo(() => {
     try {

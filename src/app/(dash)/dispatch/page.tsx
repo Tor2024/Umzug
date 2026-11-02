@@ -206,7 +206,7 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
   }
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-8">
+    <>
       <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold sm:text-3xl">Панель логиста</h1>
@@ -410,7 +410,7 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
           );
         })}
       </div>
-    </main>
+    </>
   );
 }
 

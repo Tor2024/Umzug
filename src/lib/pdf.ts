@@ -441,6 +441,7 @@ type SpecConfig = {
   hvzZones?: number;
   express?: boolean;
   sharedLoad?: boolean;
+  returnKm?: number;
 };
 
 /**
@@ -484,6 +485,7 @@ export function buildSpecLines(cfg: SpecConfig, classLabel: string): Item[] {  c
   if (cfg.kitchen) spec.push({ label: "Küchenmontage: ja", amount: 0 });
   if (cfg.furnitureItems && cfg.furnitureItems > 0) spec.push({ label: `Möbelauf-/abbau: ${cfg.furnitureItems} Stk.`, amount: 0 });
   if (cfg.hvzZones && cfg.hvzZones > 0) spec.push({ label: `Halteverbotszonen: ${cfg.hvzZones}`, amount: 0 });
+  if (cfg.returnKm && cfg.returnKm > 0) spec.push({ label: `Rückfahrt zur Basis (Leerfahrt): ca. ${cfg.returnKm} km`, amount: 0 });
   const opts: string[] = [];
   if (cfg.express) opts.push("Express");
   if (cfg.sharedLoad) opts.push("Teilladung (Rabatt)");

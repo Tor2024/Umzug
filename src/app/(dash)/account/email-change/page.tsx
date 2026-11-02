@@ -16,10 +16,10 @@ export default async function EmailChangePage({
     : { ok: false, message: "Ссылка неполная — откройте её из письма." };
 
   return (
-    <main className="mx-auto max-w-xl px-4 py-16">
+    <>
       <h1 className="text-xl font-bold">Смена email</h1>
       <p className={result.ok ? "mt-4 text-green-700" : "mt-4 text-red-600"}>{result.message}</p>
       <a className="btn btn-primary mt-6 inline-block" href="/account">В личный кабинет</a>
-    </main>
+    </>
   );
 }

@@ -137,7 +137,7 @@ export default async function AnalyticsPage() {
   ];
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-8">
+    <>
       <h1 className="mb-1 text-2xl font-bold">Аналитика</h1>
       <p className="mb-6 text-sm text-muted">{user.name} · выручка, загрузка, маржинальность</p>
 
@@ -222,6 +222,6 @@ export default async function AnalyticsPage() {
         Маржа = сумма закрытых заказов − себестоимость экипажа (строка «crew» из зафиксированного снимка расчёта).
         Прочие затраты (топливо, амортизация) в демо не учитываются.
       </p>
-    </main>
+    </>
   );
 }
