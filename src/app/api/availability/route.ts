@@ -5,6 +5,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { getDb, findSession } from "@/lib/db";
 import { monthAvailability, nearestFreeDate } from "@/lib/availability";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const jar = await cookies();
@@ -12,6 +13,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const user = token ? await findSession(await getDb(), token) : null;
   if (!user) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+  const rl = rateLimit(`avail:${user.id ?? clientIp(req)}`, 60);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: "Слишком много запросов" },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterS) } },
+    );
   }
 
   const month = req.nextUrl.searchParams.get("month") ?? new Date().toISOString().slice(0, 7);

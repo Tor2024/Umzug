@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { getDb, findSession, audit } from "@/lib/db";
 import { COOKIE } from "@/lib/auth";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function GET() {
   const jar = await cookies();
@@ -10,6 +11,13 @@ export async function GET() {
   const user = token ? await findSession(await getDb(), token) : null;
   if (!user || (user.role !== "finance" && user.role !== "admin")) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+  const rl = rateLimit(`csv:${user.id}`, 30);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: "Слишком много запросов" },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterS) } },
+    );
   }
   const db = await getDb();
   const invRes = await db.execute(

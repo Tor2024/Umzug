@@ -2,12 +2,15 @@ import { NextRequest } from "next/server";
 import { getDb, findSession } from "@/lib/db";
 import { COOKIE } from "@/lib/auth";
 import { renderProtocolPdf } from "@/lib/pdf";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 /** GET /api/pdf/protocol/[ref] — протокол приёмки (клиент-владелец, driver, logist, admin, finance). */
 export async function GET(req: NextRequest, ctx: { params: Promise<{ ref: string }> }) {
   const token = req.cookies.get(COOKIE)?.value;
   const user = token ? await findSession(await getDb(), token) : null;
   if (!user) return new Response("Unauthorized", { status: 401 });
+  const rl = rateLimit(`pdf:${user.id ?? clientIp(req)}`, 30);
+  if (!rl.ok) return new Response("Too Many Requests", { status: 429, headers: { "Retry-After": String(rl.retryAfterS) } });
 
   const { ref } = await ctx.params;
   const db = await getDb();
