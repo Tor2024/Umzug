@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   description: "Расчёт и организация переезда по Германии: честная цена, экипаж, машина, документы.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ru" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-page text-ink font-sans">{children}</body>
