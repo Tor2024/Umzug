@@ -70,6 +70,16 @@
   background: var(--color-accent);
   color: #fff;
 }
+.btn-trust {
+  background: var(--color-trust);
+  color: #fff;
+}
+.btn-trust:hover:not(:disabled) {
+  background: #059669;
+}
+.btn-trust:disabled:hover {
+  background: var(--color-trust);
+}
 .btn-primary:hover:not(:disabled) {
   background: var(--color-accent-hover);
 }

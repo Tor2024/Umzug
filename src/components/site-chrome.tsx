@@ -20,7 +20,7 @@ export function SiteHeader({ locale = "ru" }: { locale?: "ru" | "de" }) {
           <Link href={`${p("/")}#kak`} className="hidden overflow-wrap-anywhere px-2 py-2 hover:text-accent sm:inline">{T.how}</Link>
           <Link href={`${p("/")}#uslugi`} className="hidden overflow-wrap-anywhere px-2 py-2 hover:text-accent sm:inline">{T.services}</Link>
           <LocaleSwitch current={locale} />
-          <Link href={p("/login")} className="min-w-16 px-2 py-2 text-center hover:text-accent">{T.login}</Link>
+          <Link href={p("/login")} className="btn btn-trust h-10 min-w-16 px-4 text-center">{T.login}</Link>
           <Link href={p("/calc")} className="btn btn-primary h-10 min-w-28 px-4 text-center">{T.calc}</Link>
         </nav>
       </div>

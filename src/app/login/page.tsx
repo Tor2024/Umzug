@@ -61,7 +61,7 @@ export default async function LoginPage({
             <input id="password" name="password" type="password" required autoComplete="current-password"
               className="input-base" />
           </div>
-          <button type="submit" className="btn btn-primary w-full">Войти</button>
+          <button type="submit" className="btn btn-trust w-full">Войти</button>
         </form>
 
         <p className="mt-3 text-center text-sm">

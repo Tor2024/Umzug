@@ -79,7 +79,7 @@ export default async function LoginPageDe({
             <input id="password" name="password" type="password" required autoComplete="current-password"
               className="input-base" />
           </div>
-          <button type="submit" className="btn btn-primary w-full min-w-16">{T.submit}</button>
+          <button type="submit" className="btn btn-trust w-full min-w-16">{T.submit}</button>
         </form>
 
         <p className="mt-3 text-center text-sm">
