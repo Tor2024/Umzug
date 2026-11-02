@@ -129,6 +129,38 @@
   opacity: 0.85;
 }
 
+/* Цветовые семантики чипов:
+   - dispatched (синий): новое/не началось движение, «открыт», «сегодня», «в очереди»
+   - transit (красный): выполняется прямо сейчас (assigned/enroute) — требует контроля
+   - trust (зелёный): выполнено/закрыто/согласовано — контроль не нужен
+   - delayed (оранжевый): предупреждение/ожидает решения
+   - neutral (серый): отменено/нейтральное */
+.chip-dispatched {
+  background: rgb(29 78 216 / 0.1);
+  color: #1d4ed8;
+  border: 1px solid rgb(29 78 216 / 0.3);
+}
+.chip-transit {
+  background: rgb(186 26 26 / 0.1);
+  color: var(--color-danger);
+  border: 1px solid rgb(186 26 26 / 0.35);
+}
+.chip-trust {
+  background: rgb(16 185 129 / 0.12);
+  color: #047857;
+  border: 1px solid rgb(16 185 129 / 0.35);
+}
+.chip-delayed {
+  background: rgb(234 88 12 / 0.12);
+  color: var(--color-accent);
+  border: 1px solid rgb(234 88 12 / 0.35);
+}
+.chip-neutral {
+  background: rgb(71 85 99 / 0.1);
+  color: var(--color-muted);
+  border: 1px solid rgb(71 85 99 / 0.3);
+}
+
 /* Вход сообщений/панелей (Emil: ничего не появляется из ничего — scale от 0.97 + opacity) */
 @keyframes msgIn {
   from { opacity: 0; transform: translateY(4px); }

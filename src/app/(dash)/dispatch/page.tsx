@@ -34,7 +34,7 @@ const STATUS_LABEL: Record<string, string> = {
 
 const CHIP_CLASS: Record<string, string> = {
   new: "chip chip-dispatched",
-  confirmed: "chip",
+  confirmed: "chip chip-dispatched",
   assigned: "chip chip-transit",
   enroute: "chip chip-transit",
   acceptance: "chip chip-trust",
