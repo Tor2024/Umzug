@@ -7,6 +7,7 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { randomBytes } from "node:crypto";
 import { getDb, findSession, deleteSession, getTariffs, classForVolume, audit, sha256, protocolHashString, normalizeConfigValue, writeConfigValue, hashPassword, invalidateUserSessions, CONFIG_SCHEMA, logOrderEvent, saveSnapshotVersion, type DB } from "./db";
 import { buildRevisionSnapshot, type OrderForRevision } from "./revision";
 import { COOKIE } from "./auth";
@@ -1104,4 +1105,42 @@ export async function updateApiKeyAction(raw: string): Promise<SimpleResult> {
   await audit(db, user.id, "maps_key_updated", "config", "maps.api_key",
     hasKey && hasKey.value ? "replaced" : "set");
   return { ok: true, message: "Ключ сохранён." };
+}
+
+/**
+ * GDPR ст. 17: удаление аккаунта клиента через анонимизацию.
+ * GoBD § 147 AO / § 257 HGB требуют хранения бухгалтерских записей 8–10 лет,
+ * поэтому строки orders/invoices/payments не удаляются — обезличиваются:
+ * email → anon-<hash8>@deleted.local, name → «(удалено)», active = 0.
+ * Активные заявки (new..acceptance) блокируют удаление.
+ */
+export async function deleteAccountAction(): Promise<SimpleResult> {
+  const db = await getDb();
+  const user = await currentUser();
+  if (!user) return { ok: false, message: "Войдите в аккаунт." };
+  if (user.role !== "kunde") return { ok: false, message: "Удаление доступно только клиентам. Обратитесь к администратору." };
+
+  const activeRes = await db.execute({
+    sql: "SELECT COUNT(*) AS c FROM orders WHERE client_id = ? AND status IN ('new','confirmed','assigned','enroute','acceptance')",
+    args: [user.id],
+  });
+  const activeCount = Number((activeRes.rows[0] as unknown as { c: number }).c);
+  if (activeCount > 0) {
+    return { ok: false, message: `Нельзя удалить аккаунт: ${activeCount} активн${activeCount === 1 ? "ая заявка" : "ых заявки"}. Отмените или дождитесь закрытия.` };
+  }
+
+  const salt = randomBytes(4).toString("hex");
+  const anonEmail = `anon-${sha256(user.email).slice(0, 8)}-${salt}@deleted.local`;
+  await db.execute({
+    sql: "UPDATE users SET email = ?, name = '(удалено)', active = 0, verify_token = NULL, verify_expires = NULL, reset_token = NULL, reset_expires = NULL WHERE id = ?",
+    args: [anonEmail, user.id],
+  });
+  // Контактные данные в самих заказах тоже обезличиваем (email/имя в заявках).
+  await db.execute({
+    sql: "UPDATE orders SET contact_email = ?, contact_name = '(удалено)' WHERE client_id = ?",
+    args: [anonEmail, user.id],
+  });
+  await invalidateUserSessions(db, user.id);
+  await audit(db, user.id, "account_anonymized", "user", String(user.id), `anon=${anonEmail}`);
+  return { ok: true, message: "Аккаунт удалён (данные анонимизированы согласно GoBD)." };
 }

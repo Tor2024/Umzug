@@ -5,6 +5,7 @@ import Link from "next/link";
 import { connection } from "next/server";
 import { requireUser } from "@/lib/auth";
 import { getDb } from "@/lib/db";
+import { DeleteAccount } from "./delete-account";
 
 export const metadata: Metadata = { title: "Личный кабинет", robots: { index: false } };
 export const instant = false;
@@ -45,6 +46,14 @@ export default async function AccountPage() {
         </form>
       </div>
 
+      <div className="mb-8 card p-4">
+        <h2 className="mb-2 font-semibold">Мои данные (ст. 15 DSGVO)</h2>
+        <p className="mb-2 text-sm text-muted">
+          Скачайте все ваши данные в формате JSON: профиль, заявки, документы, платежи.
+        </p>
+        <a className="btn btn-outline" href="/api/account/export" download>Экспорт JSON</a>
+      </div>
+
       <h2 className="mb-3 font-semibold">Мои заявки</h2>
       {orders.length === 0 ? (
         <div className="card p-6 text-sm text-muted">
@@ -64,6 +73,10 @@ export default async function AccountPage() {
           ))}
         </ul>
       )}
+
+      <div className="mt-8">
+        <DeleteAccount />
+      </div>
     </main>
   );
 }

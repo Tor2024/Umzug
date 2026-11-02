@@ -100,7 +100,7 @@ async function buildDoc(opts: {
   const font = await pdf.embedFont(fontBytes(), { subset: true });
   const bold = await pdf.embedFont(boldBytes(), { subset: true });
 
-  let page = pdf.addPage([PAGE_W, PAGE_H]);
+  const page = pdf.addPage([PAGE_W, PAGE_H]);
   let y = PAGE_H - M;
 
   const text = (
