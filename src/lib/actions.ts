@@ -18,6 +18,7 @@ import {
 } from "./pricing";
 import { resolveRoute, validAddress } from "./geo";
 import { dayAvailability, loadFactorPct, nearestFreeDate } from "./availability";
+import { isValidLatinName } from "./validate";
 
 export interface OrderInput {
   fromText: string;
@@ -982,6 +983,53 @@ export async function updateStaffUserAction(input: {
 
   if (notes.length > 0) await audit(db, user.id, "user_update", "user", String(target.id), notes.join(" "));
   return { ok: true, message: notes.length > 0 ? `Обновлено: ${notes.join(", ")}.` : "Без изменений." };
+}
+
+/** Создание сотрудника админом (D8.2 расширение): водители, бухгалтеры, логисты, грузчики*. */
+export async function createStaffUserAction(input: {
+  name: string; email: string; role: string; password: string;
+}): Promise<SimpleResult> {
+  const db = await getDb();
+  const user = await currentUser();
+  if (!user || user.role !== "admin") return { ok: false, message: "Только админ." };
+
+  const name = input.name.trim().replace(/\s+/g, " ");
+  const email = input.email.trim().toLowerCase();
+  if (!isValidLatinName(name)) return { ok: false, message: "Имя — латиницей, два слова (имя и фамилия), как в документах." };
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { ok: false, message: "Некорректный email." };
+  if (input.password.length < 8) return { ok: false, message: "Пароль от 8 символов." };
+  // Грузчики (mover) не входят в ролевую модель (нет доступа к системе) —
+  // грузчики работают в экипаже, но учётной записи не требуется. Допустимые роли:
+  const role = input.role;
+  if (!["kunde", "logist", "driver", "finance", "admin"].includes(role)) {
+    return { ok: false, message: "Недопустимая роль." };
+  }
+  if (role === "admin") {
+    // страховка: сознательное действие, но фиксируем
+  }
+
+  const existingRes = await db.execute({
+    sql: "SELECT id, email_verified FROM users WHERE email = ?",
+    args: [email],
+  });
+  const existing = existingRes.rows[0] as unknown as { id: number; email_verified: number } | undefined;
+  if (existing) {
+    if (existing.email_verified === 1) return { ok: false, message: "Пользователь с таким email уже существует." };
+    // Неподтверждённая регистрация — обновляем до сотрудника
+    await db.execute({
+      sql: "UPDATE users SET name = ?, password_hash = ?, role = ?, email_verified = 1 WHERE id = ?",
+      args: [name, hashPassword(input.password), role, existing.id],
+    });
+    await audit(db, user.id, "user_update", "user", String(existing.id), `admin-created-staff role=${role}`);
+    return { ok: true, message: "Сотрудник создан (email был зарегистрирован ранее, теперь активирован)." };
+  }
+
+  const res = await db.execute({
+    sql: "INSERT INTO users (name, email, password_hash, role, email_verified, active, created_at) VALUES (?, ?, ?, ?, 1, 1, ?)",
+    args: [name, email, hashPassword(input.password), role, Math.floor(Date.now() / 1000)],
+  });
+  await audit(db, user.id, "user_create", "user", String(res.lastInsertRowid), `staff role=${role} email=${email}`);
+  return { ok: true, message: `Сотрудник создан: ${name} (${email}), роль ${role}. Может войти сразу.` };
 }
 
 // ─── D10: двусторонняя корректировка заказа ──────────────────────────────

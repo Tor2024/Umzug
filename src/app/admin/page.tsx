@@ -6,6 +6,7 @@ import {
   updateTariffsAction,
   updateVehicleClassAction,
   updateStaffUserAction,
+  createStaffUserAction,
   saveVehicleAction,
   deleteVehicleAction,
   updateApiKeyAction,
@@ -207,12 +208,11 @@ function historyDetails(action: string, details: string): string {
   }
 }
 
-export default async function AdminPage({ searchParams }: { searchParams: Promise<{ msg?: string }> }) {
+export default async function AdminPage({ searchParams }: { searchParams: Promise<{ msg?: string; details?: string }> }) {
   await connection();
   await requireRole(["admin"], "/admin");
   const db = await getDb();
   const { msg } = await searchParams;
-
   // Локальные server-action-обёртки (FormData → экшены)
   async function tariffsForm(fd: FormData): Promise<void> {
     "use server";
@@ -266,6 +266,17 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
     const { redirect } = await import("next/navigation");
     redirect(`/admin?msg=${r.ok ? "vehicleDel" : r.message?.includes("нельзя") ? "vehicleBusy" : "error"}`);
   }
+  async function staffCreateForm(fd: FormData): Promise<void> {
+    "use server";
+    const r = await createStaffUserAction({
+      name: String(fd.get("name") ?? ""),
+      email: String(fd.get("email") ?? ""),
+      role: String(fd.get("role") ?? "driver"),
+      password: String(fd.get("password") ?? ""),
+    });
+    const { redirect } = await import("next/navigation");
+    redirect(`/admin?msg=${r.ok ? "staffCreated" : "staffError"}&details=${encodeURIComponent(r.message ?? "")}`);
+  }
   async function apiKeyForm(fd: FormData): Promise<void> {
     "use server";
     const r = await updateApiKeyAction(String(fd.get("apiKey") ?? ""));
@@ -297,9 +308,14 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
     vehicleDel: { text: "Машина удалена.", ok: true },
     vehicleBusy: { text: "Удаление отклонено: есть рейсы/назначения.", ok: false },
     apikey: { text: "API-ключ сохранён.", ok: true },
+    staffCreated: { text: "Сотрудник создан.", ok: true },
+    staffError: { text: "Сотрудник не создан.", ok: false },
     error: { text: "Не сохранилось — проверьте выделенные значения.", ok: false },
   };
   const banner = msg ? MSG[msg] : undefined;
+  const bannerDetails = msg === "staffError" || msg === "staffCreated"
+    ? (await searchParams).details
+    : undefined;
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
@@ -312,6 +328,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       {banner && (
         <div role="status" className={`mt-4 rounded-base border px-4 py-3 text-sm ${banner.ok ? "border-trust/30 bg-emerald-50 text-emerald-900" : "border-danger/30 bg-red-50 text-red-900"}`}>
           {banner.text}
+          {bannerDetails && <span className="block mt-1 text-xs opacity-80">{bannerDetails}</span>}
         </div>
       )}
 
@@ -407,6 +424,36 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
             </form>
           ))}
         </div>
+      </section>
+
+      {/* ── Создание сотрудника (расширение D8.2) ── */}
+      <section className="mt-6">
+        <h3 className="font-semibold">Добавить сотрудника</h3>
+        <p className="mt-1 text-sm text-muted">
+          Водитель, логист или бухгалтер — учётная запись создаётся сразу активной и подтверждённой, сотрудник может войти без email-подтверждения.
+          Грузчики (сборщики экипажа) учётной записи не требуют — они назначаются в рейс вместе с машиной.
+        </p>
+        <form action={staffCreateForm} className="card mt-3 flex flex-wrap items-end gap-3 p-4">
+          <label className="min-w-48 flex-1 text-sm">
+            <span className="text-muted">Имя и фамилия (латиницей)</span>
+            <input name="name" placeholder="Ivan Petrov" pattern="[A-Za-z]+( [A-Za-z]+)+" className="input-base mt-1" required />
+          </label>
+          <label className="min-w-48 flex-1 text-sm">
+            <span className="text-muted">Email</span>
+            <input name="email" type="email" placeholder="ivan@umzugservice.de" className="input-base mt-1" required />
+          </label>
+          <label className="text-sm">
+            <span className="text-muted">Роль</span>
+            <select name="role" defaultValue="driver" className="input-base mt-1 w-40">
+              {ROLES.map((r) => <option key={r} value={r}>{ROLE_RU[r]}</option>)}
+            </select>
+          </label>
+          <label className="text-sm">
+            <span className="text-muted">Пароль (от 8 симв.)</span>
+            <input name="password" type="password" minLength={8} className="input-base mt-1 w-40" required />
+          </label>
+          <SubmitButton className="btn btn-primary">Создать сотрудника</SubmitButton>
+        </form>
       </section>
 
       {/* ── Парк машин (D8.6) ── */}
