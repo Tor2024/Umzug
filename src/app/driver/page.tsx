@@ -10,6 +10,7 @@ import { recalculate, type QuoteSnapshot } from "@/lib/pricing";
 import { DriverChecklist } from "@/components/driver-checklist";
 import RouteMapLazy from "@/components/route-map-lazy";
 import { SubmitButton } from "@/components/submit-button";
+import { ActionRequired, type ActionItem } from "@/components/action-required";
 
 export const metadata: Metadata = { title: "Экран водителя", robots: { index: false } };
 export const instant = false;
@@ -107,6 +108,19 @@ export default async function DriverPage({ searchParams }: { searchParams: Promi
   }
   const driverName = (id: number): string => nameMap.get(id) ?? `#${id}`;
 
+  // ── Панель «Требует вашего действия» водителя (после предвыборки protoMap) ──
+  const tomorrowIso = (() => { const d = new Date(todayIso + "T12:00:00Z"); d.setUTCDate(d.getUTCDate() + 1); return d.toISOString().slice(0, 10); })();
+  const driverActions: ActionItem[] = [];
+  for (const r of rows) {
+    if (r.status === "assigned" && r.move_date <= todayIso) {
+      driverActions.push({ key: `go-${r.ref}`, label: `Сегодня рейс ${r.plate} — нажмите «Выехал»`, href: "/driver", tag: r.ref, urgent: true });
+    } else if (r.status === "assigned" && r.move_date === tomorrowIso) {
+      driverActions.push({ key: `tm-${r.ref}`, label: "Завтра рейс — проверьте машину", href: "/driver", tag: r.ref });
+    } else if (r.status === "enroute" && !protoMap.get(r.id)) {
+      driverActions.push({ key: `pr-${r.ref}`, label: "Заполните протокол приёмки", href: "/driver", tag: r.ref, urgent: true });
+    }
+  }
+
   return (
     <main className="mx-auto max-w-md px-4 py-6">
       <h1 className="mb-1 text-2xl font-bold">Мой день</h1>
@@ -117,6 +131,8 @@ export default async function DriverPage({ searchParams }: { searchParams: Promi
           {msg}
         </div>
       )}
+
+      <ActionRequired items={driverActions} title="Мои действия сегодня" />
 
       {rows.length === 0 && (
         <div className="card p-6 text-sm text-muted">

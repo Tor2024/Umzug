@@ -7,6 +7,7 @@ import { requireUser } from "@/lib/auth";
 import { getDb } from "@/lib/db";
 import { DeleteAccount } from "./delete-account";
 import { ChangeEmail } from "./change-email";
+import { ActionRequired, type ActionItem } from "@/components/action-required";
 
 export const metadata: Metadata = { title: "Личный кабинет", robots: { index: false } };
 export const instant = false;
@@ -35,10 +36,45 @@ export default async function AccountPage() {
   });
   const orders = ordersRes.rows as unknown as Array<{ ref: string; status: string; move_date: string; from_text: string; to_text: string; gross_cents: number }>;
 
+  // ── Панель «Требует вашего действия»: незаконченные операции клиента ──
+  const todayIso = new Date().toISOString().slice(0, 10);
+  const actions: ActionItem[] = [];
+  for (const o of orders) {
+    if (o.status === "acceptance") {
+      actions.push({ key: `acc-${o.ref}`, label: "Подтвердить приёмку переезда", href: `/order/${o.ref}`, tag: o.ref, urgent: true });
+    } else if (o.status === "closed") {
+      // счёт не оплачен полностью?
+      const paidRes = await db.execute({
+        sql: "SELECT COALESCE(SUM(amount_cents),0) AS s FROM payments WHERE order_id = (SELECT id FROM orders WHERE ref = ?)",
+        args: [o.ref],
+      });
+      const paid = Number((paidRes.rows[0] as unknown as { s: number }).s);
+      if (paid < o.gross_cents) {
+        actions.push({ key: `pay-${o.ref}`, label: `Оплатить счёт (остаток ${fmt(o.gross_cents - paid)})`, href: `/order/${o.ref}`, tag: o.ref });
+      }
+    }
+    if (o.status !== "closed" && o.status !== "cancelled" && o.move_date <= todayIso) {
+      actions.push({ key: `mv-${o.ref}`, label: "Переезд сегодня — следите за статусом", href: `/order/${o.ref}`, tag: o.ref, urgent: true });
+    }
+  }
+  // активная правка цены, ждущая решения клиента
+  const pending = orders.find((o) => o.status === "confirmed" || o.status === "assigned");
+  if (pending) {
+    const pRes = await db.execute({
+      sql: "SELECT ref, pending_snapshot FROM orders WHERE ref = ? AND pending_snapshot IS NOT NULL",
+      args: [pending.ref],
+    });
+    if (pRes.rows.length > 0) {
+      actions.push({ key: `rev-${pending.ref}`, label: "Логист предложил изменение цены — подтвердите или отклоните", href: `/order/${pending.ref}`, tag: pending.ref, urgent: true });
+    }
+  }
+
   return (
     <main className="mx-auto max-w-3xl px-4 py-8">
       <h1 className="mb-1 text-2xl font-bold sm:text-3xl">Личный кабинет</h1>
       <p className="mb-6 text-muted">{user.name} · {user.email}</p>
+
+      <ActionRequired items={actions} />
 
       <div className="mb-8 flex flex-wrap gap-3">
         <Link className="btn btn-primary" href="/calc">Рассчитать переезд</Link>

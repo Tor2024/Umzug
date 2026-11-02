@@ -9,6 +9,7 @@ import {
   recordPaymentAction, dunningRefreshAction, createClaimAction, updateClaimStatusAction,
   type PaymentInput,
 } from "@/lib/actions";
+import { ActionRequired, type ActionItem } from "@/components/action-required";
 
 export const instant = false;
 
@@ -131,6 +132,22 @@ export default async function FinancePage() {
         {user.name} · счета, платежи, дуннинг, претензии ·{" "}
         <Link className="text-accent underline" href="/analytics">Аналитика →</Link>
       </p>
+
+      <ActionRequired items={(() => {
+        const todayIso = new Date().toISOString().slice(0, 10);
+        const finActions: ActionItem[] = [];
+        for (const inv of invoices) {
+          if (inv.status === "overdue") {
+            finActions.push({ key: `dun-${inv.number}`, label: `Просрочен счёт ${EUR(inv.amount_cents)} — запустите дуннинг`, href: "/finance", tag: inv.number, urgent: true });
+          } else if (inv.status === "open" && inv.due_date < todayIso) {
+            finActions.push({ key: `od-${inv.number}`, label: `Счёт просрочен по дате (${EUR(inv.amount_cents)}) — обновите дуннинг`, href: "/finance", tag: inv.number });
+          }
+        }
+        for (const o of ordersNoInvoice) {
+          finActions.push({ key: `inv-${o.ref}`, label: "Закрыт, счёт не выставлен", href: "/finance", tag: o.ref, urgent: true });
+        }
+        return finActions;
+      })()} title="Финансовые задачи" />
 
       {/* Дашборд */}
       <section className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

@@ -14,6 +14,7 @@ import { SubmitButton } from "@/components/submit-button";
 import { RevisionForm } from "@/components/revision-form";
 import { RevisionDecision } from "@/components/revision-decision";
 import { revisionFieldDiff } from "@/lib/revision";
+import { ActionRequired, type ActionItem } from "@/components/action-required";
 
 export const metadata: Metadata = { title: "Панель логиста", robots: { index: false } };
 export const instant = false;
@@ -159,6 +160,19 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
     }
   }
 
+  // ── Панель «Требует вашего действия»: незаконченные операции логиста ──
+  const dispatchActions: ActionItem[] = [];
+  for (const o of rows) {
+    if (o.status === "new") {
+      dispatchActions.push({ key: `conf-${o.ref}`, label: "Подтвердить цену и заявку", href: `/dispatch?status=new`, tag: o.ref, urgent: o.move_date <= today });
+    } else if (o.status === "confirmed") {
+      dispatchActions.push({ key: `asg-${o.ref}`, label: "Назначить машину и водителей", href: `/dispatch?status=confirmed`, tag: o.ref, urgent: o.move_date <= today });
+    } else if (o.status === "enroute") {
+      // зависшая приёмка: протокол подписан, клиент не подтвердил; или рейс начат давно
+      dispatchActions.push({ key: `enr-${o.ref}`, label: "Рейс в пути — ждём протокол/приёмку", href: `/order/${o.ref}`, tag: o.ref, urgent: o.move_date <= today });
+    }
+  }
+
   return (
     <main className="mx-auto max-w-6xl px-4 py-8">
       <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
@@ -182,6 +196,8 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
           {bannerText(msg, ref)}
         </div>
       )}
+
+      <ActionRequired items={dispatchActions} title="Заявки, требующие действий" />
 
       {/* D11: сводка ближайших 5 дней */}
       <section className="mb-6 card p-4">
