@@ -252,7 +252,7 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
       <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold sm:text-3xl">Панель логиста</h1>
-          <p className="text-muted">{user.name} · новых заявок: {rows.filter((r) => r.status === "new").length} · <Link className="text-accent underline" href="/inbox">Инбокс →</Link></p>
+          <p className="text-muted">{user.name} · новых заявок: {rows.filter((r) => r.status === "new").length} · <Link className="text-accent underline" href="/inbox">Сообщения →</Link></p>
         </div>
         <form className="flex items-center gap-2">
           <select name="status" defaultValue={statusFilter ?? "all"} className="input-base w-48" aria-label="Фильтр по статусу">

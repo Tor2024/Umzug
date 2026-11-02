@@ -5,7 +5,7 @@ import { getDb } from "@/lib/db";
 import type { Metadata } from "next";
 
 export const instant = false;
-export const metadata: Metadata = { robots: { index: false, follow: false }, title: "Инбокс" };
+export const metadata: Metadata = { robots: { index: false, follow: false }, title: "Сообщения клиентов" };
 
 const ROLE_LABEL: Record<string, string> = {
   kunde: "Клиент",
@@ -42,7 +42,7 @@ export default async function InboxPage() {
 
   return (
     <>
-      <h1 className="text-2xl font-bold">Инбокс</h1>
+      <h1 className="text-2xl font-bold">Сообщения клиентов</h1>
       <p className="mt-1 text-sm text-muted">Непрочитанные сообщения клиентов и все переписки по заявкам.</p>
 
       <h2 className="mt-6 font-semibold">Непрочитанные ({unread.length})</h2>

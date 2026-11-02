@@ -24,7 +24,7 @@ const NAV: NavItem[] = [
   { href: "/account", label: "Мои заявки", glyph: "▤", roles: ["kunde"] },
   { href: "/calc", label: "Новый расчёт", glyph: "＋", roles: ["kunde"] },
   { href: "/dispatch", label: "Логистика", glyph: "▦", roles: ["logist", "admin"] },
-  { href: "/inbox", label: "Инбокс", glyph: "✉", roles: ["logist", "admin"] },
+  { href: "/inbox", label: "Сообщения", glyph: "✉", roles: ["logist", "admin"] },
   { href: "/driver", label: "Мой день", glyph: "▶", roles: ["driver", "admin"] },
   { href: "/finance", label: "Бухгалтерия", glyph: "€", roles: ["finance", "admin"] },
   { href: "/analytics", label: "Аналитика", glyph: "◑", roles: ["finance", "admin"] },
