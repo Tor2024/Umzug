@@ -63,7 +63,7 @@ export async function GET(req: Request): Promise<NextResponse> {
     });
     out.payments = payRes.rows;
     const histRes = await db.execute({
-      sql: `SELECT actor_role, action, entity_id, details, created_at FROM order_history WHERE order_id IN (${ph}) ORDER BY id`,
+      sql: `SELECT actor_role, action, details, at FROM order_history WHERE order_id IN (${ph}) ORDER BY id`,
       args: orderIds,
     });
     out.order_history = histRes.rows;
