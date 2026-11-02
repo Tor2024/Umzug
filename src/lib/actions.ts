@@ -145,21 +145,18 @@ export async function createOrderAction(input: OrderInput): Promise<CreateOrderR
     throw e;
   }
 
-  // Номер заявки: counters (D2)
+  // Номер заявки: counters (D2). Атомарно: UPDATE ... RETURNING (гонки двух заказов).
   const year = new Date().getFullYear();
   const nextRef = (async (): Promise<string> => {
     await db.execute({
       sql: "INSERT INTO counters (prefix, year, last) VALUES ('MS', ?, 8940) ON CONFLICT(prefix, year) DO NOTHING",
       args: [year],
     });
-    await db.execute({
-      sql: "UPDATE counters SET last = last + 1 WHERE prefix = 'MS' AND year = ?",
+    const upd = await db.execute({
+      sql: "UPDATE counters SET last = last + 1 WHERE prefix = 'MS' AND year = ? RETURNING last",
       args: [year],
     });
-    const row = (await db.execute({
-      sql: "SELECT last FROM counters WHERE prefix = 'MS' AND year = ?",
-      args: [year],
-    })).rows[0] as unknown as { last: number };
+    const row = upd.rows[0] as unknown as { last: number };
     return `MS-${year}-${row.last}`;
   })();
 
@@ -254,10 +251,12 @@ export async function confirmOrderAction(orderId: number): Promise<SimpleResult>
   if (tariffDrift(snap, Number(order.gross_cents))) {
     return { ok: false, message: "Тарифы изменились после расчёта — сначала пересчитайте заявку." };
   }
-  await db.execute({
-    sql: "UPDATE orders SET status = 'confirmed', updated_at = ? WHERE id = ?",
+  // Атомарный переход: WHERE status='new' (гонки двух логистов / двойного клика)
+  const confRes = await db.execute({
+    sql: "UPDATE orders SET status = 'confirmed', updated_at = ? WHERE id = ? AND status = 'new'",
     args: [Math.floor(Date.now() / 1000), orderId],
   });
+  if (confRes.rowsAffected === 0) return { ok: false, message: "Заявка уже обработана другим сотрудником." };
   await logOrderEvent(db, orderId, user, "status_changed", { from: order.status, to: "confirmed" }); // D10
   await audit(db, user.id, "order_confirmed", "order", order.ref, "");
 
@@ -350,12 +349,17 @@ export async function cancelOrderAction(orderId: number): Promise<SimpleResult> 
   if (!canTransition(order.status, "cancelled", user.role)) {
     return { ok: false, message: `Отмена в статусе «${order.status}» недоступна.` };
   }
-  // D5.2: cleanup — иначе фантомные брони; D10: отмена сильнее правки — pending очищается там же
+  // D5.2: cleanup — иначе фантомные брони; D10: отмена сильнее правки — pending очищается там же.
+  // Атомарный переход: WHERE status — двойная отмена/гонка с assign не дадут двойных писем.
   await db.batch([
-    { sql: "UPDATE orders SET status = 'cancelled', pending_snapshot = NULL, revision_requested_by = NULL, updated_at = ? WHERE id = ?", args: [Math.floor(Date.now() / 1000), orderId] },
+    { sql: "UPDATE orders SET status = 'cancelled', pending_snapshot = NULL, revision_requested_by = NULL, updated_at = ? WHERE id = ? AND status = ?", args: [Math.floor(Date.now() / 1000), orderId, order.status] },
     { sql: "DELETE FROM assignments WHERE order_id = ?", args: [orderId] },
     { sql: "DELETE FROM trips WHERE order_id = ?", args: [orderId] },
   ], "write");
+  const cancelCheck = await db.execute({ sql: "SELECT status FROM orders WHERE id = ?", args: [orderId] });
+  if ((cancelCheck.rows[0] as unknown as { status: string } | undefined)?.status !== "cancelled") {
+    return { ok: false, message: "Заявка уже обработана другим сотрудником." };
+  }
   await logOrderEvent(db, orderId, user, "cancelled", { from_status: order.status });
   await audit(db, user.id, "order_cancelled", "order", order.ref, `from=${order.status}`);
 
@@ -449,10 +453,12 @@ export async function startRouteAction(orderId: number): Promise<SimpleResult> {
   if (order.move_date !== todayIso) {
     return { ok: false, message: `Выезд возможен только в день переезда (${order.move_date}).` };
   }
-  await db.execute({
-    sql: "UPDATE orders SET status = 'enroute', updated_at = ? WHERE id = ?",
+  // Атомарный переход: WHERE status='assigned' (двойной клик / водитель+админ)
+  const startRes = await db.execute({
+    sql: "UPDATE orders SET status = 'enroute', updated_at = ? WHERE id = ? AND status = 'assigned'",
     args: [Math.floor(Date.now() / 1000), orderId],
   });
+  if (startRes.rowsAffected === 0) return { ok: false, message: "Рейс уже начат или заявка не в статусе «машина назначена»." };
   await logOrderEvent(db, orderId, user, "status_changed", { from: order.status, to: "enroute" }); // D10
   await audit(db, user.id, "order_enroute", "order", order.ref, "");
   return { ok: true, message: "Статус: в пути." };
@@ -554,10 +560,12 @@ export async function acceptOrderAction(orderId: number): Promise<SimpleResult> 
   }
   const proto = await db.execute({ sql: "SELECT id FROM protocol WHERE order_id = ?", args: [order.id] });
   if (!proto.rows[0]) return { ok: false, message: "Сначала водитель должен составить протокол." };
-  await db.execute({
-    sql: "UPDATE orders SET status = 'acceptance', updated_at = ? WHERE id = ?",
+  // Атомарный переход: WHERE status='enroute' (двойной клик клиента/логиста)
+  const accRes = await db.execute({
+    sql: "UPDATE orders SET status = 'acceptance', updated_at = ? WHERE id = ? AND status = 'enroute'",
     args: [Math.floor(Date.now() / 1000), orderId],
   });
+  if (accRes.rowsAffected === 0) return { ok: false, message: "Приёмка уже подтверждена." };
   await logOrderEvent(db, orderId, user, "status_changed", { from: order.status, to: "acceptance" }); // D10
   await audit(db, user.id, "order_accepted", "order", order.ref, "");
 
@@ -638,17 +646,17 @@ export async function closeOrderAction(orderId: number): Promise<SimpleResult> {
   const existing = existingRes.rows[0] as unknown as { number: string } | undefined;
   if (existing) return { ok: false, message: `Счёт уже создан: ${existing.number}.` };
 
-  // GoBD-нумерация через counters (D7.5)
+  // GoBD-нумерация через counters (D7.5). Атомарно: UPDATE ... RETURNING.
   const year = new Date().getFullYear();
   await db.execute({
     sql: "INSERT INTO counters (prefix, year, last) VALUES ('RE', ?, 0) ON CONFLICT(prefix, year) DO NOTHING",
     args: [year],
   });
-  await db.execute({ sql: "UPDATE counters SET last = last + 1 WHERE prefix = 'RE' AND year = ?", args: [year] });
-  const { last } = (await db.execute({
-    sql: "SELECT last FROM counters WHERE prefix = 'RE' AND year = ?",
+  const upd = await db.execute({
+    sql: "UPDATE counters SET last = last + 1 WHERE prefix = 'RE' AND year = ? RETURNING last",
     args: [year],
-  })).rows[0] as unknown as { last: number };
+  });
+  const { last } = upd.rows[0] as unknown as { last: number };
   const invoiceNumber = `RE-${year}-${String(last).padStart(4, "0")}`;
 
   const due = new Date();
@@ -662,8 +670,16 @@ export async function closeOrderAction(orderId: number): Promise<SimpleResult> {
     { sql: "INSERT INTO invoices (number, order_id, amount_cents, status, dunning_level, due_date) VALUES (?, ?, ?, 'open', 0, ?)", args: [invoiceNumber, order.id, Number(order.gross_cents), dueIso] },
     // D7.1: аванс (payment с invoice_id NULL) привязываем к счёту
     { sql: "UPDATE payments SET invoice_id = ? WHERE order_id = ? AND invoice_id IS NULL", args: [invoiceNumber, order.id] },
-    { sql: "UPDATE orders SET status = 'closed', updated_at = ? WHERE id = ?", args: [now, order.id] },
+    // Атомарный переход: WHERE status='acceptance' (двойной клик / два бухгалтера)
+    { sql: "UPDATE orders SET status = 'closed', updated_at = ? WHERE id = ? AND status = 'acceptance'", args: [now, order.id] },
   ], "write");
+  // rowsAffected проверяем по orders: если переход не случился — счёт не должен существовать
+  const closed = await db.execute({ sql: "SELECT status FROM orders WHERE id = ?", args: [order.id] });
+  if ((closed.rows[0] as unknown as { status: string } | undefined)?.status !== "closed") {
+    // откатываем случайно созданный счёт (гонка: другой поток закрыл раньше)
+    await db.execute({ sql: "DELETE FROM invoices WHERE number = ?", args: [invoiceNumber] });
+    return { ok: false, message: "Заказ уже закрыт другим сотрудником." };
+  }
   await logOrderEvent(db, order.id, user, "status_changed", { from: order.status, to: "closed", invoice: invoiceNumber }); // D10
   await audit(db, user.id, "invoice_created", "invoice", invoiceNumber, `order=${order.ref} amount=${order.gross_cents}`);
 
@@ -877,11 +893,11 @@ export async function createClaimAction(input: { orderId: number; item: string; 
     sql: "INSERT INTO counters (prefix, year, last) VALUES ('SC', ?, 0) ON CONFLICT(prefix, year) DO NOTHING",
     args: [year],
   });
-  await db.execute({ sql: "UPDATE counters SET last = last + 1 WHERE prefix = 'SC' AND year = ?", args: [year] });
-  const { last } = (await db.execute({
-    sql: "SELECT last FROM counters WHERE prefix = 'SC' AND year = ?",
+  const upd = await db.execute({
+    sql: "UPDATE counters SET last = last + 1 WHERE prefix = 'SC' AND year = ? RETURNING last",
     args: [year],
-  })).rows[0] as unknown as { last: number };
+  });
+  const { last } = upd.rows[0] as unknown as { last: number };
   const number = `SC-${year}-${String(last).padStart(4, "0")}`;
   await db.execute({
     sql: "INSERT INTO claims (number, order_id, item, amount_cents, status, resolution, created_at) VALUES (?, ?, ?, ?, 'new', '', ?)",
