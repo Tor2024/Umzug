@@ -52,6 +52,7 @@ interface OrderRow {
   ref: string;
   status: string;
   contact_name: string;
+  client_phone: string | null;
   volume_m3: number;
   distance_km: number;
   move_date: string;
@@ -117,9 +118,10 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
   const db = await getDb();
 
   const rowsRes = await db.execute(
-    `SELECT id, ref, status, contact_name, volume_m3, distance_km, move_date, gross_cents, vehicle_class, snapshot, from_text, to_text, pending_snapshot, revision_requested_by
-     FROM orders WHERE status != 'cancelled'
-     ORDER BY CASE WHEN status = 'new' THEN 0 ELSE 1 END, move_date ASC, id ASC
+    `SELECT o.id, o.ref, o.status, o.contact_name, o.volume_m3, o.distance_km, o.move_date, o.gross_cents, o.vehicle_class, o.snapshot, o.from_text, o.to_text, o.pending_snapshot, o.revision_requested_by,
+            (SELECT phone FROM users WHERE id = o.client_id) AS client_phone
+     FROM orders o WHERE o.status != 'cancelled'
+     ORDER BY CASE WHEN o.status = 'new' THEN 0 ELSE 1 END, o.move_date ASC, o.id ASC
      LIMIT 200`,
   );
   const rows = rowsRes.rows as unknown as OrderRow[];
@@ -248,6 +250,11 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
               <p className="mt-1 text-sm text-muted">
                 {dateLabel(o.move_date)} · {o.volume_m3} м³ · {o.distance_km} км · {fmt(o.gross_cents)} · расчёт действителен до {dateLabel(snap.quoteValidUntil)}
               </p>
+              {o.client_phone && (
+                <p className="mt-1 text-sm">
+                  Tel: <a className="underline" href={`tel:${o.client_phone.replace(/\s/g, "")}`}>{o.client_phone}</a>
+                </p>
+              )}
               {geometry && <div className="mt-3"><RouteMapLazy geometry={geometry} fromText={o.from_text} toText={o.to_text} height={200} /></div>}
 
               {(priceChanged || expired) && o.status === "new" && (

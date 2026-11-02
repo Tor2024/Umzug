@@ -5,7 +5,7 @@
 import { redirect } from "next/navigation";
 import { randomBytes } from "node:crypto";
 import { getDb, audit, hashPassword, sha256 } from "./db";
-import { isValidLatinName } from "./validate";
+import { isValidLatinName, isValidGermanPhone } from "./validate";
 import { login, setSessionCookie, clearSessionCookie, issueVerifyToken, consumeVerifyToken, issueResetToken, consumeResetToken, COOKIE } from "./auth";
 
 async function currentUser() {
@@ -46,7 +46,7 @@ export async function logoutAction(): Promise<void> {
 
 export interface RegisterResult {
   ok: boolean;
-  error?: "exists" | "invalid" | "name";
+  error?: "exists" | "invalid" | "name" | "phone";
   verifyUrl?: string; // демо/fallback без SMTP: показываем ссылку на экране
   emailSent?: boolean; // письмо с verify-ссылкой отправлено через Resend
 }
@@ -56,12 +56,16 @@ export async function registerAction(formData: FormData): Promise<RegisterResult
   const name = String(formData.get("name") ?? "").trim().replace(/\s+/g, " ");
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   const password = String(formData.get("password") ?? "");
+  const phone = String(formData.get("phone") ?? "").trim().replace(/\s+/g, " ");
 
   if (!name || !EMAIL_RE.test(email) || password.length < 8) {
     return { ok: false, error: "invalid" };
   }
   if (!isValidLatinName(name)) {
     return { ok: false, error: "name" };
+  }
+  if (!isValidGermanPhone(phone)) {
+    return { ok: false, error: "phone" };
   }
 
   const db = await getDb();
@@ -79,16 +83,16 @@ export async function registerAction(formData: FormData): Promise<RegisterResult
 
   let userId: number;
   if (existing) {
-    // неподтверждённый повтор: обновляем имя/пароль/токен (D3.7)
+    // неподтверждённый повтор: обновляем имя/пароль/телефон/токен (D3.7)
     await db.execute({
-      sql: "UPDATE users SET name = ?, password_hash = ? WHERE id = ?",
-      args: [name, hashPassword(password), existing.id],
+      sql: "UPDATE users SET name = ?, password_hash = ?, phone = ? WHERE id = ?",
+      args: [name, hashPassword(password), phone, existing.id],
     });
     userId = existing.id;
   } else {
     const r = await db.execute({
-      sql: "INSERT INTO users (email, name, role, password_hash, active, email_verified, created_at) VALUES (?, ?, 'kunde', ?, 1, 0, ?)",
-      args: [email, name, hashPassword(password), Math.floor(Date.now() / 1000)],
+      sql: "INSERT INTO users (email, name, role, password_hash, active, email_verified, phone, created_at) VALUES (?, ?, 'kunde', ?, 1, 0, ?, ?)",
+      args: [email, name, hashPassword(password), phone, Math.floor(Date.now() / 1000)],
     });
     userId = Number(r.lastInsertRowid);
   }

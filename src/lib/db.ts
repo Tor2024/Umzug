@@ -87,6 +87,7 @@ const SCHEMA_SQL = `
     pending_email   TEXT,
     pending_email_token TEXT,
     pending_email_expires INTEGER,
+    phone           TEXT NOT NULL DEFAULT '',
     created_at      INTEGER NOT NULL
   );
   CREATE INDEX IF NOT EXISTS idx_users_reset_token ON users(reset_token);

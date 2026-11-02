@@ -4,12 +4,13 @@
 
 import { useState, useTransition } from "react";
 import { registerAction, type RegisterResult } from "@/lib/auth-actions";
-import { isValidLatinName } from "@/lib/validate";
+import { isValidLatinName, isValidGermanPhone } from "@/lib/validate";
 
 export function RegisterForm() {
   const [result, setResult] = useState<RegisterResult | null>(null);
   const [pending, startTransition] = useTransition();
   const [nameHint, setNameHint] = useState(false);
+  const [phoneHint, setPhoneHint] = useState(false);
 
   if (result?.ok && result.emailSent) {
     return (
@@ -53,7 +54,9 @@ export function RegisterForm() {
             ? "Этот email уже зарегистрирован и подтверждён. Войдите."
             : result.error === "name"
               ? "Имя и фамилию укажите латиницей — два слова, как в загранпаспорте. Пример: Anna Safrova"
-              : "Проверьте данные: имя, корректный email, пароль от 8 символов."}
+              : result.error === "phone"
+                ? "Укажите корректный телефон: +49… или 0… (например +49 151 23456789)."
+                : "Проверьте данные: имя, корректный email, пароль от 8 символов."}
         </div>
       )}
       <div>
@@ -83,6 +86,30 @@ export function RegisterForm() {
       <div>
         <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
         <input id="email" name="email" type="email" required autoComplete="email" className="input-base" />
+      </div>
+      <div>
+        <label htmlFor="phone" className="block text-sm font-medium mb-1">Телефон (моб.)</label>
+        <input
+          id="phone"
+          name="phone"
+          type="tel"
+          required
+          autoComplete="tel"
+          className="input-base"
+          placeholder="+49 151 23456789"
+          onChange={(e) => {
+            setPhoneHint(e.target.value.length > 0 && !isValidGermanPhone(e.target.value.trim()));
+          }}
+        />
+        {phoneHint ? (
+          <p className="mt-1 text-xs text-danger">
+            Номер в немецком формате: +49… или 0…, например +49 151 23456789.
+          </p>
+        ) : (
+          <p className="mt-1 text-xs text-muted">
+            По нему логист согласует детали переезда.
+          </p>
+        )}
       </div>
       <div>
         <label htmlFor="password" className="block text-sm font-medium mb-1">Пароль (мин. 8 символов)</label>

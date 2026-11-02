@@ -15,3 +15,15 @@ export function isValidLatinName(name: string): boolean {
       /[A-Za-z]{2}/.test(p),
   );
 }
+
+/**
+ * Телефон клиента (немецкий формат): +49… или 0…, 7–14 цифр после префикса.
+ * Пробелы/дефисы/скобки допускаются и нормализуются. Требование: логист
+ * согласует детали переезда по телефону; шуточные заказы отсекаются.
+ */
+export function isValidGermanPhone(raw: string): boolean {
+  const p = raw.replace(/[\s\-/().]/g, "");
+  if (/^\+49\d{7,14}$/.test(p)) return true;
+  if (/^0\d{8,14}$/.test(p)) return true;
+  return false;
+}

@@ -253,3 +253,29 @@ describe("snapshot roundtrip", () => {
     expect(snap.quoteValidUntil).toBe(expected);
   });
 });
+
+describe("минимальная стоимость (floor)", () => {
+  // Примечание: при дефолтных тарифах floor (35 €) недостижим — минимальный
+  // base класса A (340 €) всегда выше. Механику floor проверяем изменённым тарифом:
+  // админ может поднять floor как экономический фильтр мусорных заявок (D8).
+  const HIGH_FLOOR = { ...T, floorCents: 100000 }; // 1000 €
+
+  it("сумма строк ниже floorCents → расчёт поднимается до floor", () => {
+    const tiny = cfg({ volumeM3: 1, distanceKm: 3, floorsFrom: 0, floorsTo: 0 });
+    const q = calculateQuote(tiny, HIGH_FLOOR);
+    expect(q.subtotal).toBe(100000); // floor применяется
+    expect(q.net).toBe(100000); // без скидок/мультипликаторов
+    expect(q.gross).toBe(119000); // + НДС 19%
+  });
+
+  it("обычный расчёт floor не трогает", () => {
+    const q = calculateQuote(cfg(), T);
+    expect(q.subtotal).toBeGreaterThan(T.floorCents);
+  });
+
+  it("recalculate(snap) воспроизводит floor-расчёт", () => {
+    const tiny = cfg({ volumeM3: 1, distanceKm: 3, floorsFrom: 0, floorsTo: 0 });
+    const snap = makeSnapshot(tiny, HIGH_FLOOR);
+    expect(recalculate(snap).gross).toBe(calculateQuote(tiny, HIGH_FLOOR).gross);
+  });
+});

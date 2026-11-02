@@ -202,15 +202,19 @@ export function calculateQuote(cfg: MoveConfig, t: Tariffs): Quote {
 
   const subtotal = lines.reduce((s, l) => s + l.amount, 0);
 
+  // 9a. Минимальная стоимость (экономический фильтр мусорных заявок, D8):
+  // если сумма позиций ниже floor — поднимаем до floor (в позиции не пишем).
+    const subtotalEff = Math.max(subtotal, t.floorCents);
+
   // 10. Скидка (догруз) — первой, к subtotal (D1.1)
-  const discount = cfg.sharedLoad ? Math.round(subtotal * t.sharedLoadPct / 100) : 0;
+  const discount = cfg.sharedLoad ? Math.round(subtotalEff * t.sharedLoadPct / 100) : 0;
 
   // 11. Коэффициенты спроса — один множитель (D1.1, D1.5)
   const multiplierPct = t.seasonPct + t.loadPct +
     (isWeekend(cfg) ? t.weekendPct : 0) +
     (cfg.express ? t.expressPct : 0) +
     (cfg.autoLoadPct ?? 0);
-  const net = Math.round((subtotal - discount) * (1 + multiplierPct / 100));
+  const net = Math.round((subtotalEff - discount) * (1 + multiplierPct / 100));
 
   // 12. НДС один раз; § 19 UStG — vatEnabled=false
   const vat = t.vatEnabled ? Math.round(net * t.vatPct / 100) : 0;
@@ -218,7 +222,7 @@ export function calculateQuote(cfg: MoveConfig, t: Tariffs): Quote {
   const deposit = Math.round(gross * t.depositPct / 100);
 
   return {
-    lines, subtotal, discount, multiplierPct, net, vat, gross, deposit,
+    lines, subtotal: subtotalEff, discount, multiplierPct, net, vat, gross, deposit,
     remainder: gross - deposit,
     crewHoursLoad: round2(hoursLoad),
     crewHoursDrive: round2(driveHours),
