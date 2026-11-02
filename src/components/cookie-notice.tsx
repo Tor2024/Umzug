@@ -46,6 +46,17 @@ export function CookieNotice() {
     return () => { cancelled = true; clearTimeout(t); };
   }, []);
 
+  // Локаль может смениться клиентской навигацией (/, → /de при первом визите) —
+  // отслеживаем pathname, чтобы язык баннера всегда совпадал со страницей.
+  useEffect(() => {
+    const onNav = () => setDe(window.location.pathname.startsWith("/de"));
+    onNav();
+    window.addEventListener("popstate", onNav);
+    // Next.js App Router навигация не триггерит popstate при push — интервал-гвард
+    const iv = setInterval(onNav, 500);
+    return () => { window.removeEventListener("popstate", onNav); clearInterval(iv); };
+  }, []);
+
   if (!visible) return null;
   const L = LABELS[de ? "de" : "ru"];
 
