@@ -659,6 +659,10 @@ export async function closeOrderAction(orderId: number): Promise<SimpleResult> {
   }
   const now = Math.floor(Date.now() / 1000);
 
+  // Ресурсы (машина/водители) освобождаются: assignment-записи блокируют дату.
+  // trips остаются (история рейсов); занятость на дату смотрит только assignments.
+  await db.execute({ sql: "DELETE FROM assignments WHERE order_id = ?", args: [order.id] });
+
   // Гварды (TOCTOU)
   const freshRes = await db.execute({ sql: "SELECT status FROM orders WHERE id = ?", args: [order.id] });
   const fresh = freshRes.rows[0] as unknown as { status: OrderStatus };
