@@ -38,6 +38,11 @@ export default async function AccountPage() {
 
   // ── Панель «Требует вашего действия»: незаконченные операции клиента ──
   const todayIso = new Date().toISOString().slice(0, 10);
+  function addDaysIso(iso: string, n: number): string {
+    const x = new Date(iso + "T12:00:00Z");
+    x.setUTCDate(x.getUTCDate() + n);
+    return x.toISOString().slice(0, 10);
+  }
   const actions: ActionItem[] = [];
   for (const o of orders) {
     if (o.status === "acceptance") {
@@ -55,6 +60,10 @@ export default async function AccountPage() {
     }
     if (o.status !== "closed" && o.status !== "cancelled" && o.move_date <= todayIso) {
       actions.push({ key: `mv-${o.ref}`, label: "Переезд сегодня — следите за статусом", href: `/order/${o.ref}`, tag: o.ref, urgent: true });
+    }
+    // 48ч-фокус (@1922): заявка-«новая» с выездом в ближайшие 48 часов — клиенту напоминание в интерфейсе
+    if (o.status === "new" && o.move_date > todayIso && o.move_date <= addDaysIso(todayIso, 2)) {
+      actions.push({ key: `conf48-${o.ref}`, label: "До переезда ≤48 часов — заявка ещё не подтверждена", href: `/order/${o.ref}`, tag: o.ref, urgent: true });
     }
   }
   // активная правка цены, ждущая решения клиента

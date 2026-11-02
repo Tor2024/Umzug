@@ -180,3 +180,22 @@ export async function sendOrderCancelledEmail(to: string, name: string, ref: str
   );
   return sendEmail(to, `Заявка ${ref} отменена — Umzug Service`, html);
 }
+
+/** Напоминание о неподтверждённой заявке (cron, за 48ч и 24ч до переезда). */
+export async function sendOrderReminderEmail(
+  to: string, name: string, ref: string, moveDate: string, kind: "48h" | "24h",
+): Promise<SendResult> {
+  const when = kind === "48h"
+    ? "До переезда осталось около двух дней"
+    : "Переезд уже завтра";
+  const html = statusTemplate(
+    `Здравствуйте, ${escapeHtml(name)}! ${when}, а заявка ${ref} ещё не подтверждена.`,
+    `<p style="margin:0 0 12px;font-size:15px;line-height:1.5;">Дата переезда: <b>${escapeHtml(moveDate)}</b>. Заявка всё ещё в статусе «новая» — логист ещё не подтвердил цену.</p>
+     <p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;">Пожалуйста, дождитесь подтверждения цены или свяжитесь с нами. Без подтверждения машина на эту дату не закреплена.</p>`,
+    ref,
+  );
+  const subject = kind === "48h"
+    ? `Заявка ${ref}: до переезда ~2 дня, заявка не подтверждена — Umzug Service`
+    : `Заявка ${ref}: переезд завтра, заявка не подтверждена — Umzug Service`;
+  return sendEmail(to, subject, html);
+}

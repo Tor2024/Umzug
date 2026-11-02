@@ -170,11 +170,24 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
 
   // ── Панель «Требует вашего действия»: незаконченные операции логиста ──
   const dispatchActions: ActionItem[] = [];
+  // 48ч-фокус (@1922): заявка-«новая» с датой переезда в ближайшие 48 часов — срочная
+  const in48h = (d: string): boolean => d > today && d <= addDaysIso(today, 2);
+  function addDaysIso(iso: string, n: number): string {
+    const x = new Date(iso + "T12:00:00Z");
+    x.setUTCDate(x.getUTCDate() + n);
+    return x.toISOString().slice(0, 10);
+  }
   for (const o of rows) {
     if (o.status === "new") {
-      dispatchActions.push({ key: `conf-${o.ref}`, label: "Подтвердить цену и заявку", href: `/dispatch?status=new`, tag: o.ref, urgent: o.move_date <= today });
+      dispatchActions.push({
+        key: `conf-${o.ref}`,
+        label: in48h(o.move_date) ? "Подтвердить цену и заявку — до переезда ≤48 ч" : "Подтвердить цену и заявку",
+        href: `/dispatch?status=new`,
+        tag: o.ref,
+        urgent: o.move_date <= addDaysIso(today, 2),
+      });
     } else if (o.status === "confirmed") {
-      dispatchActions.push({ key: `asg-${o.ref}`, label: "Назначить машину и водителей", href: `/dispatch?status=confirmed`, tag: o.ref, urgent: o.move_date <= today });
+      dispatchActions.push({ key: `asg-${o.ref}`, label: "Назначить машину и водителей", href: `/dispatch?status=confirmed`, tag: o.ref, urgent: o.move_date <= addDaysIso(today, 2) });
     } else if (o.status === "enroute") {
       // зависшая приёмка: протокол подписан, клиент не подтвердил; или рейс начат давно
       dispatchActions.push({ key: `enr-${o.ref}`, label: "Рейс в пути — ждём протокол/приёмку", href: `/order/${o.ref}`, tag: o.ref, urgent: o.move_date <= today });
