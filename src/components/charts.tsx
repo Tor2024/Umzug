@@ -1,10 +1,10 @@
 // SVG-графики для аналитики (server-safe, без клиентского JS/библиотек).
 // Стиль: фирменный оранжевый + спокойная палитра; tabular-nums; скругления.
 
-/** Бар-чарт (вертикальные столбцы) с подписями и значениями. */
+/** Бар-чарт (вертикальные столбцы, HTML/CSS — без SVG-растяжений). */
 export function BarChart({
   data,
-  height = 180,
+  height = 170,
   formatValue,
 }: {
   data: Array<{ label: string; value: number; color?: string }>;
@@ -13,31 +13,30 @@ export function BarChart({
 }) {
   if (data.length === 0) return null;
   const max = Math.max(...data.map((d) => d.value), 1);
-  const chartH = height - 34;
-  const barW = 100 / data.length;
   return (
     <div className="w-full overflow-x-auto">
-      <svg viewBox={`0 0 100 ${height}`} preserveAspectRatio="none" className="h-auto w-full min-w-[480px]" style={{ height }}>
-        <line x1="0" y1={chartH} x2="100" y2={chartH} stroke="#e2e8f0" strokeWidth="0.4" />
+      <div className="flex min-w-[480px] items-end gap-2" style={{ height }}>
         {data.map((d, i) => {
-          const h = d.value > 0 ? Math.max((d.value / max) * (chartH - 6), 1.5) : 0;
-          const x = i * barW + barW * 0.18;
-          const w = barW * 0.64;
+          const hPct = d.value > 0 ? Math.max((d.value / max) * 100, 2) : 0;
           return (
-            <g key={`${d.label}-${i}`}>
-              <rect x={x} y={chartH - h} width={w} height={h} rx="1.2" fill={d.color ?? "#EA7A28"} />
+            <div key={`${d.label}-${i}`} className="flex min-w-16 flex-1 flex-col items-center justify-end gap-1" style={{ height: "100%" }}>
               {d.value > 0 && (
-                <text x={x + w / 2} y={chartH - h - 1.8} textAnchor="middle" fontSize="3.2" fill="#475569" fontWeight="600">
+                <span className="text-[11px] font-semibold tabular-nums text-muted">
                   {formatValue ? formatValue(d.value) : d.value}
-                </text>
+                </span>
               )}
-              <text x={x + w / 2} y={chartH + 6} textAnchor="middle" fontSize="3.4" fill="#64748b">
-                {d.label}
-              </text>
-            </g>
+              <div
+                title={`${d.label}: ${formatValue ? formatValue(d.value) : d.value}`}
+                className="w-full max-w-14 rounded-t-base transition-[height] duration-500"
+                style={{ height: `${hPct}%`, backgroundColor: d.color ?? "#EA7A28", minHeight: d.value > 0 ? 4 : 0 }}
+                role="img"
+                aria-label={`${d.label}: ${formatValue ? formatValue(d.value) : d.value}`}
+              />
+              <span className="w-full truncate text-center text-[11px] text-muted">{d.label}</span>
+            </div>
           );
         })}
-      </svg>
+      </div>
     </div>
   );
 }
