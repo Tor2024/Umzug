@@ -34,5 +34,8 @@ export default function CrewMapLazy({ locale = "ru", ...props }: CrewMapProps & 
   // locale нужен для типов (стрип с пропсов) — fallback определяет локаль по pathname
   void locale;
   if (!props.crew) return null;
-  return <CrewMapInner {...props} />;
+  // key пересоздаёт карту при смене позиции/маршрута — без этого Leaflet падает
+  // «Map container is being reused by another instance» при re-render
+  const mapKey = `${props.crew.lat},${props.crew.lon}|${props.fromText}|${props.toText}`;
+  return <CrewMapInner key={mapKey} {...props} />;
 }
