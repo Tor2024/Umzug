@@ -101,17 +101,25 @@ export function CalcWizard({ loggedIn, tariffs = DEFAULT_TARIFFS }: { loggedIn: 
   const [sharedLoad, setSharedLoad] = useState(false);
   // Задача 6: авто-коэффициент загрузки выбранной даты (из календаря)
   const [autoLoadPct, setAutoLoadPct] = useState(0);
+  // Время начала загрузки (клиент выбирает, 7–17 ArbZG-совместимо)
+  const [startTime, setStartTime] = useState("08:00");
+  // Клиент упаковывает сам → часы упаковки = 0 (строка Verpackungsservice исчезает)
+  const [selfPack, setSelfPack] = useState(false);
+  // Доп. требования к загрузке/выгрузке (согласует логист)
+  const [specialRequests, setSpecialRequests] = useState("");
+
+  const effectivePackHours = selfPack ? 0 : packHours;
 
   // Черновой расчёт на клиенте (официальная цена — после сабмита, D4.13)
   const draft = useMemo<MoveConfig>(() => ({
     vehicleClass: "B", classForced: false,
     volumeM3, distanceKm: route.km, durationMin: route.minutes || undefined,
     floorsFrom, floorsTo, elevatorFrom, elevatorTo,
-    boxes, kitchen, furnitureItems, packHours, hvzZones, extraCrew,
+    boxes, kitchen, furnitureItems, packHours: effectivePackHours, hvzZones, extraCrew,
     moveDate, express, sharedLoad,
     autoLoadPct: autoLoadPct || undefined,
     returnKm: returnKm > 0 ? returnKm : undefined,
-  }), [volumeM3, route.km, route.minutes, floorsFrom, floorsTo, elevatorFrom, elevatorTo, boxes, kitchen, furnitureItems, packHours, hvzZones, extraCrew, moveDate, express, sharedLoad, autoLoadPct, returnKm]);
+  }), [volumeM3, route.km, route.minutes, floorsFrom, floorsTo, elevatorFrom, elevatorTo, boxes, kitchen, furnitureItems, effectivePackHours, hvzZones, extraCrew, moveDate, express, sharedLoad, autoLoadPct, returnKm]);
 
   const quote = useMemo(() => {
     try {
@@ -131,10 +139,13 @@ export function CalcWizard({ loggedIn, tariffs = DEFAULT_TARIFFS }: { loggedIn: 
     const input: OrderInput = {
       fromText, toText, volumeM3,
       floorsFrom, floorsTo, elevatorFrom, elevatorTo,
-      boxes, kitchen, furnitureItems, packHours, hvzZones, extraCrew,
+      boxes, kitchen, furnitureItems, packHours: effectivePackHours, hvzZones, extraCrew,
       moveDate, express, sharedLoad,
       vehicleClass: "A", // «авто» — сервер выберет по объёму
       classForced: false,
+      startTime,
+      selfPack,
+      specialRequests: specialRequests.trim() || undefined,
     };
     startTransition(async () => {
       const res = await createOrderAction(input);
@@ -185,6 +196,16 @@ export function CalcWizard({ loggedIn, tariffs = DEFAULT_TARIFFS }: { loggedIn: 
               <span className="font-medium">Дата переезда</span>
               <input className="input-base" type="date" value={moveDate} onChange={(e) => { setMoveDate(e.target.value); setAutoLoadPct(0); }} />
               <span className="text-xs text-muted">Воскресенья и праздники недоступны (§ 9 ArbZG).</span>
+            </label>
+            <label className="grid gap-1 text-sm">
+              <span className="font-medium">Время начала загрузки</span>
+              <select className="input-base" value={startTime} onChange={(e) => setStartTime(e.target.value)}>
+                {Array.from({ length: 11 }, (_, i) => {
+                  const h = 7 + i;
+                  return <option key={h} value={`${String(h).padStart(2, "0")}:00`}>{`${String(h).padStart(2, "0")}:00`}</option>;
+                })}
+              </select>
+              <span className="text-xs text-muted">Экипаж прибудет к этому времени (с учётом подачи машины).</span>
             </label>
             <AvailabilityCalendar
               loggedIn={loggedIn}
@@ -261,8 +282,22 @@ export function CalcWizard({ loggedIn, tariffs = DEFAULT_TARIFFS }: { loggedIn: 
                 <input type="range" min={0} max={20} value={furnitureItems} onChange={(e) => setFurnitureItems(Number(e.target.value))} />
               </label>
               <label className="grid gap-1 text-sm">
-                <span className="font-medium">Упаковка: <b>{packHours} ч</b></span>
-                <input type="range" min={0} max={12} value={packHours} onChange={(e) => setPackHours(Number(e.target.value))} />
+                <span className="font-medium">Упаковка: <b>{effectivePackHours} ч</b></span>
+                <input type="range" min={0} max={12} value={packHours} disabled={selfPack} onChange={(e) => setPackHours(Number(e.target.value))} />
+              </label>
+              <label className="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked={selfPack} onChange={(e) => setSelfPack(e.target.checked)} />
+                Упаковываем сами — услуга упаковки не нужна
+              </label>
+              <label className="grid gap-1 text-sm">
+                <span className="font-medium">Доп. требования к загрузке/выгрузке <span className="font-normal text-muted">(по желанию, согласует логист)</span></span>
+                <textarea
+                  className="input-base min-h-20"
+                  maxLength={500}
+                  placeholder="Например: хрупкая мебель, узкая лестница, нужно поднять на 3-й этаж без лифта, пианино…"
+                  value={specialRequests}
+                  onChange={(e) => setSpecialRequests(e.target.value)}
+                />
               </label>
               <label className="grid gap-1 text-sm">
                 <span className="font-medium">Зоны запрета парковки (HVZ): <b>{hvzZones}</b></span>

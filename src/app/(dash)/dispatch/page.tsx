@@ -8,7 +8,7 @@ import { requireRole } from "@/lib/auth";
 import { getDb, getTariffs, type DB } from "@/lib/db";
 import { calculateQuote, recalculate, type QuoteSnapshot, type VehicleClass } from "@/lib/pricing";
 import { tariffDrift } from "@/lib/ops";
-import { confirmOrderAction, recalcOrderAction, cancelOrderAction, assignOrderAction, closeOrderAction, forceCloseOrderAction, assignSubcontractorAction, unassignSubcontractorAction } from "@/lib/actions";
+import { confirmOrderAction, recalcOrderAction, cancelOrderAction, assignOrderAction, closeOrderAction, forceCloseOrderAction, assignSubcontractorAction, unassignSubcontractorAction, approveSpecialRequestsAction, rejectSpecialRequestsAction } from "@/lib/actions";
 import RouteMapLazy from "@/components/route-map-lazy";
 import { SubmitButton } from "@/components/submit-button";
 import { RevisionForm } from "@/components/revision-form";
@@ -65,6 +65,10 @@ interface OrderRow {
   to_text: string;
   pending_snapshot: string | null;      // D10
   revision_requested_by: string | null; // D10
+  start_time: string;
+  self_pack: number;
+  special_requests: string | null;
+  special_approved: number | null;
 }
 
 const todayIso = (): string => {
@@ -104,6 +108,8 @@ const ACTION_MSG: Record<string, string> = {
   pending: "Сначала завершите правку: заявка ждёт подтверждения изменения.",
   sub_assigned: "Заявка передана партнёру-перевозчику.",
   sub_unassigned: "Партнёр снят — можно назначить свою машину.",
+  spApproved: "Доп. требования клиента согласованы.",
+  spRejected: "Доп. требования клиента отклонены.",
   sub_class: "Класс машин партнёра ниже класса заявки.",
   sub_error: "Не удалось передать партнёру.",
 };
@@ -112,7 +118,7 @@ const ACTION_MSG: Record<string, string> = {
 function bannerText(code: string, ref?: string): string {
   const base = ACTION_MSG[code] ?? code;
   if (!ref) return base;
-  const okCodes = ["confirmed", "assigned", "closed", "force_closed", "cancelled", "recalculated", "sub_assigned", "sub_unassigned"];
+  const okCodes = ["confirmed", "assigned", "closed", "force_closed", "cancelled", "recalculated", "sub_assigned", "sub_unassigned", "spApproved", "spRejected"];
   if (okCodes.includes(code)) return `${ref}: ${base.charAt(0).toLowerCase()}${base.slice(1)}`;
   return `${ref}: ${base}`;
 }
@@ -125,6 +131,7 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
 
   const rowsRes = await db.execute(
     `SELECT o.id, o.ref, o.status, o.contact_name, o.volume_m3, o.distance_km, o.move_date, o.gross_cents, o.vehicle_class, o.snapshot, o.from_text, o.to_text, o.pending_snapshot, o.revision_requested_by,
+            o.start_time, o.self_pack, o.special_requests, o.special_approved,
             (SELECT phone FROM users WHERE id = o.client_id) AS client_phone
      FROM orders o WHERE o.status != 'cancelled'
      ORDER BY CASE WHEN o.status = 'new' THEN 0 ELSE 1 END, o.move_date ASC, o.id ASC
@@ -330,6 +337,13 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
                   if (ri?.km != null) return <span className="chip chip-delayed">Возврат на базу: {ri.km} км · себестоимость {((ri.costCents ?? 0) / 100).toFixed(2)} € (внутр.)</span>;
                   return <span className="chip chip-neutral">Возврат на базу: не рассчитан</span>;
                 })()}
+                {o.start_time && <span className="chip chip-neutral">Начало: {o.start_time}</span>}
+                {!!o.self_pack && <span className="chip chip-neutral">Упаковка — сам клиент</span>}
+                {o.special_requests && (
+                  <span className={`chip ${o.special_approved === 1 ? "chip-trust" : o.special_approved === 0 ? "chip-delayed" : "chip-dispatched"}`}>
+                    {o.special_approved === 1 ? "Требования согласованы" : o.special_approved === 0 ? "Требования отклонены" : "Требования ждут согласования"}
+                  </span>
+                )}
                 {pendingSnap && (
                   <span className="chip chip-dispatched">
                     {o.revision_requested_by === "kunde" ? "Правка клиента — требуется решение" : "Ждёт подтверждения клиента"}
@@ -347,6 +361,48 @@ export default async function DispatchPage({ searchParams }: { searchParams: Pro
                 <p className="mt-1 text-sm">
                   Tel: <a className="underline" href={`tel:${o.client_phone.replace(/\s/g, "")}`}>{o.client_phone}</a>
                 </p>
+              )}
+              {/* Таймлайн рейса (@2048 п.1): расписание от подачи до возврата на базу */}
+              {o.status === "assigned" && (() => {
+                const q = (() => { try { return recalculate(snap); } catch { return null; } })();
+                if (!q) return null;
+                const approach = candidatesMap.get(o.id)?.find((c) => c.optimal)?.approachMin ?? 0;
+                const fmtT = (m: number): string => {
+                  const [h, mm] = (o.start_time || "08:00").split(":").map(Number);
+                  const total = h * 60 + mm + Math.round(m);
+                  return `${String(Math.floor(total / 60) % 24).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
+                };
+                const load = q.crewHoursLoad * 60, drive = q.crewHoursDrive * 60, unload = load;
+                const retKm = snap.config.returnKm ?? 0;
+                return (
+                  <div className="mt-3 rounded-base border border-line bg-surface p-3 text-sm">
+                    <p className="font-semibold">Расписание дня <span className="font-normal text-muted">(расчётное; возможны задержки — буфер закладывает логист при правке цены)</span></p>
+                    <ul className="mt-1 space-y-0.5 text-muted">
+                      <li>{fmtT(0)} — подача машины ({Math.round(approach)} мин)</li>
+                      <li>{fmtT(approach)} — начало погрузки ({Math.round(load / 60 * 10) / 10} ч)</li>
+                      <li>{fmtT(approach + load)} — выезд в путь ({Math.round(drive / 60 * 10) / 10} ч)</li>
+                      <li>{fmtT(approach + load + drive)} — прибытие, выгрузка ({Math.round(unload / 60 * 10) / 10} ч)</li>
+                      <li>{fmtT(approach + load + drive + unload)} — готово{retKm > 0 ? ` · возврат на базу ${retKm} км (~${Math.round(retKm / 80 * 10) / 10} ч)` : ""}</li>
+                    </ul>
+                  </div>
+                );
+              })()}
+              {o.special_requests && (
+                <div className="mt-3 rounded-base border border-accent-soft bg-orange-50 p-3 text-sm">
+                  <p className="font-semibold">Доп. требования клиента к загрузке/выгрузке:</p>
+                  <p className="mt-1 whitespace-pre-wrap">{o.special_requests}</p>
+                  {o.special_approved === null && (o.status === "new" || o.status === "confirmed") && (
+                    <div className="mt-2 flex gap-2">
+                      <form action={async () => { "use server"; const r = await approveSpecialRequestsAction(o.id); redirectMsg(r.ok ? "spApproved" : r.message ?? "state", o.ref); }}>
+                        <SubmitButton className="btn btn-primary h-9">Согласовать</SubmitButton>
+                      </form>
+                      <form action={async () => { "use server"; const r = await rejectSpecialRequestsAction(o.id); redirectMsg(r.ok ? "spRejected" : r.message ?? "state", o.ref); }}>
+                        <SubmitButton className="btn btn-outline h-9">Отклонить</SubmitButton>
+                      </form>
+                    </div>
+                  )}
+                  {o.special_approved === 0 && <p className="mt-1 text-xs text-danger">Отклонено — обсудите с клиентом в переписке.</p>}
+                </div>
               )}
               {geometry && <div className="mt-3"><RouteMapLazy geometry={geometry} fromText={o.from_text} toText={o.to_text} height={200} /></div>}
 

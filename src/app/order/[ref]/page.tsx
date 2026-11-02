@@ -57,7 +57,7 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
     args: [ref.toUpperCase()],
   });
   const order = orderRes.rows[0] as unknown as
-    | (Record<string, unknown> & { id: number; ref: string; client_id: number | null; status: string; snapshot: string; volume_m3: number; distance_km: number; move_date: string; from_text: string; to_text: string; pending_snapshot: string | null; revision_requested_by: string | null })
+    | (Record<string, unknown> & { id: number; ref: string; client_id: number | null; status: string; snapshot: string; volume_m3: number; distance_km: number; move_date: string; from_text: string; to_text: string; pending_snapshot: string | null; revision_requested_by: string | null; start_time: string; self_pack: number; special_requests: string | null; special_approved: number | null })
     | undefined;
   if (!order) {
     return <main className="mx-auto max-w-xl px-4 py-10"><p>Заявка не найдена.</p></main>;
@@ -223,6 +223,19 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
           <div className="flex justify-between gap-3"><dt className="shrink-0 text-muted">Дата</dt><dd>{dateLabel(order.move_date)}</dd></div>
           <div className="flex justify-between gap-3"><dt className="shrink-0 text-muted">Объём</dt><dd className="tabular-nums">{order.volume_m3} м³</dd></div>
           <div className="flex justify-between gap-3"><dt className="shrink-0 text-muted">Класс машины</dt><dd>{snap.config.vehicleClass}</dd></div>
+          {order.start_time && <div className="flex justify-between gap-3"><dt className="shrink-0 text-muted">Начало загрузки</dt><dd>{order.start_time}</dd></div>}
+          {!!order.self_pack && <div className="flex justify-between gap-3"><dt className="shrink-0 text-muted">Упаковка</dt><dd>Выполняется самостоятельно</dd></div>}
+          {order.special_requests && (
+            <div className="sm:col-span-2">
+              <dt className="text-muted">Ваши доп. требования</dt>
+              <dd className="mt-1 whitespace-pre-wrap">{order.special_requests}</dd>
+              <dd className="mt-1 text-xs">
+                {order.special_approved === 1 && <span className="text-trust">✓ Согласовано логистом</span>}
+                {order.special_approved === 0 && <span className="text-danger">✕ Отклонено — мы свяжемся с вами в переписке</span>}
+                {order.special_approved === null && <span className="text-muted">⏳ На согласовании у логиста</span>}
+              </dd>
+            </div>
+          )}
         </dl>
         {geometry && <div className="mt-4"><RouteMapLazy geometry={geometry} fromText={order.from_text} toText={order.to_text} /></div>}
       </div>

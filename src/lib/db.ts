@@ -126,7 +126,11 @@ const SCHEMA_SQL = `
     updated_at     INTEGER NOT NULL,
     pending_snapshot TEXT,
     revision_requested_by TEXT,
-    current_version INTEGER NOT NULL DEFAULT 1
+    current_version INTEGER NOT NULL DEFAULT 1,
+    start_time TEXT NOT NULL DEFAULT '',
+    self_pack INTEGER NOT NULL DEFAULT 0,
+    special_requests TEXT,
+    special_approved INTEGER
   );
   CREATE INDEX IF NOT EXISTS idx_orders_client ON orders(client_id);
   CREATE INDEX IF NOT EXISTS idx_orders_date ON orders(move_date);

@@ -45,7 +45,8 @@ export default async function DriverPage({ searchParams }: { searchParams: Promi
   // D6.8: рейсы водителя через assignments, сегодня сверху + предстоящие
   const rowsRes = await db.execute({
     sql: `SELECT o.id, o.ref, o.status, o.move_date, o.from_text, o.to_text, o.volume_m3, o.distance_km,
-            o.gross_cents, o.snapshot, t.vehicle_id, t.driver_id, t.codriver_id, v.plate, v.label AS vehicle_label
+            o.gross_cents, o.snapshot, o.start_time, o.self_pack, o.special_requests, o.special_approved,
+            t.vehicle_id, t.driver_id, t.codriver_id, v.plate, v.label AS vehicle_label
      FROM trips t
      JOIN orders o ON o.id = t.order_id
      JOIN vehicles v ON v.id = t.vehicle_id
@@ -57,6 +58,7 @@ export default async function DriverPage({ searchParams }: { searchParams: Promi
   const rows = rowsRes.rows as unknown as Array<{
     id: number; ref: string; status: string; move_date: string; from_text: string; to_text: string;
     volume_m3: number; distance_km: number; gross_cents: number; snapshot: string;
+    start_time: string; self_pack: number; special_requests: string | null; special_approved: number | null;
     vehicle_id: number; driver_id: number; codriver_id: number | null; plate: string; vehicle_label: string;
   }>;
 
@@ -168,6 +170,15 @@ export default async function DriverPage({ searchParams }: { searchParams: Promi
               {geometry && <div className="mt-3"><RouteMapLazy geometry={geometry} fromText={r.from_text} toText={r.to_text} height={200} /></div>}
               {r.codriver_id && (
                 <p className="text-sm text-muted">Экипаж: {driverName(r.driver_id)}{r.codriver_id !== r.driver_id ? ` + ${driverName(r.codriver_id)}` : ""}</p>
+              )}
+              {r.start_time && (
+                <p className="text-sm font-medium">Время начала: {r.start_time}{!!r.self_pack ? " · упаковка — сам клиент" : ""}</p>
+              )}
+              {r.special_requests && r.special_approved === 1 && (
+                <div className="mt-2 rounded-base border border-accent-soft bg-orange-50 p-3 text-sm">
+                  <p className="font-semibold">Доп. требования клиента (согласованы):</p>
+                  <p className="mt-1 whitespace-pre-wrap">{r.special_requests}</p>
+                </div>
               )}
 
               {/* Шаг дня 1: Выехал (assigned→enroute, только сегодня — D6.3) */}

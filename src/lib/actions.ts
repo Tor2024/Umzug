@@ -36,6 +36,12 @@ export interface OrderInput {
   hvzZones: number;
   extraCrew: number;
   moveDate: string; // ISO yyyy-mm-dd
+  /** Желаемое время начала загрузки, HH:MM (07:00–17:00). */
+  startTime: string;
+  /** Клиент упаковывает сам — услуга упаковки не нужна (packHours = 0). */
+  selfPack?: boolean;
+  /** Доп. требования к загрузке/выгрузке — согласуются логистом. */
+  specialRequests?: string;
   express: boolean;
   sharedLoad: boolean;
   vehicleClass: VehicleClass; // «авто» → сервер выбирает сам
@@ -80,6 +86,15 @@ export async function createOrderAction(input: OrderInput): Promise<CreateOrderR
   if (!validAddress(fromText) || !validAddress(toText)) {
     return { ok: false, error: "address", message: "Укажите адреса отправления и прибытия (3–200 символов)." };
   }
+
+  // Время начала загрузки (требование @2048): HH:MM, окно 07:00–17:00
+  const startTime = /^\d{2}:\d{2}$/.test(input.startTime ?? "") ? input.startTime : "";
+  const startHour = Number(startTime.slice(0, 2));
+  if (!startTime || startHour < 7 || startHour > 17) {
+    return { ok: false, error: "validation", message: "Укажите время начала загрузки (07:00–17:00)." };
+  }
+  const selfPack = !!input.selfPack;
+  const specialRequests = (input.specialRequests ?? "").trim().slice(0, 500) || null;
 
   // Маршрут: сервер сам, клиентский km игнорируется (D4.1/D4.2)
   const apiKeyRes = await db.execute("SELECT value FROM config WHERE key = 'maps.api_key'");
@@ -181,14 +196,15 @@ export async function createOrderAction(input: OrderInput): Promise<CreateOrderR
         (ref, client_id, contact_name, contact_email, status, vehicle_class, snapshot,
          volume_m3, distance_km, move_date, net_cents, vat_cents, gross_cents,
          deposit_cents, remainder_cents, config_version, express, shared_load,
-         from_text, to_text, created_at, updated_at)
-       VALUES (?, ?, ?, ?, 'new', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?)`,
+         from_text, to_text, start_time, self_pack, special_requests, special_approved,
+         created_at, updated_at)
+       VALUES (?, ?, ?, ?, 'new', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)`,
       args: [
         ref, user.id, user.name, user.email, cfg.vehicleClass, JSON.stringify(snapshot),
         cfg.volumeM3, route.km, cfg.moveDate,
         quote.net, quote.vat, quote.gross, quote.deposit, quote.remainder,
         cfg.express ? 1 : 0, cfg.sharedLoad ? 1 : 0,
-        fromText, toText, now, now,
+        fromText, toText, startTime, selfPack ? 1 : 0, specialRequests, now, now,
       ],
     });
     const orderId = Number(insOrder.lastInsertRowid);
@@ -1609,4 +1625,51 @@ export async function unassignSubcontractorAction(orderId: number): Promise<Simp
 
   await audit(db, user.id, "sub_unassigned", "order", order.ref);
   return { ok: true, message: "Партнёр снят — можно назначить свою машину." };
+}
+
+// ── Согласование доп. требований клиента (требование @2048 п.4) ──
+// Логист одобряет или отклоняет special_requests; клиент видит статус на странице заявки.
+
+export async function approveSpecialRequestsAction(orderId: number): Promise<SimpleResult> {
+  const db = await getDb();
+  const user = await currentUser();
+  if (!user || !["logist", "admin"].includes(user.role)) return { ok: false, message: "Недостаточно прав." };
+  const oRes = await db.execute({
+    sql: "SELECT id, ref, special_requests, special_approved FROM orders WHERE id = ?",
+    args: [orderId],
+  });
+  const order = oRes.rows[0] as unknown as { id: number; ref: string; special_requests: string | null; special_approved: number | null } | undefined;
+  if (!order) return { ok: false, message: "Заявка не найдена." };
+  if (!order.special_requests) return { ok: false, message: "Доп. требований у этой заявки нет." };
+
+  const upd = await db.execute({
+    sql: "UPDATE orders SET special_approved = 1 WHERE id = ? AND special_approved IS NULL",
+    args: [orderId],
+  });
+  if (upd.rowsAffected === 0) return { ok: false, message: "Требования уже согласованы." };
+  await logOrderEvent(db, order.id, user, "special_requests_approved", {});
+  await audit(db, user.id, "special_requests_approved", "order", order.ref);
+  return { ok: true, message: "Доп. требования согласованы — экипаж будет предупреждён." };
+}
+
+export async function rejectSpecialRequestsAction(orderId: number): Promise<SimpleResult> {
+  const db = await getDb();
+  const user = await currentUser();
+  if (!user || !["logist", "admin"].includes(user.role)) return { ok: false, message: "Недостаточно прав." };
+  const oRes = await db.execute({
+    sql: "SELECT id, ref, special_requests, special_approved FROM orders WHERE id = ?",
+    args: [orderId],
+  });
+  const order = oRes.rows[0] as unknown as { id: number; ref: string; special_requests: string | null; special_approved: number | null } | undefined;
+  if (!order) return { ok: false, message: "Заявка не найдена." };
+  if (!order.special_requests) return { ok: false, message: "Доп. требований у этой заявки нет." };
+
+  const upd = await db.execute({
+    sql: "UPDATE orders SET special_approved = 0 WHERE id = ? AND special_approved IS NULL",
+    args: [orderId],
+  });
+  if (upd.rowsAffected === 0) return { ok: false, message: "Решение по требованиям уже принято." };
+  await logOrderEvent(db, order.id, user, "special_requests_rejected", {});
+  await audit(db, user.id, "special_requests_rejected", "order", order.ref);
+  return { ok: true, message: "Требования отклонены — обсудите детали с клиентом в переписке." };
 }
