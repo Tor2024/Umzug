@@ -198,7 +198,7 @@ export async function createOrderAction(input: OrderInput): Promise<CreateOrderR
          deposit_cents, remainder_cents, config_version, express, shared_load,
          from_text, to_text, start_time, self_pack, special_requests, special_approved,
          created_at, updated_at)
-       VALUES (?, ?, ?, ?, 'new', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)`,
+       VALUES (?, ?, ?, ?, 'new', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?)`,
       args: [
         ref, user.id, user.name, user.email, cfg.vehicleClass, JSON.stringify(snapshot),
         cfg.volumeM3, route.km, cfg.moveDate,
